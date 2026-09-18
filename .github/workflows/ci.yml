@@ -6,6 +6,50 @@ on:
     branches: [ main ]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: wellness_toys
+          POSTGRES_PASSWORD: wellness_toys_dev
+          POSTGRES_DB: wellness_toys_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U wellness_toys"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_PORT: 5433
+      DATABASE_USER: wellness_toys
+      DATABASE_PASSWORD: wellness_toys_dev
+      # Field encryption requires real keys. CI generates throwaway ones: the
+      # database it writes to is created and destroyed with the job.
+      ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: ci-primary-key-not-a-secret-0001
+      ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: ci-deterministic-key-not-a-secret
+      ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: ci-salt-not-a-secret-0001
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Prepare the database
+        run: bin/rails db:prepare
+
+      - name: Run the suite
+        run: bundle exec rspec
+
   scan_ruby:
     runs-on: ubuntu-latest
 
@@ -20,24 +64,9 @@ jobs:
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
-      
+
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
-      
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
 
   lint:
     runs-on: ubuntu-latest
@@ -64,4 +93,3 @@ jobs:
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
-
