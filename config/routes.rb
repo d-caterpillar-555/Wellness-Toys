@@ -108,6 +108,14 @@ Rails.application.routes.draw do
     get "/figure", to: "figure#index", as: :figure
     get "/figure/pieces", to: "figure#pieces", as: :figure_pieces
     get "/figure/pieces/:slug", to: "figure#piece", as: :figure_piece
+
+    # plan: a floor plan. Departments are rooms; a product is an object on the
+    # plan, drawn with its callout. The register is the same data without the
+    # walking.
+    get "/plan", to: "plan#index", as: :plan
+    get "/plan/register", to: "plan#register", as: :plan_register
+    get "/plan/room/:slug", to: "plan#room", as: :plan_room
+    get "/plan/object/:slug", to: "plan#object", as: :plan_object
   end
 
   # --- Admin ----------------------------------------------------------------

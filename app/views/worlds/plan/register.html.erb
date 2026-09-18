@@ -1,0 +1,67 @@
+<% content_for :title, "The register" %>
+<% content_for :meta_description, "Everything in the shop as a ruled register: SKU, name, price, grouped by department. The plan without the walk." %>
+
+<div class="plan">
+  <header class="plan-masthead">
+    <p class="plan-wordmark"><%= link_to Store.name, plan_path, class: "plan-wordmark" %></p>
+    <nav aria-label="Sections">
+      <ul class="plan-masthead__links">
+        <li><%= link_to "The plan", plan_path, class: "plan-masthead__link" %></li>
+        <li><%= link_to "The register", plan_register_path, class: "plan-masthead__link", aria: { current: "page" } %></li>
+        <li><%= link_to "The shop", root_path, class: "plan-masthead__link" %></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="plan-sheet" id="main">
+    <header class="plan-head">
+      <div>
+        <h1 class="plan-title">The register</h1>
+        <p class="plan-standfirst">
+          The same drawing, read as a list. Every object, its department, and its price.
+        </p>
+      </div>
+      <p class="plan-stamp">Sheet 02 &middot; <%= pluralize(@objects.size, "object") %></p>
+    </header>
+
+    <% @departments.each do |category| %>
+      <% entries = @objects.select { |product| product.primary_category&.id == category.id } %>
+      <% next if entries.empty? %>
+      <section class="plan-group">
+        <h2 class="plan-group__title">
+          <%= link_to category.name, plan_room_path(category), class: "plan-masthead__link" %>
+          &middot; <%= pluralize(entries.size, "object") %>
+        </h2>
+        <ol class="plan-register">
+          <% entries.each do |product| %>
+            <li>
+              <%= link_to plan_object_path(product.slug), class: "plan-register__row" do %>
+                <span class="plan-register__code"><%= product.sku %></span>
+                <span class="plan-register__name"><%= product.name %></span>
+                <span class="plan-register__price"><%= price(product.lowest_price_cents) %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ol>
+      </section>
+    <% end %>
+
+    <% unfiled = @objects.reject(&:primary_category) %>
+    <% if unfiled.any? %>
+      <section class="plan-group">
+        <h2 class="plan-group__title">Unfiled</h2>
+        <ol class="plan-register">
+          <% unfiled.each do |product| %>
+            <li>
+              <%= link_to plan_object_path(product.slug), class: "plan-register__row" do %>
+                <span class="plan-register__code"><%= product.sku %></span>
+                <span class="plan-register__name"><%= product.name %></span>
+                <span class="plan-register__price"><%= price(product.lowest_price_cents) %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ol>
+      </section>
+    <% end %>
+  </main>
+</div>

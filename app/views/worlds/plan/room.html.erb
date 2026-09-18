@@ -1,0 +1,72 @@
+<% content_for :title, @category.name %>
+<% content_for :meta_description, "#{@category.name} is a room on the plan at #{Store.name}: #{pluralize(@objects.size, "object")} in it, with materials and dimensions stated." %>
+
+<% cols = 3 %>
+
+<div class="plan">
+  <header class="plan-masthead">
+    <p class="plan-wordmark"><%= link_to Store.name, plan_path, class: "plan-wordmark" %></p>
+    <nav aria-label="Sections">
+      <ul class="plan-masthead__links">
+        <li><%= link_to "The plan", plan_path, class: "plan-masthead__link" %></li>
+        <li><%= link_to "The register", plan_register_path, class: "plan-masthead__link" %></li>
+        <li><%= link_to "The shop", root_path, class: "plan-masthead__link" %></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="plan-sheet" id="main">
+    <header class="plan-head">
+      <div>
+        <h1 class="plan-title"><%= @category.name %></h1>
+        <p class="plan-standfirst">
+          You are in this room. <%= pluralize(@objects.size, "object") %> on the plan, each drawn
+          with its callout number.
+        </p>
+      </div>
+      <p class="plan-stamp">Room detail &middot; <%= @category.slug %></p>
+    </header>
+
+    <%= render "worlds/plan/board", rooms: @rooms, empty_rooms: @empty_rooms, current: @category, marker: false %>
+
+    <section aria-label="<%= @category.name %> on the plan">
+      <svg class="plan-board" viewBox="<%= @room[:x] - 12 %> <%= @room[:y] - 12 %> <%= @room[:w] + 24 %> <%= @room[:h] + 24 %>"
+           role="img" aria-label="<%= @category.name %>, with its objects numbered">
+        <rect class="plan-walls" x="<%= @room[:x] %>" y="<%= @room[:y] %>" width="<%= @room[:w] %>" height="<%= @room[:h] %>" />
+
+        <% @objects.each_with_index do |product, index| %>
+          <% col = index % cols %>
+          <% row = index / cols %>
+          <% cx = @room[:x] + 60 + (col * ((@room[:w] - 120) / [cols - 1, 1].max)) %>
+          <% cy = @room[:y] + 90 + (row * 70) %>
+          <a href="<%= plan_object_path(product.slug) %>" class="plan-room" data-plan-room
+             data-x="<%= cx %>" data-y="<%= cy %>"
+             data-name="<%= product.name %>" data-count="<%= strip_tags(price(product.lowest_price_cents)) %>">
+            <circle class="plan-callout__ring" cx="<%= cx %>" cy="<%= cy %>" r="15" />
+            <text class="plan-callout__number" x="<%= cx %>" y="<%= cy + 4 %>" text-anchor="middle"><%= index + 1 %></text>
+          </a>
+        <% end %>
+      </svg>
+    </section>
+
+    <% if @objects.any? %>
+      <ol class="plan-objects">
+        <% @objects.each_with_index do |product, index| %>
+          <li class="plan-object">
+            <%= link_to plan_object_path(product.slug), class: "plan-object__link" do %>
+              <span class="plan-object__callout"><%= index + 1 %></span>
+              <span class="plan-object__name"><%= product.name %></span>
+              <span class="plan-object__price"><%= price(product.lowest_price_cents) %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ol>
+    <% else %>
+      <p class="plan-standfirst">This room is empty today. An empty room is a fact; we would rather show it than fill it.</p>
+    <% end %>
+
+    <p class="plan-readout">
+      <%= link_to "Back to the whole plan", plan_path, class: "plan-masthead__link" %>
+    </p>
+  </main>
+</div>

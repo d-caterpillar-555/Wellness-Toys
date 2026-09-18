@@ -1,0 +1,114 @@
+<% content_for :title, @product.name %>
+<% content_for :meta_description, @product.subtitle.presence || "#{@product.name}: materials, dimensions and price, drawn as an elevation on the plan at #{Store.name}." %>
+
+<div class="plan">
+  <header class="plan-masthead">
+    <p class="plan-wordmark"><%= link_to Store.name, plan_path, class: "plan-wordmark" %></p>
+    <nav aria-label="Sections">
+      <ul class="plan-masthead__links">
+        <li><%= link_to "The plan", plan_path, class: "plan-masthead__link" %></li>
+        <li><%= link_to "The register", plan_register_path, class: "plan-masthead__link" %></li>
+        <li><%= link_to "The shop", root_path, class: "plan-masthead__link" %></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="plan-sheet" id="main">
+    <header class="plan-head">
+      <div>
+        <p class="plan-stamp">
+          <%= @product.sku %>
+          <% if @category %> &middot; <%= link_to @category.name, plan_room_path(@category), class: "plan-masthead__link" %><% end %>
+        </p>
+        <h1 class="plan-title"><%= @product.name %></h1>
+        <% if @product.subtitle.present? %>
+          <p class="plan-standfirst"><%= @product.subtitle %></p>
+        <% end %>
+      </div>
+      <p class="plan-stamp">Elevation &middot; <%= @product.brand&.name || "no maker recorded" %></p>
+    </header>
+
+    <div class="plan-two">
+      <div class="plan-elevation">
+        <%= product_cover_tag(@product) %>
+      </div>
+
+      <div>
+        <p class="plan-price"><%= price(@product.lowest_price_cents) %></p>
+
+        <dl class="plan-figures">
+          <% if @product.materials.present? %>
+            <div class="plan-figure">
+              <dt>Materials</dt>
+              <dd><%= @product.materials %></dd>
+            </div>
+          <% end %>
+          <div class="plan-figure">
+            <dt>Body safe</dt>
+            <dd><%= @product.body_safe? ? "Yes" : "No" %></dd>
+          </div>
+          <% if @product.safety_notes.present? %>
+            <div class="plan-figure">
+              <dt>Safety notes</dt>
+              <dd><%= @product.safety_notes %></dd>
+            </div>
+          <% end %>
+          <% if @product.dimensions.present? %>
+            <div class="plan-figure">
+              <dt>Dimensions</dt>
+              <dd><%= @product.dimensions %></dd>
+            </div>
+          <% end %>
+          <% if @product.weight_grams.present? %>
+            <div class="plan-figure">
+              <dt>Weight</dt>
+              <dd><%= @product.weight_grams %> g</dd>
+            </div>
+          <% end %>
+        </dl>
+
+        <% if @product.description.present? %>
+          <p class="plan-standfirst"><%= @product.description %></p>
+        <% end %>
+        <% if @product.care_instructions.present? %>
+          <p class="plan-standfirst"><%= @product.care_instructions %></p>
+        <% end %>
+
+        <% if @variants.any? %>
+          <%= form_with url: cart_items_path, method: :post, class: "plan-buy" do %>
+            <label class="plan-buy__label" for="variant_id">Edition</label>
+            <%= select_tag "variant_id",
+                  options_for_select(@variants.map { |variant|
+                    label = strip_tags(price(variant.price_cents, currency: variant.currency))
+                    [ "#{variant.name} - #{label}", variant.id ]
+                  }), id: "variant_id" %>
+
+            <label class="plan-buy__label" for="quantity">Quantity</label>
+            <%= select_tag "quantity", options_for_select(quantity_options), id: "quantity" %>
+
+            <%= submit_tag t("products.add_to_cart"), class: "plan-buy__submit" %>
+          <% end %>
+        <% else %>
+          <p class="plan-standfirst">No edition of this object is available right now.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @related.any? %>
+      <section aria-label="Also in this room">
+        <h2 class="plan-group__title">Also in <%= @category&.name || "the catalogue" %></h2>
+        <ol class="plan-register">
+          <% @related.each do |product| %>
+            <li>
+              <%= link_to plan_object_path(product.slug), class: "plan-register__row" do %>
+                <span class="plan-register__code"><%= product.sku %></span>
+                <span class="plan-register__name"><%= product.name %></span>
+                <span class="plan-register__price"><%= price(product.lowest_price_cents) %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ol>
+      </section>
+    <% end %>
+  </main>
+</div>

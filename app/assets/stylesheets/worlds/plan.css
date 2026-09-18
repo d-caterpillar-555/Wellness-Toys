@@ -1,0 +1,537 @@
+/* ==========================================================================
+   plan: the shop as a building.
+
+   A daylight architectural model: plan white, hairline ink, soft shade, one
+   terracotta for the room you are in. Measurements and coordinates are set in
+   a monospace face, because on a drawing they are data rather than voice.
+
+   The palette is declared here as --w-* tokens for script/check-contrast.
+   ========================================================================== */
+
+.plan {
+  --w-surface: oklch(96.5% 0.006 250);
+  --w-surface-sunk: oklch(92.8% 0.008 250);
+  --w-ink: oklch(28% 0.020 255);
+  --w-body: oklch(38% 0.018 255);
+  --w-muted: oklch(51% 0.020 255);
+  --w-accent: oklch(53.5% 0.130 40);
+  --w-on-accent: oklch(97.5% 0.006 90);
+  --w-line: oklch(74% 0.012 250);
+  --plan-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  background-color: var(--w-surface);
+  color: var(--w-body);
+  font-family: var(--font-sans);
+  min-block-size: 100dvh;
+}
+
+.plan-skip {
+  background-color: var(--w-ink);
+  color: var(--w-surface);
+  inset-block-start: -100%;
+  inset-inline-start: 1rem;
+  padding: 0.75rem 1rem;
+  position: absolute;
+  text-decoration: none;
+  z-index: 80;
+}
+
+.plan-skip:focus {
+  inset-block-start: 1rem;
+}
+
+/* --- Masthead ------------------------------------------------------------ */
+
+.plan-masthead {
+  align-items: baseline;
+  border-block-end: 1px solid var(--w-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+}
+
+.plan-wordmark {
+  color: var(--w-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.plan-masthead__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.plan-masthead__link {
+  color: var(--w-muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.plan-masthead__link:hover,
+.plan-masthead__link:focus-visible,
+.plan-masthead__link[aria-current="page"] {
+  color: var(--w-accent);
+}
+
+/* --- The sheet ----------------------------------------------------------- */
+
+.plan-sheet {
+  margin-inline: auto;
+  max-inline-size: 84rem;
+  padding: 1.5rem 1.5rem 5rem;
+}
+
+.plan-head {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  justify-content: space-between;
+  padding-block: 1rem 1.5rem;
+}
+
+.plan-title {
+  color: var(--w-ink);
+  font-size: clamp(1.5rem, 3vw, 2.125rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.plan-standfirst {
+  color: var(--w-muted);
+  font-size: 0.9375rem;
+  margin: 0.4rem 0 0;
+  max-inline-size: 58ch;
+}
+
+.plan-stamp {
+  border: 1px solid var(--w-line);
+  color: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  padding: 0.4rem 0.6rem;
+  text-transform: uppercase;
+}
+
+/* --- The drawing --------------------------------------------------------- */
+
+.plan-board {
+  background-color: var(--w-surface);
+  border: 1px solid var(--w-line);
+  display: block;
+  inline-size: 100%;
+  position: relative;
+}
+
+.plan-room {
+  cursor: pointer;
+}
+
+.plan-room rect {
+  fill: var(--w-surface);
+  stroke: var(--w-ink);
+  stroke-width: 1;
+  transition: fill 150ms ease-out;
+}
+
+.plan-room:hover rect,
+.plan-room:focus-visible rect {
+  fill: oklch(94% 0.030 45);
+}
+
+.plan-room[aria-current="true"] rect {
+  fill: oklch(93% 0.045 42);
+}
+
+.plan-room__name {
+  fill: var(--w-ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plan-room__count {
+  fill: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.plan-room__door {
+  stroke: var(--w-accent);
+  stroke-width: 2;
+}
+
+.plan-walls {
+  fill: none;
+  stroke: var(--w-ink);
+  stroke-width: 2;
+}
+
+.plan-corridor {
+  fill: var(--w-surface-sunk);
+  stroke: var(--w-line);
+  stroke-width: 1;
+}
+
+.plan-dimension line {
+  stroke: var(--w-line);
+  stroke-width: 1;
+}
+
+.plan-dimension text {
+  fill: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.plan-scale line {
+  stroke: var(--w-ink);
+  stroke-width: 1;
+}
+
+.plan-scale circle {
+  fill: var(--w-surface);
+  stroke: var(--w-ink);
+  stroke-width: 1;
+}
+
+.plan-scale text {
+  fill: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 10px;
+}
+
+.plan-marker {
+  fill: var(--w-accent);
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.plan-marker__ring {
+  fill: none;
+  stroke: var(--w-accent);
+  stroke-width: 1.5;
+}
+
+.plan-readout {
+  color: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  margin-block-start: 0.75rem;
+  text-transform: uppercase;
+}
+
+/* --- Rooms as a list, under the drawing --------------------------------- */
+
+.plan-legend {
+  display: grid;
+  gap: 0 2rem;
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+}
+
+@media (min-width: 48rem) {
+  .plan-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.plan-legend__item {
+  border-block-end: 1px solid var(--w-line);
+}
+
+.plan-legend__link {
+  align-items: baseline;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-block: 0.65rem;
+  text-decoration: none;
+}
+
+.plan-legend__name {
+  color: var(--w-ink);
+  font-size: 0.9375rem;
+}
+
+.plan-legend__link:hover .plan-legend__name,
+.plan-legend__link:focus-visible .plan-legend__name {
+  color: var(--w-accent);
+}
+
+.plan-legend__count {
+  color: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* --- The room: objects placed on the plan ------------------------------- */
+
+.plan-objects {
+  display: grid;
+  gap: 0.75rem 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+}
+
+@media (min-width: 40rem) {
+  .plan-objects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.plan-object {
+  border-block-start: 1px solid var(--w-line);
+  padding-block: 0.75rem;
+}
+
+.plan-object__link {
+  align-items: baseline;
+  display: flex;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.plan-object__callout {
+  color: var(--w-accent);
+  font-family: var(--plan-mono);
+  font-size: 0.8125rem;
+}
+
+.plan-object__name {
+  color: var(--w-ink);
+  font-size: 0.9375rem;
+}
+
+.plan-object__link:hover .plan-object__name,
+.plan-object__link:focus-visible .plan-object__name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.plan-object__price {
+  color: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 0.8125rem;
+  margin-inline-start: auto;
+}
+
+/* --- One object, as an elevation ---------------------------------------- */
+
+.plan-elevation {
+  background-color: var(--w-surface);
+  border: 1px solid var(--w-line);
+  padding: 1.5rem;
+}
+
+.plan-elevation img {
+  aspect-ratio: 1;
+  block-size: auto;
+  display: block;
+  inline-size: 100%;
+  object-fit: contain;
+  padding: 8%;
+}
+
+.plan-figures {
+  border-block-start: 1px solid var(--w-ink);
+  margin: 1.5rem 0;
+}
+
+.plan-figure {
+  border-block-end: 1px solid var(--w-line);
+  display: grid;
+  gap: 0.25rem 1.5rem;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  padding-block: 0.6rem;
+}
+
+.plan-figure dt {
+  color: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plan-figure dd {
+  color: var(--w-ink);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.plan-price {
+  color: var(--w-ink);
+  font-family: var(--plan-mono);
+  font-size: 1.25rem;
+  margin: 0 0 1.25rem;
+}
+
+.plan-buy {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.9rem;
+}
+
+.plan-buy select {
+  background-color: var(--w-surface);
+  border: 1px solid var(--w-line);
+  color: var(--w-ink);
+  font-size: 0.9375rem;
+  min-block-size: 2.75rem;
+  padding-inline: 0.6rem;
+}
+
+.plan-buy__label {
+  color: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plan-buy__submit {
+  background-color: var(--w-ink);
+  border: 0;
+  color: var(--w-surface);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  min-block-size: 2.75rem;
+  padding-inline: 1.25rem;
+}
+
+.plan-buy__submit:hover,
+.plan-buy__submit:focus-visible {
+  background-color: var(--w-accent);
+  color: var(--w-on-accent);
+}
+
+.plan-two {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 60rem) {
+  .plan-two {
+    gap: 3.5rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* --- The register -------------------------------------------------------- */
+
+.plan-register {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.plan-register__row {
+  align-items: baseline;
+  border-block-end: 1px solid var(--w-line);
+  display: grid;
+  gap: 0.25rem 1rem;
+  grid-template-columns: 5rem minmax(0, 1fr) auto;
+  padding-block: 0.6rem;
+  text-decoration: none;
+}
+
+.plan-register__code {
+  color: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 0.75rem;
+}
+
+.plan-register__name {
+  color: var(--w-ink);
+  font-size: 0.9375rem;
+}
+
+.plan-register__row:hover .plan-register__name,
+.plan-register__row:focus-visible .plan-register__name {
+  color: var(--w-accent);
+}
+
+.plan-register__price {
+  color: var(--w-body);
+  font-family: var(--plan-mono);
+  font-size: 0.8125rem;
+}
+
+.plan-group {
+  margin-block-start: 2rem;
+}
+
+.plan-group__title {
+  border-block-end: 1px solid var(--w-ink);
+  color: var(--w-muted);
+  font-family: var(--plan-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  margin: 0 0 0.5rem;
+  padding-block-end: 0.35rem;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-room rect,
+  .plan-marker {
+    transition: none;
+  }
+}
+
+/* --- Rooms with nothing in them, and object callouts --------------------- */
+
+.plan-room__empty {
+  fill: var(--w-surface-sunk);
+  stroke: var(--w-line);
+  stroke-dasharray: 4 3;
+  stroke-width: 1;
+}
+
+.plan-callout__ring {
+  fill: var(--w-surface);
+  stroke: var(--w-accent);
+  stroke-width: 1.5;
+}
+
+.plan-room:hover .plan-callout__ring,
+.plan-room:focus-visible .plan-callout__ring {
+  fill: var(--w-accent);
+}
+
+.plan-callout__number {
+  fill: var(--w-accent);
+  font-family: var(--plan-mono);
+  font-size: 12px;
+}
+
+.plan-room:hover .plan-callout__number,
+.plan-room:focus-visible .plan-callout__number {
+  fill: var(--w-on-accent);
+}

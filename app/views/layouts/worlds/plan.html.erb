@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <%= render "layouts/world_head", stylesheet: "worlds/plan", module_name: "worlds/plan" %>
+  </head>
+
+  <%# Daylight on a drafting table. %>
+  <body class="plan">
+    <a class="plan-skip" href="#main">Skip to content</a>
+
+    <%= render "shared/age_gate" unless age_confirmed? %>
+    <%= render "shared/consent_banner" if age_confirmed? && !consent_decided? %>
+
+    <%= yield %>
+
+    <%= render "shared/world_dock" %>
+  </body>
+</html>
