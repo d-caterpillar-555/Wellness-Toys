@@ -1629,6 +1629,22 @@
   }
 }
 
+/* The tiled wall is two up on a phone and one up on the narrowest screens:
+   at 390px the second column pushed the page four pixels wider than the
+   viewport, which is the kind of overflow a tiled grid hides until you
+   measure it. min-width on the tiles stops a long product name doing the same
+   thing again on its own. */
+@media (max-width: 30rem) {
+  [data-style="solarium"] .wt-catalogue__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+[data-style="solarium"] .wt-catalogue__grid > * {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
 [data-style="solarium"] .wt-catalogue__grid > * {
   background-color: var(--color-paper);
   padding: calc(var(--spacing) * 4);
