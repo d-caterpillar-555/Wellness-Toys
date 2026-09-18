@@ -61,3 +61,6 @@
 # checkout and means nothing in anyone else's.
 /.freebuff/
 .variate/
+
+# Local browser tooling: console logs, snapshots, session state
+.playwright-cli/
