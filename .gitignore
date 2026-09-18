@@ -1,0 +1,58 @@
+# --- Secrets ---------------------------------------------------------------
+# Never committed. Production values live in the deployment secret store.
+/.env
+/.env.*
+!/.env.example
+/config/master.key
+/config/credentials/*.key
+
+# --- Local services --------------------------------------------------------
+# The project-local PostgreSQL cluster created by bin/pg. Contains real data
+# and must never be committed or shared.
+/.postgres/
+
+# --- Build output ----------------------------------------------------------
+/app/assets/builds/*
+!/app/assets/builds/.keep
+/public/assets/
+
+# --- Local tool binaries ---------------------------------------------------
+# Meilisearch and Chrome for Testing, fetched by script/fetch-meilisearch and
+# script/fetch-chrome. Large, and reproducible from those scripts.
+/.tools/
+
+# --- Rails -----------------------------------------------------------------
+/log/*
+!/log/.keep
+/tmp/*
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/.keep
+/tmp/storage/*
+!/tmp/storage/.keep
+/storage/*
+!/storage/.keep
+/public/uploads/
+
+# --- Test and coverage -----------------------------------------------------
+/coverage/
+/spec/examples.txt
+/spec/fixtures/vcr_cassettes/
+
+# --- Documentation output --------------------------------------------------
+/doc/
+/erd.pdf
+/erd.png
+
+# --- Editor and OS ---------------------------------------------------------
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# --- Tooling ---------------------------------------------------------------
+/.bundle/
+/node_modules/
+/byebug.log
+/.rubocop_cache/

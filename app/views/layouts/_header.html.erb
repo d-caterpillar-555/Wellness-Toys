@@ -1,0 +1,33 @@
+<header class="border-b border-line bg-paper">
+  <div class="wt-container">
+    <div class="flex items-center justify-between gap-6 min-h-[72px]">
+
+      <%= link_to root_path, class: "flex items-center shrink-0 no-underline" do %>
+        <span class="font-display text-title text-ink tracking-title"><%= Brand.name %></span>
+      <% end %>
+
+      <nav aria-label="Primary" class="hidden md:flex items-center gap-8">
+        <%= link_to "About", page_path("about"), class: "wt-nav-link", aria: { current: ("page" if current_page?(page_path("about"))) } %>
+        <%= link_to "Standards", page_path("standards"), class: "wt-nav-link", aria: { current: ("page" if current_page?(page_path("standards"))) } %>
+        <%= link_to "Contact", page_path("contact"), class: "wt-nav-link", aria: { current: ("page" if current_page?(page_path("contact"))) } %>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="wt-nav-link px-2"
+          data-controller="theme"
+          data-action="theme#toggle"
+          aria-label="Switch colour theme">
+          <span data-theme-target="label">Theme</span>
+        </button>
+      </div>
+    </div>
+
+    <nav aria-label="Primary mobile" class="md:hidden flex items-center gap-6 pb-3 overflow-x-auto">
+      <%= link_to "About", page_path("about"), class: "wt-nav-link" %>
+      <%= link_to "Standards", page_path("standards"), class: "wt-nav-link" %>
+      <%= link_to "Contact", page_path("contact"), class: "wt-nav-link" %>
+    </nav>
+  </div>
+</header>

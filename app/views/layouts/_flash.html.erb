@@ -1,0 +1,15 @@
+<%# Flash messages. Rendered in a turbo frame so any action can replace it
+    without a full page render. %>
+<div id="flash" aria-live="polite" aria-atomic="true">
+  <% if notice.present? %>
+    <div class="wt-container pt-6">
+      <p class="wt-panel px-5 py-4 text-ui text-ink" role="status"><%= notice %></p>
+    </div>
+  <% end %>
+
+  <% if alert.present? %>
+    <div class="wt-container pt-6">
+      <p class="wt-panel px-5 py-4 text-ui text-ink border-ember" role="alert"><%= alert %></p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+#
+# Download Chrome for Testing and its matching chromedriver.
+#
+# This exists because Chromium is only available on this Ubuntu release as a
+# snap transitional package, and snap does not work reliably inside WSL. Chrome
+# for Testing is a plain zip published by the Chrome team specifically for
+# automation, so it needs no root access and no package manager.
+#
+# Used by the Capybara system specs and by the Playwright CLI skill when driving
+# the live application.
+#
+# Usage: script/fetch-chrome
+#
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DEST="$ROOT/.tools/chrome"
+INDEX="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"
+
+command -v unzip >/dev/null || { echo "unzip is required. Install it with: sudo apt-get install -y unzip" >&2; exit 1; }
+command -v node  >/dev/null || { echo "node is required to parse the version index." >&2; exit 1; }
+
+mkdir -p "$DEST"
+
+echo "Resolving the current stable version"
+version="$(curl -fsSL --retry 4 --retry-all-errors "$INDEX" |
+  node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>process.stdout.write(JSON.parse(s).channels.Stable.version))')"
+
+if [ -z "$version" ]; then
+  echo "Could not resolve a Chrome for Testing version." >&2
+  exit 1
+fi
+
+echo "  $version"
+
+fetch() {
+  local name="$1"        # chrome | chromedriver
+  local inner="$2"       # chrome-linux64 | chromedriver-linux64, the zip's top level
+  local url="https://storage.googleapis.com/chrome-for-testing-public/${version}/linux64/${inner}.zip"
+
+  echo "Downloading $name"
+  curl -fsSL --retry 4 --retry-all-errors "$url" -o "$DEST/${inner}.zip"
+  rm -rf "${DEST:?}/${name}" "${DEST:?}/${inner}"
+  unzip -q -o "$DEST/${inner}.zip" -d "$DEST"
+  rm -f "$DEST/${inner}.zip"
+
+  # The archive's top-level directory is named after the channel, not the
+  # binary, so rename it to a stable path the test suite can rely on.
+  mv "$DEST/$inner" "$DEST/$name"
+
+  find "$DEST/$name" -maxdepth 1 -type f \( -name chrome -o -name chromedriver \) -exec chmod +x {} +
+}
+
+fetch chrome chrome-linux64
+fetch chromedriver chromedriver-linux64
+
+echo
+echo "Version:"
+"$DEST/chrome/chrome" --version 2>&1 | head -1 || true
+
+echo
+echo "Checking shared library dependencies:"
+missing="$(ldd "$DEST/chrome/chrome" 2>/dev/null | grep 'not found' | awk '{print $1}' | sort -u || true)"
+
+if [ -z "$missing" ]; then
+  echo "  all resolved"
+else
+  echo "$missing" | sed 's/^/  /'
+  echo
+  echo "These need root to install. Run the apt command in the report."
+fi

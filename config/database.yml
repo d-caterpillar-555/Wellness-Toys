@@ -1,0 +1,43 @@
+# PostgreSQL.
+#
+# Development and test connect to the docker-compose Postgres, which is
+# published on 5433 because a native PostgreSQL cluster already owns 5432 on
+# this machine. Connection details come from the environment with development
+# defaults, so `bin/rails db:prepare` works with no setup beyond `docker
+# compose up -d`.
+#
+# Production takes a single DATABASE_URL from the deployment secret store.
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("DATABASE_HOST", "127.0.0.1") %>
+  port: <%= ENV.fetch("DATABASE_PORT", 5433) %>
+  username: <%= ENV.fetch("DATABASE_USER", "wellness_toys") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "wellness_toys_dev") %>
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: wellness_toys_development
+
+test:
+  <<: *default
+  database: wellness_toys_test
+
+production:
+  primary: &primary_production
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+  cache:
+    <<: *primary_production
+    database: wellness_toys_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: wellness_toys_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: wellness_toys_production_cable
+    migrations_paths: db/cable_migrate

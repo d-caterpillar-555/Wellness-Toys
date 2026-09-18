@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+#
+# Smoke-check the running development server.
+#
+# Usage: script/smoke [base_url]
+#
+set -uo pipefail
+
+BASE="${1:-http://127.0.0.1:3000}"
+
+pass=0
+fail=0
+
+ok()   { printf '  ok   %s\n' "$1"; pass=$((pass + 1)); }
+bad()  { printf '  FAIL %s\n' "$1"; fail=$((fail + 1)); }
+
+check() {
+  local label="$1" url="$2" want="${3:-200}"
+  local code
+  code="$(curl -s -o /dev/null -w '%{http_code}' "$url")"
+
+  if [ "$code" = "$want" ]; then
+    ok "$(printf '%-30s %s' "$label" "$code")"
+  else
+    bad "$(printf '%-30s got %s, want %s' "$label" "$code" "$want")"
+  fi
+}
+
+echo "Checking $BASE"
+echo
+
+check "home" "$BASE/"
+check "about" "$BASE/about"
+check "standards" "$BASE/standards"
+check "contact" "$BASE/contact"
+check "shipping" "$BASE/shipping"
+check "discreet-shipping" "$BASE/discreet-shipping"
+check "returns" "$BASE/returns"
+check "privacy" "$BASE/privacy"
+check "terms" "$BASE/terms"
+check "accessibility" "$BASE/accessibility"
+check "faq" "$BASE/faq"
+check "health" "$BASE/up"
+check "unknown path" "$BASE/definitely-not-a-page" 404
+check "font" "$BASE/fonts/instrument-sans-latin-400-normal.woff2"
+
+echo
+echo "Content security policy"
+echo
+
+# One request, so the header nonce and the tag nonces must agree. Fetching them
+# separately would compare two different requests and always look mismatched.
+headers="$(curl -sD - -o /tmp/wt-body.html "$BASE/")"
+
+header_nonce="$(printf '%s' "$headers" | grep -i '^content-security-policy:' | grep -oE "nonce-[A-Za-z0-9+/=]+" | head -1 | sed 's/^nonce-//')"
+css_href="$(grep -oE '<link rel="stylesheet" href="[^"]+"' /tmp/wt-body.html | sed -E 's/.*href="([^"]+)".*/\1/' | head -1)"
+
+if [ -z "$header_nonce" ]; then
+  bad "CSP header carries a nonce"
+else
+  ok "CSP header carries a nonce"
+fi
+
+if printf '%s' "$headers" | grep -qi "script-src 'self' 'nonce-"; then
+  ok "script-src uses a nonce, not unsafe-inline"
+else
+  bad "script-src policy unexpected"
+fi
+
+if printf '%s' "$headers" | grep -qi "unsafe-inline"; then
+  bad "policy contains unsafe-inline"
+else
+  ok "policy contains no unsafe-inline"
+fi
+
+body_nonces="$(grep -oE 'nonce="[^"]+"' /tmp/wt-body.html | sed -E 's/nonce="([^"]+)"/\1/' | sort -u)"
+
+if [ -z "$body_nonces" ]; then
+  bad "tags carry a nonce"
+elif [ "$(printf '%s\n' "$body_nonces" | wc -l)" -eq 1 ] && [ "$body_nonces" = "$header_nonce" ]; then
+  ok "every tag nonce matches the header nonce"
+else
+  bad "nonce mismatch between header and tags"
+  printf '       header: %s\n' "$header_nonce"
+  printf '       tags:   %s\n' "$body_nonces"
+fi
+
+echo
+echo "Stylesheet delivery"
+echo
+
+if [ -n "$css_href" ]; then
+  css_code="$(curl -s -o /dev/null -w '%{http_code}' "$BASE$css_href")"
+  css_size="$(curl -s -o /dev/null -w '%{size_download}' "$BASE$css_href")"
+  if [ "$css_code" = "200" ] && [ "$css_size" -gt 5000 ]; then
+    ok "$css_href ($css_size bytes)"
+  else
+    bad "$css_href returned $css_code with $css_size bytes"
+  fi
+else
+  bad "no stylesheet link found in the page"
+fi
+
+rm -f /tmp/wt-body.html
+
+echo
+echo "Result: $pass passed, $fail failed"
+exit $((fail > 0))

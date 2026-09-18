@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title><%= content_for(:title).presence || Brand.title_for(nil) %></title>
+    <meta name="description" content="<%= content_for(:meta_description).presence || Brand.tagline %>">
+
+    <%# Self-referencing canonical. Override per page only when a different
+        canonical is genuinely correct. %>
+    <link rel="canonical" href="<%= content_for(:canonical).presence || request.base_url + request.path %>">
+
+    <meta property="og:site_name" content="<%= Brand.name %>">
+    <meta property="og:title" content="<%= content_for(:title).presence || Brand.title_for(nil) %>">
+    <meta property="og:description" content="<%= content_for(:meta_description).presence || Brand.tagline %>">
+    <meta property="og:type" content="<%= content_for(:og_type).presence || "website" %>">
+    <meta property="og:url" content="<%= request.base_url + request.path %>">
+    <% if content_for?(:og_image) %>
+      <meta property="og:image" content="<%= content_for(:og_image) %>">
+    <% end %>
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#F5F4F0" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#12151A" media="(prefers-color-scheme: dark)">
+
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%# Only the two weights used above the fold are preloaded. %>
+    <link rel="preload" href="/fonts/newsreader-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+
+    <%# tailwindcss-rails builds app/assets/tailwind/application.css into
+        app/assets/builds/tailwind.css. Referencing it by its real name. %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <%# Resolve the theme before first paint so nobody sees a flash of the wrong
+        one. Inline and nonce-signed on purpose: an external request here would
+        defeat the point. %>
+    <script nonce="<%= content_security_policy_nonce %>">
+      (function () {
+        try {
+          var stored = localStorage.getItem("wt-theme");
+          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.dataset.theme = stored || (prefersDark ? "dark" : "light");
+        } catch (e) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="min-h-[100dvh] flex flex-col bg-paper text-body">
+    <a href="#main" class="wt-skip-link">Skip to content</a>
+
+    <%= render "layouts/header" %>
+
+    <main id="main" class="flex-1">
+      <%= render "layouts/flash" %>
+      <%= yield %>
+    </main>
+
+    <%= render "layouts/footer" %>
+  </body>
+</html>

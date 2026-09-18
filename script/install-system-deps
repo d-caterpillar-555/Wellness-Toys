@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+#
+# Print (and optionally run) the system packages this project needs.
+#
+# These require root, so this script does not install them silently. Run the
+# printed command yourself, or pass --run to let sudo prompt you normally.
+#
+# Why each package is here:
+#
+#   libvips42t64    Image processing backend for Active Storage variants.
+#                   Note the t64 suffix: Ubuntu 26.04 went through the 64-bit
+#                   time_t transition and the unsuffixed name no longer exists.
+#                   MiniMagick is NOT an acceptable substitute; see gems.md.
+#
+#   libnspr4        Chrome for Testing shared libraries. Chromium is only
+#   libnss3         available on this release as a snap transitional package,
+#   libasound2t64   and snap is unreliable inside WSL, so script/fetch-chrome
+#                   downloads a plain zip instead. Those five libraries are
+#                   what it still needs from the system.
+#
+# Usage:
+#   script/install-system-deps          # print the command
+#   script/install-system-deps --run    # actually install
+#
+set -euo pipefail
+
+PACKAGES=(
+  libvips42t64
+  libnspr4
+  libnss3
+  libasound2t64
+)
+
+COMMAND="sudo apt-get update && sudo apt-get install -y ${PACKAGES[*]}"
+
+# Report what is already present so a re-run is obviously a no-op.
+missing=()
+for pkg in "${PACKAGES[@]}"; do
+  if dpkg -s "$pkg" >/dev/null 2>&1; then
+    echo "  present  $pkg"
+  else
+    echo "  MISSING  $pkg"
+    missing+=("$pkg")
+  fi
+done
+
+echo
+
+if [ "${#missing[@]}" -eq 0 ]; then
+  echo "All system dependencies are installed."
+  exit 0
+fi
+
+if [ "${1:-}" = "--run" ]; then
+  echo "Running: $COMMAND"
+  # shellcheck disable=SC2086
+  eval "$COMMAND"
+else
+  echo "Run this to install the ${#missing[@]} missing package(s):"
+  echo
+  echo "  $COMMAND"
+fi

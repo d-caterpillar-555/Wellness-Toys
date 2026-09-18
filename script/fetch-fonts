@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# Fetch the two self-hosted font families as woff2.
+#
+# Both are SIL Open Font Licence, so redistributing them in the repository is
+# permitted. Self-hosting matters here for two reasons: a font CDN sees the
+# visitor's IP and the referring URL, which is exactly the kind of leak the
+# privacy posture in docs/project-context.md forbids on health-adjacent pages;
+# and it removes a third-party render-blocking request from the critical path.
+#
+# Files come from Fontsource's CDN, which publishes the Google Fonts families
+# as predictable static assets under the OFL.
+#
+# Usage: script/fetch-fonts
+#
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Served straight from public/. Fonts referenced through the asset pipeline get
+# their url() rewritten by Propshaft, which cannot see files that Tailwind's
+# build step has already copied into app/assets/builds. Serving them from a
+# fixed path avoids that entirely, and fonts are long-cached anyway.
+DEST="$ROOT/public/fonts"
+BASE="https://cdn.jsdelivr.net/npm"
+
+FILES=(
+  "@fontsource/newsreader/files/newsreader-latin-400-normal.woff2"
+  "@fontsource/newsreader/files/newsreader-latin-500-normal.woff2"
+  "@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2"
+  "@fontsource/instrument-sans/files/instrument-sans-latin-500-normal.woff2"
+  "@fontsource/instrument-sans/files/instrument-sans-latin-600-normal.woff2"
+)
+
+mkdir -p "$DEST"
+
+for path in "${FILES[@]}"; do
+  name="$(basename "$path")"
+  curl -fsSL --retry 4 --retry-all-errors "$BASE/$path" -o "$DEST/$name"
+  echo "  $name"
+done
+
+echo
+echo "Downloaded into public/fonts:"
+ls -la "$DEST"

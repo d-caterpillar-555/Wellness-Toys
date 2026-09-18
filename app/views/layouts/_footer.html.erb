@@ -1,0 +1,42 @@
+<footer class="border-t border-line mt-24">
+  <div class="wt-container py-16">
+    <div class="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
+
+      <div>
+        <p class="font-display text-title text-ink tracking-title mb-4"><%= Brand.name %></p>
+        <p class="text-ui text-muted max-w-[36ch]"><%= Brand.tagline %></p>
+      </div>
+
+      <nav aria-label="Company">
+        <h2 class="text-label font-medium tracking-label text-ink mb-4">Company</h2>
+        <ul class="space-y-2 text-ui">
+          <li><%= link_to "About", page_path("about"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+          <li><%= link_to "Our standards", page_path("standards"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+          <li><%= link_to "Contact", page_path("contact"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+          <li><%= link_to "FAQ", page_path("faq"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Trust and legal">
+        <h2 class="text-label font-medium tracking-label text-ink mb-4">Trust</h2>
+        <ul class="space-y-2 text-ui">
+          <li><%= link_to "Shipping", page_path("shipping"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+          <li><%= link_to "Discreet shipping", page_path("discreet-shipping"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+          <li><%= link_to "Returns", page_path("returns"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+          <li><%= link_to "Privacy", page_path("privacy"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+          <li><%= link_to "Terms", page_path("terms"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+          <li><%= link_to "Accessibility", page_path("accessibility"), class: "text-body no-underline hover:text-ink hover:underline" %></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="mt-12 pt-8 border-t border-line flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-caption text-muted">
+        <%= Brand.legal_entity %>. You must be of legal age in your jurisdiction to purchase.
+      </p>
+      <p class="text-caption text-muted">
+        <%= mail_to Brand.support_email, Brand.support_email, class: "text-body underline decoration-line hover:decoration-accent" %>
+      </p>
+    </div>
+  </div>
+</footer>

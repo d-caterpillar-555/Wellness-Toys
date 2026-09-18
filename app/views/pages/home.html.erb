@@ -1,0 +1,128 @@
+<% content_for :title, nil %>
+<% content_for :meta_description, "#{Brand.name} sells sexual health and wellness products, and publishes the education that explains them. Evidence over euphemism, discretion as standard." %>
+
+<%# --- Hero -----------------------------------------------------------------
+    Asymmetric and left-weighted rather than centred. Four text elements at
+    most, a headline that fits two lines, and one primary action. %>
+<section class="wt-container pt-20 pb-20 md:pt-28 md:pb-28">
+  <div class="max-w-[54rem]" data-controller="reveal" data-reveal>
+    <h1 class="text-display-lg md:text-display-xl text-ink">
+      Sexual wellbeing,<br>taken seriously.
+    </h1>
+
+    <p class="mt-8 text-lede text-body max-w-[52ch]">
+      Products we can explain, and an education library we cite. No euphemisms,
+      no shame, and no guessing.
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center gap-3">
+      <%= link_to "Our standards", page_path("standards"), class: "wt-btn wt-btn--primary" %>
+      <%= link_to "Why we exist", page_path("about"), class: "wt-btn wt-btn--secondary" %>
+    </div>
+  </div>
+</section>
+
+<%# --- Positioning ----------------------------------------------------------
+    Two columns: a claim on the left, the argument on the right. This layout
+    family is used once on the page. %>
+<section class="border-t border-line" data-controller="reveal" data-reveal>
+  <div class="wt-container py-20 md:py-28 grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] md:gap-16">
+    <h2 class="text-heading md:text-heading-lg text-ink max-w-[18ch]">
+      Most of this industry talks to you like a joke.
+    </h2>
+
+    <div class="wt-prose">
+      <p>
+        Open a typical shop in this category and you get black backgrounds, neon
+        glow, and product names that are embarrassed by their own subject. The
+        information you actually need is buried under the winking.
+      </p>
+      <p>
+        So we started from the other direction. Everything we sell has a
+        materials list, care instructions and dimensions. Everything we publish
+        has a source. Where a question is medical, we say so and point you at a
+        clinician instead of quietly implying a product will fix it.
+      </p>
+      <p>
+        That is the whole idea. Treat people as adults, and treat the subject
+        the way any other part of health gets treated.
+      </p>
+    </div>
+  </div>
+</section>
+
+<%# --- Operating principles -------------------------------------------------
+    A definition list with hairlines between entries, rather than a row of
+    equal cards. Long lists get grouped chunks, not a hairline under every row. %>
+<section class="border-t border-line bg-paper-sunk" data-controller="reveal" data-reveal>
+  <div class="wt-container py-20 md:py-28">
+    <h2 class="text-heading md:text-heading-lg text-ink mb-12 max-w-[24ch]">
+      Three things we will not do
+    </h2>
+
+    <dl class="grid gap-x-16 gap-y-10 md:grid-cols-2 max-w-[76rem]">
+      <div class="border-t border-line pt-6">
+        <dt class="text-title text-ink font-display mb-3">We will not invent facts.</dt>
+        <dd class="text-body max-w-[46ch]">
+          No made up statistics, no borrowed credentials, no studies that do not
+          exist. If we cite something, you can follow the link and read it.
+        </dd>
+      </div>
+
+      <div class="border-t border-line pt-6">
+        <dt class="text-title text-ink font-display mb-3">We will not make medical claims.</dt>
+        <dd class="text-body max-w-[46ch]">
+          A product can be described accurately without pretending to be a
+          treatment. Anything clinical belongs with a clinician.
+        </dd>
+      </div>
+
+      <div class="border-t border-line pt-6">
+        <dt class="text-title text-ink font-display mb-3">We will not sell your privacy.</dt>
+        <dd class="text-body max-w-[46ch]">
+          Purchase history and browsing in this category reveal health intent.
+          No advertising trackers, no session recording, and nothing in a URL
+          that identifies you.
+        </dd>
+      </div>
+
+      <div class="border-t border-line pt-6">
+        <dt class="text-title text-ink font-display mb-3">We will not pretend to be discreet.</dt>
+        <dd class="text-body max-w-[46ch]">
+          Plain packaging and a neutral billing descriptor, stated once, on the
+          shipping page. It is a standard we meet, not a slogan we shout.
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<%# --- Where to go next -----------------------------------------------------
+    A single row of three text links, not cards. Different from every layout
+    above it. %>
+<section class="border-t border-line" data-controller="reveal" data-reveal>
+  <div class="wt-container py-20 md:py-24">
+    <h2 class="text-heading text-ink mb-8">Start here</h2>
+
+    <ul class="divide-y divide-line border-t border-line">
+      <li>
+        <%= link_to page_path("standards"), class: "group flex items-baseline justify-between gap-6 py-6 no-underline" do %>
+          <span class="text-title text-ink group-hover:text-accent">How we choose what we stock</span>
+          <span class="text-ui text-muted">Standards</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to page_path("discreet-shipping"), class: "group flex items-baseline justify-between gap-6 py-6 no-underline" do %>
+          <span class="text-title text-ink group-hover:text-accent">What arrives, and what it says on it</span>
+          <span class="text-ui text-muted">Shipping</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to page_path("privacy"), class: "group flex items-baseline justify-between gap-6 py-6 no-underline" do %>
+          <span class="text-title text-ink group-hover:text-accent">What we collect, and what we refuse to</span>
+          <span class="text-ui text-muted">Privacy</span>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+</section>

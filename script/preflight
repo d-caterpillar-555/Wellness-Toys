@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+#
+# Pre-commit safety check.
+#
+# Verifies that nothing which must never be committed is staged, and reports the
+# git identity. Run this before any commit touching configuration.
+#
+# Usage: script/preflight
+#
+set -uo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+pass=0
+fail=0
+
+echo "Git identity"
+name="$(git config --get user.name || true)"
+email="$(git config --get user.email || true)"
+echo "  name:  ${name:-UNSET}"
+echo "  email: ${email:-UNSET}"
+if [ -z "$name" ] || [ -z "$email" ]; then
+  fail=$((fail + 1))
+  echo "  -> set them with: git config user.name 'You' && git config user.email 'you@example.com'"
+else
+  pass=$((pass + 1))
+fi
+
+echo
+echo "Must never be committed"
+for path in .env config/master.key .postgres/data/PG_VERSION .tools/meilisearch/meilisearch; do
+  if [ ! -e "$path" ]; then
+    printf '  %-40s (absent, nothing to leak)\n' "$path"
+    pass=$((pass + 1))
+  elif git check-ignore -q "$path"; then
+    printf '  %-40s IGNORED\n' "$path"
+    pass=$((pass + 1))
+  else
+    printf '  %-40s !! NOT IGNORED !!\n' "$path"
+    fail=$((fail + 1))
+  fi
+done
+
+echo
+echo "Tracked file count"
+tracked="$(git ls-files | wc -l)"
+echo "  $tracked files tracked"
+
+echo
+echo "Result: $pass passed, $fail failed"
+exit $((fail > 0))

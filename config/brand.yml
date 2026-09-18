@@ -1,0 +1,38 @@
+# Brand configuration. Single source of truth.
+#
+# These values are read through Brand (app/models/brand.rb) and are used in
+# page titles, the wordmark, mailer templates, schema.org Organization output,
+# and the default meta description. Changing the brand name is a one-line
+# change here, not a refactor.
+#
+# Environment variables override these values, which is how staging and
+# production are kept free of hardcoded identity.
+
+default: &default
+  name: "Wellness Toys"
+  # Shown in the footer and used as the default meta description when a page
+  # does not define its own. Keep it one sentence. No hype, no claims.
+  tagline: "Sexual health and wellness, plainly explained."
+
+  # Contact. Use real addresses before launch; these are placeholders.
+  support_email: "support@example.com"
+  privacy_email: "privacy@example.com"
+  press_email: "press@example.com"
+
+  # Used for schema.org Organization and for absolute URL generation.
+  url: "http://localhost:3000"
+
+  # Legal entity that operates the store. Appears on the terms and privacy
+  # pages and in policy text. Set this before launch.
+  legal_entity: "Wellness Toys"
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  name: "Wellness Toys"
+  url: "http://www.example.com"
+
+production:
+  <<: *default
