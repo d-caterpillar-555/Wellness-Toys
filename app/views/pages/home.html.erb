@@ -9,7 +9,7 @@
   <header class="inst-run">
     <p class="inst-run__mark"><%= Store.name %></p>
     <p class="inst-run__section">Front matter</p>
-    <p>Vol. 1 &middot; <%= @register.sum(&:catalogue_count) %> objects &middot; <%= pluralize(@register.size, "department") %></p>
+    <p>Vol. 1 &middot; <%= @register.sum(&:catalogue_count) %> objects &middot; <%= pluralize(@register.length, "department") %></p>
   </header>
 
   <div class="inst-body">

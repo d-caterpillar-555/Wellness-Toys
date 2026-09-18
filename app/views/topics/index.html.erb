@@ -5,7 +5,7 @@
   <header class="inst-run">
     <p class="inst-run__mark"><%= link_to Store.name, root_path, class: "inst-link" %></p>
     <p class="inst-run__section">The library</p>
-    <p><%= pluralize(@topics.size, "topic") %></p>
+    <p><%= pluralize(@topics.length, "topic") %></p>
   </header>
 
   <div class="inst-body">

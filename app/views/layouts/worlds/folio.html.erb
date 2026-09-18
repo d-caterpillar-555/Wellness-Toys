@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <%= render "layouts/world_head", stylesheet: "worlds/folio", module_name: "worlds/folio" %>
+  </head>
+
+  <%# folio has no site chrome: the document is the chrome. Only the two
+      prompts the shop is required to make (age, consent) sit above it, plus
+      the dock, which belongs to no world. %>
+  <body class="folio">
+    <a class="folio-skip" href="#main">Skip to content</a>
+
+    <%= render "shared/age_gate" unless age_confirmed? %>
+    <%= render "shared/consent_banner" if age_confirmed? && !consent_decided? %>
+
+    <%= yield %>
+
+    <%= render "shared/world_dock" %>
+  </body>
+</html>

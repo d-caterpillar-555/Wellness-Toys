@@ -1,0 +1,72 @@
+<% content_for :title, "The folio, printed" %>
+<% content_for :meta_description, "The folio as a printed document: the catalogue with its specifications, and the library." %>
+
+<%# The same document with the furniture removed: no index, no forms, one
+    column. This is what a reader prints to keep. %>
+<div class="folio">
+  <header class="folio-masthead">
+    <p class="folio-wordmark"><%= Store.name %></p>
+    <p class="folio-imprint">
+      Printed document &middot; <%= pluralize(@products.size, "object") %> in the catalogue
+      &middot; <%= pluralize(@reading.size, "piece") %> in the library
+    </p>
+  </header>
+
+  <div class="folio-body">
+    <main class="folio-doc" id="main">
+      <section class="folio-section">
+        <span class="folio-section__number">3</span>
+        <h1 class="folio-section__title">The catalogue</h1>
+
+        <% @departments.each do |category| %>
+          <% entries = @by_department[category.id] %>
+          <% next if entries.blank? %>
+          <div class="folio-group">
+            <h2 class="folio-group__title"><%= category.name %></h2>
+            <ol class="folio-records">
+              <% entries.each do |product| %>
+                <li class="folio-record">
+                  <div class="folio-record__summary">
+                    <span class="folio-record__number"><%= product.sku %></span>
+                    <span class="folio-record__name"><%= product.name %></span>
+                    <span class="folio-record__price"><%= price(product.lowest_price_cents) %></span>
+                  </div>
+                  <dl class="folio-record__spec">
+                    <% if product.materials.present? %>
+                      <div><dt>Materials</dt> <dd><%= product.materials %></dd></div>
+                    <% end %>
+                    <div><dt>Body safe</dt> <dd><%= product.body_safe? ? "Yes" : "No" %></dd></div>
+                    <% if product.dimensions.present? %>
+                      <div><dt>Dimensions</dt> <dd><%= product.dimensions %></dd></div>
+                    <% end %>
+                  </dl>
+                </li>
+              <% end %>
+            </ol>
+          </div>
+        <% end %>
+      </section>
+
+      <section class="folio-section">
+        <span class="folio-section__number">4</span>
+        <h2 class="folio-section__title">The library</h2>
+        <ul class="folio-reading">
+          <% @reading.each do |article| %>
+            <li class="folio-reading__item">
+              <span class="folio-reading__link"><%= article.title %></span>
+              <p class="folio-reading__meta">
+                <%= article.kind %>
+                <% if article.author %> &middot; <%= article.author.name %><% end %>
+              </p>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+
+      <footer class="folio-colophon">
+        <p><%= Store.legal_entity %> &middot; <%= Store.support_email %></p>
+        <p><%= link_to "Back to the folio", folio_path, class: "folio-reading__link" %></p>
+      </footer>
+    </main>
+  </div>
+</div>

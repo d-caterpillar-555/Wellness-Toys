@@ -92,6 +92,18 @@ Rails.application.routes.draw do
     get "/#{slug}", to: "pages#show", defaults: { slug: slug }, as: :"page_#{slug.tr('-', '_')}"
   end
 
+  # --- The worlds -----------------------------------------------------------
+  # One prefix per architecture, each with its own page inventory. Institute,
+  # the default, is the canonical routes above; these are the other seven.
+  # See docs/eight-worlds.md.
+
+  scope module: "worlds" do
+    # folio: the whole shop as one continuous document. Its addresses are
+    # anchors on /folio; the print view is the same document without furniture.
+    get "/folio", to: "folio#index", as: :folio
+    get "/folio/print", to: "folio#print", as: :folio_print
+  end
+
   # --- Admin ----------------------------------------------------------------
   mount Avo::Engine, at: "/admin"
 end

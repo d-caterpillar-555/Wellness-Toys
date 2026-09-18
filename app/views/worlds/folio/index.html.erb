@@ -1,0 +1,245 @@
+<% content_for :title, "The folio" %>
+<% content_for :meta_description, "The whole shop as one document: the departments, the catalogue with its records, the library, and the standards behind both." %>
+
+<%# One page. Every other address in this world is an anchor on this document,
+    so the index rail is the only navigation and the records open in place
+    rather than sending the reader somewhere else. %>
+<div class="folio">
+  <header class="folio-masthead">
+    <p class="folio-wordmark"><%= Store.name %></p>
+    <p class="folio-imprint">
+      One document &middot; <%= pluralize(@products.size, "object") %>
+      &middot; <%= pluralize(@reading.size, "piece") %> in the library
+      <% if @departments.any? %> &middot; <%= pluralize(@departments.length, "department") %><% end %>
+    </p>
+  </header>
+
+  <div class="folio-body">
+    <nav class="folio-index" aria-label="Index">
+      <p class="folio-index__title">Index</p>
+      <ol class="folio-index__list">
+        <% [
+             [ "statement", "1", "Statement" ],
+             [ "departments", "2", "Departments" ],
+             [ "catalogue", "3", "The catalogue" ],
+             [ "library", "4", "The library" ],
+             [ "standards", "5", "Standards" ],
+             [ "contact", "6", "Contact" ]
+           ].each do |id, number, label| %>
+          <li class="folio-index__item">
+            <a class="folio-index__link" href="#<%= id %>" data-folio-link>
+              <span class="folio-index__number"><%= number %></span><span><%= label %></span>
+            </a>
+          </li>
+        <% end %>
+      </ol>
+      <div class="folio-index__track" aria-hidden="true">
+        <div class="folio-index__progress" data-folio-progress></div>
+      </div>
+    </nav>
+
+    <main class="folio-doc" id="main">
+      <section class="folio-section" id="statement" data-folio-section>
+        <span class="folio-section__number">1</span>
+        <h1 class="folio-statement">Everything we sell has a materials list, and everything we publish has a source.</h1>
+        <p class="folio-lede">
+          This document is the whole shop. There is no other page to find your way back to.
+        </p>
+        <div class="folio-prose folio-prose--opening">
+          <p>
+            We keep a small catalogue of sexual health and wellness products, chosen against
+            written standards rather than a supplier's margin, and we publish the education that
+            explains them with the sources attached. Nothing here is a medical claim. Where a
+            question is clinical, the library says so and points you to a clinician.
+          </p>
+          <p>
+            The catalogue is not a shelf you scroll past. Each object is an entry, and an entry
+            opens where it stands: what it is made of, how it is used, what it costs, and how to
+            put it in the basket - without leaving this page.
+          </p>
+        </div>
+        <aside class="folio-margin">
+          Read straight through, or use the index. The catalogue is entry 3, the library entry 4.
+        </aside>
+      </section>
+
+      <section class="folio-section" id="departments" data-folio-section>
+        <span class="folio-section__number">2</span>
+        <h2 class="folio-section__title">Departments</h2>
+        <ol class="folio-departments">
+          <% @departments.each do |category| %>
+            <li class="folio-department">
+              <a class="folio-department__link" href="#department-<%= category.slug %>">
+                <%= category.name %>
+              </a>
+              <span class="folio-department__count"><%= pluralize(category.catalogue_count, "object") %></span>
+            </li>
+          <% end %>
+        </ol>
+      </section>
+
+      <section class="folio-section" id="catalogue" data-folio-section>
+        <span class="folio-section__number">3</span>
+        <h2 class="folio-section__title">The catalogue</h2>
+
+        <% @departments.each do |category| %>
+          <% entries = @by_department[category.id] %>
+          <% next if entries.blank? %>
+          <div class="folio-group" id="department-<%= category.slug %>">
+            <h3 class="folio-group__title"><%= category.name %></h3>
+            <ol class="folio-records">
+              <% entries.each do |product| %>
+                <li>
+                  <details class="folio-record">
+                    <summary class="folio-record__summary">
+                      <span class="folio-record__number"><%= product.sku %></span>
+                      <span class="folio-record__name"><%= product.name %></span>
+                      <span class="folio-record__price"><%= price(product.lowest_price_cents) %></span>
+                    </summary>
+
+                    <div class="folio-record__body">
+                      <div class="folio-record__plate"><%= product_cover_tag(product) %></div>
+                      <div>
+                        <dl class="folio-record__spec">
+                          <% if product.materials.present? %>
+                            <div><dt>Materials</dt> <dd><%= product.materials %></dd></div>
+                          <% end %>
+                          <div><dt>Body safe</dt> <dd><%= product.body_safe? ? "Yes" : "No" %></dd></div>
+                          <% if product.dimensions.present? %>
+                            <div><dt>Dimensions</dt> <dd><%= product.dimensions %></dd></div>
+                          <% end %>
+                          <% if product.brand %>
+                            <div><dt>Maker</dt> <dd><%= product.brand.name %></dd></div>
+                          <% end %>
+                        </dl>
+
+                        <% if product.description.present? %>
+                          <div class="folio-prose"><p><%= product.description %></p></div>
+                        <% end %>
+
+                        <% variants = product.variants.select(&:active?) %>
+                        <% if variants.any? %>
+                          <%= form_with url: cart_items_path, method: :post, class: "folio-buy" do %>
+                            <label class="folio-buy__label" for="variant_<%= product.id %>">Edition</label>
+                            <%= select_tag "variant_id",
+                                  options_for_select(variants.map { |variant|
+                                    label = strip_tags(price(variant.price_cents, currency: variant.currency))
+                                    [ "#{variant.name} - #{label}", variant.id ]
+                                  }),
+                                  id: "variant_#{product.id}" %>
+
+                            <label class="folio-buy__label" for="quantity_<%= product.id %>">Quantity</label>
+                            <%= select_tag "quantity", options_for_select(quantity_options), id: "quantity_#{product.id}" %>
+
+                            <%= submit_tag t("products.add_to_cart"), class: "folio-buy__submit" %>
+                          <% end %>
+                        <% else %>
+                          <p class="folio-note">No edition of this object is available right now.</p>
+                        <% end %>
+                      </div>
+                    </div>
+                  </details>
+                </li>
+              <% end %>
+            </ol>
+          </div>
+        <% end %>
+
+        <% if @unfiled.any? %>
+          <div class="folio-group" id="department-unfiled">
+            <h3 class="folio-group__title">Unfiled</h3>
+            <ol class="folio-records">
+              <% @unfiled.each do |product| %>
+                <li>
+                  <details class="folio-record">
+                    <summary class="folio-record__summary">
+                      <span class="folio-record__number"><%= product.sku %></span>
+                      <span class="folio-record__name"><%= product.name %></span>
+                      <span class="folio-record__price"><%= price(product.lowest_price_cents) %></span>
+                    </summary>
+                    <div class="folio-record__body">
+                      <div class="folio-record__plate"><%= product_cover_tag(product) %></div>
+                      <div>
+                        <p class="folio-note">This object is not filed under a department yet.</p>
+                      </div>
+                    </div>
+                  </details>
+                </li>
+              <% end %>
+            </ol>
+          </div>
+        <% end %>
+
+        <% if @products.empty? %>
+          <p class="folio-note">The catalogue is empty right now. An empty shelf is a fact; we would rather show it than fill it.</p>
+        <% end %>
+      </section>
+
+      <section class="folio-section" id="library" data-folio-section>
+        <span class="folio-section__number">4</span>
+        <h2 class="folio-section__title">The library</h2>
+        <p class="folio-lede">The publishing side of the shop, with the sources on every piece.</p>
+
+        <% if @reading.any? %>
+          <ul class="folio-reading">
+            <% @reading.each do |article| %>
+              <% topic = article.primary_topic || article.topics.first %>
+              <li class="folio-reading__item">
+                <%= link_to article.title,
+                      topic ? learn_article_path(topic.slug, article.slug) : learn_path,
+                      class: "folio-reading__link" %>
+                <p class="folio-reading__meta">
+                  <%= article.kind %>
+                  <% if article.author %> &middot; <%= article.author.name %><% end %>
+                  <% if article.published_at %> &middot; <%= article.published_at.strftime("%B %Y") %><% end %>
+                </p>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="folio-note">The library is being prepared. Nothing is invented to fill it while it is.</p>
+        <% end %>
+      </section>
+
+      <section class="folio-section" id="standards" data-folio-section>
+        <span class="folio-section__number">5</span>
+        <h2 class="folio-section__title">Standards</h2>
+
+        <% if @standards && @standards.paragraphs.any? %>
+          <div class="folio-prose">
+            <% @standards.paragraphs.first(3).each do |paragraph| %>
+              <p><%= paragraph %></p>
+            <% end %>
+          </div>
+          <p class="folio-note">
+            <%= link_to "The full standards", page_path("standards"), class: "folio-reading__link" %>,
+            and <%= link_to "shipping", page_path("shipping"), class: "folio-reading__link" %> in plain terms.
+          </p>
+        <% else %>
+          <p class="folio-note">The standards are being written. We would rather leave this section short than fill it.</p>
+        <% end %>
+      </section>
+
+      <section class="folio-section" id="contact" data-folio-section>
+        <span class="folio-section__number">6</span>
+        <h2 class="folio-section__title">Contact</h2>
+        <p class="folio-lede">
+          Questions about an object, an order, or something we published:
+          <%= mail_to Store.support_email, Store.support_email, class: "folio-reading__link" %>.
+        </p>
+        <p class="folio-note">
+          <%= link_to "The site proper", root_path, class: "folio-reading__link" %> carries the
+          same catalogue in the shop's own architecture.
+        </p>
+      </section>
+
+      <footer class="folio-colophon">
+        <p>
+          <%= Store.legal_entity %> &middot; <%= Store.tagline %> &middot;
+          <%= link_to "Imprint and privacy", page_path("privacy"), class: "folio-reading__link" %>
+        </p>
+        <p><%= link_to "Print this document", folio_print_path, class: "folio-reading__link" %></p>
+      </footer>
+    </main>
+  </div>
+</div>

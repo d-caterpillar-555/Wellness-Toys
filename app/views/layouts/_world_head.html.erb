@@ -1,0 +1,54 @@
+<%# locals: (stylesheet:, module_name:) %>
+<%# The document head every world shares: identity, metadata, the structured
+    data graph, the theme resolution, and the baseline stylesheet the shared
+    prompts (age gate, consent) are drawn with. What a world adds is its own
+    stylesheet and its own module, passed in. %>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title><%= content_for(:title).presence || Store.title_for(nil) %></title>
+<meta name="description" content="<%= content_for(:meta_description).presence || Store.tagline %>">
+
+<link rel="canonical" href="<%= content_for(:canonical).presence || request.base_url + request.path %>">
+
+<meta property="og:site_name" content="<%= Store.name %>">
+<meta property="og:title" content="<%= content_for(:title).presence || Store.title_for(nil) %>">
+<meta property="og:description" content="<%= content_for(:meta_description).presence || Store.tagline %>">
+<meta property="og:type" content="<%= content_for(:og_type).presence || "website" %>">
+<meta property="og:url" content="<%= request.base_url + request.path %>">
+<% if content_for?(:og_image) %>
+  <meta property="og:image" content="<%= content_for(:og_image) %>">
+<% end %>
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F5F4F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12151A" media="(prefers-color-scheme: dark)">
+
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon.png">
+
+<%= csrf_meta_tags %>
+<%= csp_meta_tag %>
+
+<link rel="preload" href="/fonts/newsreader-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+
+<%= stylesheet_link_tag "tailwind", stylesheet, "data-turbo-track": "reload" %>
+<%= javascript_importmap_tags %>
+<%= javascript_import_module_tag module_name %>
+
+<script nonce="<%= content_security_policy_nonce %>">
+  (function () {
+    try {
+      var stored = localStorage.getItem("wt-theme");
+      var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = stored || (prefersDark ? "dark" : "light");
+    } catch (e) {
+      document.documentElement.dataset.theme = "light";
+    }
+  })();
+</script>
+
+<%= json_ld(organization_schema) %>
+<%= json_ld(website_schema) %>
+<%= yield :structured_data %>
