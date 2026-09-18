@@ -1,0 +1,127 @@
+<% content_for :title, "Figure" %>
+<% content_for :meta_description, "The shop as a figure study: a drawn figure moves through five poses as you scroll, and each pose carries a chapter - the catalogue, the library, the standards." %>
+
+<%# The choreography. One figure, five poses, five chapters. The figure is
+    drawn from a skeleton in the browser, so the pose changes with the reader
+    rather than between screens: see app/javascript/worlds/figure.js. %>
+<div class="figure">
+  <header class="fig-masthead">
+    <p class="fig-wordmark"><%= Store.name %></p>
+    <nav aria-label="Sections">
+      <ul class="fig-masthead__links">
+        <li><%= link_to "The pieces", figure_pieces_path, class: "fig-masthead__link" %></li>
+        <li><%= link_to "The library", learn_path, class: "fig-masthead__link" %></li>
+        <li><%= link_to "The shop", root_path, class: "fig-masthead__link" %></li>
+      </ul>
+    </nav>
+  </header>
+
+  <ol class="fig-rail" aria-label="Poses">
+    <% [ [ "stand", "Stand" ], [ "reach", "Reach" ], [ "fold", "Fold" ], [ "rest", "Rest" ], [ "open", "Open" ] ].each do |pose, label| %>
+      <li>
+        <a class="fig-rail__link" href="#pose-<%= pose %>" data-figure-link data-pose="<%= pose %>">
+          <span class="fig-rail__dot" aria-hidden="true"></span><%= label %>
+        </a>
+      </li>
+    <% end %>
+  </ol>
+
+  <div class="fig-stage" data-figure-stage>
+    <div class="fig-figure" aria-hidden="true">
+      <svg class="fig-figure__svg" data-figure-svg viewBox="0 0 200 400" role="presentation"></svg>
+    </div>
+
+    <main class="fig-chapters" id="main">
+      <section class="fig-chapter" id="pose-stand" data-pose="stand">
+        <p class="fig-chapter__pose">Pose one &middot; Stand</p>
+        <h1 class="fig-chapter__standfirst">
+          Everything we sell has a materials list, and everything we publish has a source.
+        </h1>
+        <p class="fig-chapter__body">
+          A small catalogue of sexual health and wellness products, chosen against written
+          standards, and the education that explains them, with the sources attached.
+        </p>
+        <p class="fig-chapter__body">
+          Keep scrolling and she will move: reach for the catalogue, fold over the library, rest
+          on the standards, and open at the end.
+        </p>
+      </section>
+
+      <section class="fig-chapter" id="pose-reach" data-pose="reach">
+        <p class="fig-chapter__pose">Pose two &middot; Reach</p>
+        <h2 class="fig-chapter__title">The catalogue</h2>
+        <p class="fig-chapter__body">
+          Each object is documented before it is described: materials, body safety, dimensions,
+          and who made it. Nothing is stocked because a supplier paid for the shelf.
+        </p>
+
+        <ul class="fig-inline">
+          <% @pieces.limit(4).each do |product| %>
+            <li class="fig-inline__item">
+              <%= link_to product.name, figure_piece_path(product.slug), class: "fig-inline__link" %>
+              <span class="fig-inline__meta"><%= price(product.lowest_price_cents) %></span>
+            </li>
+          <% end %>
+        </ul>
+
+        <div class="fig-links">
+          <%= link_to "All pieces", figure_pieces_path, class: "fig-link" %>
+        </div>
+      </section>
+
+      <section class="fig-chapter" id="pose-fold" data-pose="fold">
+        <p class="fig-chapter__pose">Pose three &middot; Fold</p>
+        <h2 class="fig-chapter__title">The library</h2>
+        <p class="fig-chapter__body">
+          The publishing side of the shop: guides and explainers, written by named people with
+          their credentials stated, each with the evidence it rests on.
+        </p>
+
+        <ul class="fig-inline">
+          <% @reading.each do |article| %>
+            <% topic = article.primary_topic || article.topics.first %>
+            <li class="fig-inline__item">
+              <%= link_to article.title,
+                    topic ? learn_article_path(topic.slug, article.slug) : learn_path,
+                    class: "fig-inline__link" %>
+              <span class="fig-inline__meta"><%= article.kind %></span>
+            </li>
+          <% end %>
+        </ul>
+
+        <div class="fig-links">
+          <%= link_to "The whole library", learn_path, class: "fig-link" %>
+        </div>
+      </section>
+
+      <section class="fig-chapter" id="pose-rest" data-pose="rest">
+        <p class="fig-chapter__pose">Pose four &middot; Rest</p>
+        <h2 class="fig-chapter__title">What we will not do</h2>
+        <p class="fig-chapter__body">
+          No medical claims, no invented statistics, no analytics, no ad pixels, no session
+          recording. Purchase history reveals health intent and is treated as sensitive even
+          though this is not a clinic.
+        </p>
+        <div class="fig-links">
+          <%= link_to "The standards", page_path("standards"), class: "fig-link" %>
+          <%= link_to "How shipping works", page_path("shipping"), class: "fig-link" %>
+        </div>
+      </section>
+
+      <section class="fig-chapter" id="pose-open" data-pose="open">
+        <p class="fig-chapter__pose">Pose five &middot; Open</p>
+        <h2 class="fig-chapter__title">Open</h2>
+        <p class="fig-chapter__body">
+          That is the shop: a catalogue with its specifications, a library with its sources, and
+          standards we can be held to. The rest of it is here too, in the architecture the shop
+          was built in.
+        </p>
+        <div class="fig-links">
+          <%= link_to "The shop proper", root_path, class: "fig-link" %>
+          <%= link_to "The eight architectures", worlds_path, class: "fig-link" %>
+          <%= mail_to Store.support_email, Store.support_email, class: "fig-link" %>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>

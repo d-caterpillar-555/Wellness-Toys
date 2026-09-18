@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <%= render "layouts/world_head", stylesheet: "worlds/figure", module_name: "worlds/figure" %>
+  </head>
+
+  <%# Dusk. The ground is painted by the stylesheet, so the body carries the
+      world's class rather than the tailwind paper. %>
+  <body class="figure">
+    <a class="figure-skip" href="#main">Skip to content</a>
+
+    <%= render "shared/age_gate" unless age_confirmed? %>
+    <%= render "shared/consent_banner" if age_confirmed? && !consent_decided? %>
+
+    <%= yield %>
+
+    <%= render "shared/world_dock" %>
+  </body>
+</html>

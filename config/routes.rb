@@ -102,6 +102,12 @@ Rails.application.routes.draw do
     # anchors on /folio; the print view is the same document without furniture.
     get "/folio", to: "folio#index", as: :folio
     get "/folio/print", to: "folio#print", as: :folio_print
+
+    # figure: the scroll choreography. One story, a catalogue with poses on
+    # hover, and one piece at a time.
+    get "/figure", to: "figure#index", as: :figure
+    get "/figure/pieces", to: "figure#pieces", as: :figure_pieces
+    get "/figure/pieces/:slug", to: "figure#piece", as: :figure_piece
   end
 
   # --- Admin ----------------------------------------------------------------

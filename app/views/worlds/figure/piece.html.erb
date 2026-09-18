@@ -1,0 +1,107 @@
+<% content_for :title, @product.name %>
+<% content_for :meta_description, @product.subtitle.presence || "#{@product.name} at #{Store.name}: materials, body safety and dimensions stated before description." %>
+
+<div class="figure">
+  <header class="fig-masthead">
+    <p class="fig-wordmark"><%= link_to Store.name, figure_path, class: "fig-wordmark" %></p>
+    <nav aria-label="Sections">
+      <ul class="fig-masthead__links">
+        <li><%= link_to "The choreography", figure_path, class: "fig-masthead__link" %></li>
+        <li><%= link_to "The pieces", figure_pieces_path, class: "fig-masthead__link" %></li>
+        <li><%= link_to "The shop", root_path, class: "fig-masthead__link" %></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="fig-piece" id="main">
+    <div class="fig-piece__layout">
+      <div class="fig-piece__plate"><%= product_cover_tag(@product) %></div>
+
+      <div>
+        <p class="fig-chapter__pose">
+          <%= @product.primary_category&.name || "Catalogue" %>
+          <% if @product.brand %> &middot; <%= @product.brand.name %><% end %>
+          &middot; <%= @product.sku %>
+        </p>
+        <h1 class="fig-piece__title"><%= @product.name %></h1>
+        <% if @product.subtitle.present? %>
+          <p class="fig-chapter__body"><%= @product.subtitle %></p>
+        <% end %>
+        <p class="fig-piece__price"><%= price(@product.lowest_price_cents) %></p>
+
+        <dl class="fig-spec">
+          <% if @product.materials.present? %>
+            <div class="fig-spec__row">
+              <dt class="fig-spec__label">Materials</dt>
+              <dd class="fig-spec__value"><%= @product.materials %></dd>
+            </div>
+          <% end %>
+          <div class="fig-spec__row">
+            <dt class="fig-spec__label">Body safe</dt>
+            <dd class="fig-spec__value"><%= @product.body_safe? ? "Yes" : "No" %></dd>
+          </div>
+          <% if @product.safety_notes.present? %>
+            <div class="fig-spec__row">
+              <dt class="fig-spec__label">Safety notes</dt>
+              <dd class="fig-spec__value"><%= @product.safety_notes %></dd>
+            </div>
+          <% end %>
+          <% if @product.dimensions.present? %>
+            <div class="fig-spec__row">
+              <dt class="fig-spec__label">Dimensions</dt>
+              <dd class="fig-spec__value"><%= @product.dimensions %></dd>
+            </div>
+          <% end %>
+          <% if @product.weight_grams.present? %>
+            <div class="fig-spec__row">
+              <dt class="fig-spec__label">Weight</dt>
+              <dd class="fig-spec__value"><%= @product.weight_grams %> g</dd>
+            </div>
+          <% end %>
+        </dl>
+
+        <% if @product.description.present? %>
+          <p class="fig-chapter__body"><%= @product.description %></p>
+        <% end %>
+        <% if @product.care_instructions.present? %>
+          <p class="fig-chapter__body"><%= @product.care_instructions %></p>
+        <% end %>
+
+        <% if @variants.any? %>
+          <%= form_with url: cart_items_path, method: :post, class: "fig-buy" do %>
+            <label class="fig-buy__label" for="variant_id">Edition</label>
+            <%= select_tag "variant_id",
+                  options_for_select(@variants.map { |variant|
+                    label = strip_tags(price(variant.price_cents, currency: variant.currency))
+                    [ "#{variant.name} - #{label}", variant.id ]
+                  }), id: "variant_id" %>
+
+            <label class="fig-buy__label" for="quantity">Quantity</label>
+            <%= select_tag "quantity", options_for_select(quantity_options), id: "quantity" %>
+
+            <%= submit_tag t("products.add_to_cart"), class: "fig-buy__submit" %>
+          <% end %>
+        <% else %>
+          <p class="fig-chapter__body">No edition of this piece is available right now.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @related.any? %>
+      <section class="fig-pieces__head fig-pieces__head--spaced">
+        <h2 class="fig-pieces__title">Other pieces</h2>
+      </section>
+      <ol class="fig-grid">
+        <% @related.each do |product| %>
+          <li>
+            <%= link_to figure_piece_path(product.slug), class: "fig-card" do %>
+              <span class="fig-card__plate"><%= product_cover_tag(product) %></span>
+              <span class="fig-card__name"><%= product.name %></span>
+              <span class="fig-card__meta"><%= price(product.lowest_price_cents) %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ol>
+    <% end %>
+  </main>
+</div>
