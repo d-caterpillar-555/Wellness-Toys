@@ -27,7 +27,7 @@ PAGES = [
       guessing is how people end up with the wrong product, the wrong material,
       or the wrong expectation.
 
-      So #{Brand.name} is built the other way round. Products are described the
+      So #{Store.name} is built the other way round. Products are described the
       way any other product in a health category would be described: what it is
       made of, what it measures, how it is cleaned, and who it is not suitable
       for. Alongside that we publish an education library, and we cite our
@@ -268,3 +268,14 @@ PAGES.each do |attributes|
 end
 
 puts "Pages: #{Page.count}"
+
+# --- Remaining seed files ---------------------------------------------------
+#
+# Loaded in order. Each is idempotent, so `bin/rails db:seed` can be re-run at
+# any point without duplicating records.
+#
+# Everything created across all of them is DEMO DATA. See the header comment in
+# each file for what that means and what must be replaced before launch.
+%w[catalogue education].each do |seed|
+  load Rails.root.join("db/seeds/#{seed}.rb")
+end

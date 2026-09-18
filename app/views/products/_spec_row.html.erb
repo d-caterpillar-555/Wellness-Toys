@@ -1,0 +1,8 @@
+<%# locals: (label:, value:) %>
+<%# A spec table is a definition list with hairline rows, not a bordered grid.
+    The label sits in the muted column and the value carries the tabular
+    numerals, so dimensions and weights line up down the column. %>
+<div class="flex flex-col gap-1 border-b border-line py-4 sm:flex-row sm:gap-6">
+  <dt class="w-44 shrink-0 text-muted"><%= label %></dt>
+  <dd class="tnum text-body text-ink-soft"><%= value %></dd>
+</div>

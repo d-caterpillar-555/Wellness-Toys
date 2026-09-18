@@ -1,0 +1,22 @@
+<% content_for :title, t("auth.credentials.title") %>
+
+<section class="wt-container py-12 md:py-16">
+  <div class="max-w-[34rem]">
+    <h1 class="text-display-sm text-ink md:text-display"><%= t("auth.credentials.title") %></h1>
+    <p class="mt-4 text-lede text-body"><%= t("auth.credentials.intro") %></p>
+
+    <%= render "shared/form_errors", resource: resource %>
+
+    <%= form_with model: resource, as: resource_name, url: registration_path(resource_name), method: :put, class: "mt-10 space-y-6" do |form| %>
+      <%= render "shared/field", form: form, attribute: :email, label: t("auth.fields.email"), type: :email_field, autocomplete: "email" %>
+      <%= render "shared/field", form: form, attribute: :password, label: t("auth.fields.password"), type: :password_field, autocomplete: "new-password", required: false, hint: t("auth.credentials.new_password_hint") %>
+      <%= render "shared/field", form: form, attribute: :password_confirmation, label: t("auth.fields.password_confirmation"), type: :password_field, autocomplete: "new-password", required: false %>
+      <%= render "shared/field", form: form, attribute: :current_password, label: t("auth.fields.current_password"), type: :password_field, autocomplete: "current-password", hint: t("auth.hints.current_password") %>
+
+      <div class="pt-2">
+        <%= form.submit t("auth.credentials.submit"), class: "wt-btn wt-btn--primary" %>
+        <%= link_to t("account.nav.account"), account_root_path, class: "wt-btn wt-btn--quiet" %>
+      </div>
+    <% end %>
+  </div>
+</section>

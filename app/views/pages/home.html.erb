@@ -1,5 +1,5 @@
 <% content_for :title, nil %>
-<% content_for :meta_description, "#{Brand.name} sells sexual health and wellness products, and publishes the education that explains them. Evidence over euphemism, discretion as standard." %>
+<% content_for :meta_description, "#{Store.name} sells sexual health and wellness products, and publishes the education that explains them. Evidence over euphemism, discretion as standard." %>
 
 <%# --- Hero -----------------------------------------------------------------
     Asymmetric and left-weighted rather than centred. Four text elements at
@@ -16,8 +16,11 @@
     </p>
 
     <div class="mt-10 flex flex-wrap items-center gap-3">
-      <%= link_to "Our standards", page_path("standards"), class: "wt-btn wt-btn--primary" %>
-      <%= link_to "Why we exist", page_path("about"), class: "wt-btn wt-btn--secondary" %>
+      <%# One primary action, and it is the catalogue: the argument for the shop
+          is the shop. The standards page keeps its place one level down. %>
+      <%= link_to "Shop the catalogue", shop_path, class: "wt-btn wt-btn--primary" %>
+      <%= link_to "Our standards", page_path("standards"), class: "wt-btn wt-btn--secondary" %>
+      <%= link_to "Why we exist", page_path("about"), class: "wt-btn wt-btn--quiet" %>
     </div>
   </div>
 </section>

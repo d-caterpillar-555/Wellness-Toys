@@ -1,0 +1,30 @@
+<% content_for :title, t("account.profile.title") %>
+
+<section class="wt-container py-12 md:py-16">
+  <h1 class="text-display-sm text-ink md:text-display"><%= t("account.profile.title") %></h1>
+  <p class="mt-4 max-w-[52ch] text-lede text-body"><%= t("account.profile.intro") %></p>
+
+  <div class="mt-10">
+    <%= render "account/nav" %>
+  </div>
+
+  <dl class="mt-12 max-w-[34rem] border-t border-line text-ui">
+    <div class="flex items-baseline justify-between gap-4 border-b border-line py-4">
+      <dt class="text-muted"><%= t("auth.fields.name") %></dt>
+      <dd class="text-ink"><%= current_user.name %></dd>
+    </div>
+    <div class="flex items-baseline justify-between gap-4 border-b border-line py-4">
+      <dt class="text-muted"><%= t("auth.fields.email") %></dt>
+      <dd class="text-ink"><%= current_user.email %></dd>
+    </div>
+    <div class="flex items-baseline justify-between gap-4 border-b border-line py-4">
+      <dt class="text-muted"><%= t("auth.fields.phone") %></dt>
+      <dd class="text-ink"><%= current_user.phone.presence || "-" %></dd>
+    </div>
+  </dl>
+
+  <div class="mt-8 flex flex-wrap gap-3">
+    <%= link_to t("account.profile.edit_title"), edit_account_profile_path, class: "wt-btn wt-btn--secondary" %>
+    <%= link_to t("auth.credentials.title"), edit_user_registration_path, class: "wt-btn wt-btn--quiet" %>
+  </div>
+</section>

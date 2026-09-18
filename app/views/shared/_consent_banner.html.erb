@@ -1,0 +1,23 @@
+<%# Consent, recorded rather than assumed.
+    Nothing on this site loads a tracker, so both buttons change nothing today.
+    What they do is write the answer down, with its date and the policy version,
+    so a consented layer could be added later without inventing a history. %>
+<div class="border-b border-line bg-paper-sunk" role="region" aria-label="<%= t("consent.label") %>">
+  <div class="wt-container py-4">
+    <p class="max-w-[68ch] text-ui text-body">
+      <span class="text-ink"><%= t("consent.heading") %></span>
+      <%= t("consent.body") %>
+      <%= link_to t("consent.policy"), page_path("privacy"), class: "text-accent" %>
+    </p>
+    <div class="mt-3 flex flex-wrap gap-3">
+      <%= button_to t("consent.functional_only"),
+            consent_path,
+            params: { consent: { functional: "1" } },
+            class: "wt-btn wt-btn--secondary" %>
+      <%= button_to t("consent.accept_all"),
+            consent_path,
+            params: { consent: { functional: "1", analytics: "1", marketing: "1" } },
+            class: "wt-btn wt-btn--primary" %>
+    </div>
+  </div>
+</div>

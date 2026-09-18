@@ -1,0 +1,4 @@
+<%# locals: (cart:) %>
+<%= link_to cart_path, id: "cart-count", class: "wt-nav-link px-2", aria: { label: t("cart.link") } do %>
+  <%= t("cart.link") %> <span class="tnum"><%= cart.item_count %></span>
+<% end %>

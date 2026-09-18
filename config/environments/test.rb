@@ -39,6 +39,15 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
 
+  # Bullet is a gate in the suite, not an advisory log: an N+1 that a spec
+  # triggers fails the example, which is how "Bullet warnings zero" stays true
+  # rather than becoming a number somebody has to remember to look at.
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.bullet_logger = true
+    Bullet.raise = true
+  end
+
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 

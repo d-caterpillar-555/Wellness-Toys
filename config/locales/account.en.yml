@@ -1,0 +1,140 @@
+# Account, authentication and privacy copy.
+#
+# Same rules as the shop copy: plain language, no claims, no euphemism, and
+# hyphens rather than em-dashes.
+en:
+  auth:
+    rate_limited: "Too many attempts just now. Try again in a few minutes."
+    fields:
+      name: "Name"
+      email: "Email"
+      phone: "Phone (optional)"
+      password: "Password"
+      password_confirmation: "Confirm password"
+      current_password: "Current password"
+    hints:
+      phone: "Used only to reach you about an order. Encrypted at rest."
+      password: "At least %{count} characters."
+      current_password: "Your current password, before setting a new one."
+    sign_in:
+      title: "Sign in"
+      intro: "Your orders, addresses and privacy choices, in one place."
+      submit: "Sign in"
+      sign_up_link: "Create an account"
+      forgot_password_link: "Forgot your password?"
+    sign_up:
+      title: "Create an account"
+      intro: "An account keeps your order history and makes the next order shorter. It is not needed to buy."
+      submit: "Create an account"
+      sign_in_link: "Already have an account?"
+      confirmations_legend: "Before you continue"
+      age_confirmed: "I confirm I am old enough to buy these products where I live."
+      terms_accepted: "I accept the terms and the privacy policy."
+    credentials:
+      title: "Email and password"
+      intro: "Changing either asks for your current password first."
+      submit: "Save changes"
+      new_password_hint: "Leave both password fields blank to keep the current password."
+    passwords:
+      new_title: "Reset your password"
+      new_intro: "We send a one-time link. It expires in six hours."
+      new_submit: "Send the reset link"
+      edit_title: "Choose a new password"
+      edit_submit: "Save the new password"
+
+  account:
+    nav:
+      account: "Account"
+      sign_in: "Sign in"
+      sign_out: "Sign out"
+      staff_only: "That area is for store staff."
+      staff_only: "That area is for store staff."
+    dashboard:
+      title: "Your account"
+      intro: "Orders, addresses and privacy, in one place."
+      orders_heading: "Orders"
+      orders_empty: "No orders yet."
+      addresses_heading: "Addresses"
+      addresses_empty: "No addresses saved."
+      privacy_heading: "Privacy requests"
+      privacy_empty: "No open requests."
+      browse: "Browse the catalogue"
+      all_orders: "All orders"
+      profile_link: "Your details"
+      privacy_link: "Privacy"
+    profile:
+      title: "Your details"
+      intro: "The name and phone number on your account."
+      edit_title: "Edit your details"
+      updated: "Your details were updated."
+      submit: "Save"
+    orders:
+      title: "Orders"
+      intro: "Every order placed with this account."
+      empty: "No orders have been placed with this account yet."
+      number: "Order"
+      placed: "Placed"
+      total: "Total"
+      status: "Status"
+      view: "View"
+      back: "Back to orders"
+    addresses:
+      title: "Addresses"
+      intro: "Saved addresses fill in the checkout form. The street lines are encrypted."
+      empty: "No addresses saved yet."
+      created: "Address saved."
+      updated: "Address updated."
+      removed: "Address removed."
+      add: "Add an address"
+      edit: "Edit"
+      remove: "Remove"
+      submit: "Save address"
+      back: "Back to addresses"
+      default_shipping: "Default shipping address"
+      default_billing: "Default billing address"
+      fields:
+        label: "Label (optional)"
+        recipient: "Recipient"
+        line1: "Address"
+        line2: "Address line 2"
+        city: "City"
+        region: "State or region"
+        postal_code: "Postal code"
+        country_code: "Country code"
+      hints:
+        label: "A word to tell this address apart, for example Home."
+        country_code: "Two letters, for example GB or US."
+    data_requests:
+      title: "Privacy requests"
+      intro: "Ask for a copy of your data, or for your account to be erased."
+      empty: "No requests have been made yet."
+      new_title: "Make a request"
+      new_intro: "An export is prepared and appears here when it is ready. A deletion request is reviewed by a person first."
+      created: "Your request was recorded."
+      export_note: "Export generated"
+      submit: "Send the request"
+      back: "Back to requests"
+      kinds:
+        export: "Send me a copy of my data"
+        delete: "Erase my account and data"
+      statuses:
+        pending: "Pending"
+        processing: "Processing"
+        completed: "Completed"
+        rejected: "Rejected"
+      retention_note: "Deletion erases the account. Order history is kept in anonymised form, because tax and consumer law require it."
+    consent:
+      title: "Consent"
+      intro: "What this site is allowed to do with your data. Every decision is recorded with its date, and withdrawing is a new record rather than an edit."
+      updated: "Your consent choices were saved."
+      submit: "Save choices"
+      kinds:
+        functional: "Functional"
+        analytics: "Analytics"
+        marketing: "Marketing"
+      descriptions:
+        functional: "Needed for the cart and sign-in to work."
+        analytics: "No analytics run today. This records your answer for any future consented layer."
+        marketing: "No marketing tags run today. This records your answer for any future consented layer."
+      granted_on: "Granted"
+      revoked_on: "Withdrawn"

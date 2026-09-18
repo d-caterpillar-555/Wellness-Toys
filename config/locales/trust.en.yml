@@ -1,0 +1,23 @@
+# Trust-surface copy: the age gate, the consent banner, and the product controls
+# that were written before the cart existed.
+en:
+  age_gate:
+    label: "Age confirmation"
+    heading: "Adult products."
+    body: "This store sells products intended for adults. Confirm you are of legal age where you live."
+    confirm: "I am of legal age"
+    why: "Why we ask"
+
+  consent:
+    label: "Consent"
+    heading: "Storage and consent."
+    body: "The cart needs functional storage to work. Analytics and marketing stay off whatever you choose here: this records your answer for a future layer rather than switching anything on today."
+    functional_only: "Only what is needed"
+    accept_all: "Accept all"
+    saved: "Your choice was recorded."
+    withdrawn: "Consent withdrawn. Nothing that was already recorded is deleted: the withdrawal is a second record."
+    policy: "Privacy policy"
+
+  products:
+    configuration: "Configuration"
+    add_to_cart: "Add to cart"

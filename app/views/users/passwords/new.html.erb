@@ -1,0 +1,19 @@
+<% content_for :title, t("auth.passwords.new_title") %>
+<% content_for :meta_description, t("auth.passwords.new_intro") %>
+
+<section class="wt-container py-12 md:py-16">
+  <div class="max-w-[34rem]">
+    <h1 class="text-display-sm text-ink md:text-display"><%= t("auth.passwords.new_title") %></h1>
+    <p class="mt-4 text-lede text-body"><%= t("auth.passwords.new_intro") %></p>
+
+    <%= render "shared/form_errors", resource: resource %>
+
+    <%= form_with model: resource, as: resource_name, url: password_path(resource_name), method: :post, class: "mt-10 space-y-6" do |form| %>
+      <%= render "shared/field", form: form, attribute: :email, label: t("auth.fields.email"), type: :email_field, autocomplete: "email" %>
+
+      <div class="pt-2">
+        <%= form.submit t("auth.passwords.new_submit"), class: "wt-btn wt-btn--primary w-full" %>
+      </div>
+    <% end %>
+  </div>
+</section>

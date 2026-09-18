@@ -1,0 +1,61 @@
+<% content_for :title, "Glossary" %>
+<% content_for :meta_description, "Plain-language definitions of the words used across the #{Store.name} education library." %>
+<% grouped = grouped_by_initial(@terms) %>
+
+<section class="wt-container pt-12 pb-8 md:pt-16" data-controller="reveal" data-reveal>
+  <nav aria-label="Breadcrumb" class="text-caption">
+    <%= link_to "Learn", learn_path, class: "text-body no-underline hover:text-ink" %>
+    <span aria-hidden="true" class="text-muted"> / </span>
+    <span class="text-ink" aria-current="page">Glossary</span>
+  </nav>
+
+  <h1 class="mt-4 text-display-sm text-ink md:text-display">Glossary</h1>
+  <p class="mt-4 max-w-[60ch] text-lede text-body">
+    The words this subject is full of, defined in a sentence or two and without
+    the euphemism. Where a term has a longer article behind it, the definition
+    links to it.
+  </p>
+</section>
+
+<% if @terms.any? %>
+  <div class="wt-container pb-20" data-controller="reveal" data-reveal>
+    <nav aria-label="Jump to a letter" class="border-y border-line py-4">
+      <ul class="flex flex-wrap gap-2">
+        <% grouped.keys.sort.each do |letter| %>
+          <li>
+            <%= link_to letter, "#letter-#{initial_anchor(letter)}", class: "wt-badge min-h-[44px] px-3 text-ui text-body hover:border-ink hover:text-ink" %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+
+    <div class="mt-12 space-y-12">
+      <% grouped.keys.sort.each do |letter| %>
+        <section id="letter-<%= initial_anchor(letter) %>" aria-labelledby="letter-<%= initial_anchor(letter) %>-heading">
+          <h2 id="letter-<%= initial_anchor(letter) %>-heading" class="text-heading-sm text-ink"><%= letter %></h2>
+
+          <dl class="mt-4 divide-y divide-line border-t border-line">
+            <% grouped[letter].each do |term| %>
+              <div class="py-5">
+                <dt>
+                  <%= link_to term.title, learn_glossary_term_path(term), class: "text-title text-ink underline decoration-line hover:decoration-accent" %>
+                </dt>
+                <% if term.excerpt.present? %>
+                  <dd class="mt-2 max-w-[68ch] text-body"><%= term.excerpt %></dd>
+                <% end %>
+              </div>
+            <% end %>
+          </dl>
+        </section>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="wt-container pb-20">
+    <div class="max-w-[52ch] border-t border-line pt-8">
+      <p class="text-lede text-ink">The glossary is empty right now.</p>
+      <p class="mt-3 text-body">Terms are being written. The guides are open in the meantime.</p>
+      <%= link_to "Read the guides", learn_path, class: "wt-btn wt-btn--secondary mt-6" %>
+    </div>
+  </div>
+<% end %>

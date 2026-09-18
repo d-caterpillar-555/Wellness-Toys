@@ -1,0 +1,20 @@
+<%# locals: (pagy:) %>
+<%# Pagy owns the arithmetic; the links are ours so they meet the 44px touch
+    target and keep the current filters when a page changes. %>
+<% if pagy.last > 1 %>
+  <nav class="mt-12 flex items-center justify-between gap-4 border-t border-line pt-6" aria-label="Pagination">
+    <% if pagy.previous %>
+      <%= link_to "Previous", "#{request.path}?#{request.query_parameters.merge('page' => pagy.previous).to_query}", class: "wt-btn wt-btn--secondary" %>
+    <% else %>
+      <span aria-hidden="true"></span>
+    <% end %>
+
+    <p class="text-ui text-muted tnum">Page <%= pagy.page %> of <%= pagy.last %></p>
+
+    <% if pagy.next %>
+      <%= link_to "Next", "#{request.path}?#{request.query_parameters.merge('page' => pagy.next).to_query}", class: "wt-btn wt-btn--secondary" %>
+    <% else %>
+      <span aria-hidden="true"></span>
+    <% end %>
+  </nav>
+<% end %>

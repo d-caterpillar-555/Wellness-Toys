@@ -1,0 +1,35 @@
+<% content_for :title, t("account.consent.title") %>
+
+<section class="wt-container py-12 md:py-16">
+  <h1 class="text-display-sm text-ink md:text-display"><%= t("account.consent.title") %></h1>
+  <p class="mt-4 max-w-[52ch] text-lede text-body"><%= t("account.consent.intro") %></p>
+
+  <div class="mt-10">
+    <%= render "account/nav" %>
+  </div>
+
+  <%= form_with url: account_consent_path, method: :patch, class: "mt-12 max-w-[52ch]" do |form| %>
+    <% ConsentRecord::KINDS.each do |kind| %>
+      <% record = @records[kind] %>
+      <div class="border-t border-line py-6">
+        <label class="flex items-start gap-3">
+          <%= check_box_tag "consent[#{kind}]", "1", @consents[kind], id: "consent_#{kind}", class: "mt-1" %>
+          <span>
+            <span class="block text-ui text-ink"><%= t("account.consent.kinds.#{kind}") %></span>
+            <span class="mt-1 block text-body"><%= t("account.consent.descriptions.#{kind}") %></span>
+            <% if record.present? %>
+              <span class="mt-1 block text-caption text-muted tnum">
+                <%= record.revoked? ? t("account.consent.revoked_on") : t("account.consent.granted_on") %>
+                <%= (record.revoked_at || record.granted_at).utc.strftime("%-d %B %Y") %>
+              </span>
+            <% end %>
+          </span>
+        </label>
+      </div>
+    <% end %>
+
+    <div class="mt-8">
+      <%= form.submit t("account.consent.submit"), class: "wt-btn wt-btn--primary" %>
+    </div>
+  <% end %>
+</section>

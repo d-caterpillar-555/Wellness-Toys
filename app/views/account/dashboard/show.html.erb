@@ -1,0 +1,81 @@
+<% content_for :title, t("account.dashboard.title") %>
+
+<section class="wt-container py-12 md:py-16">
+  <h1 class="text-display-sm text-ink md:text-display"><%= t("account.dashboard.title") %></h1>
+  <p class="mt-4 text-lede text-body"><%= t("account.dashboard.intro") %></p>
+
+  <div class="mt-10">
+    <%= render "account/nav" %>
+  </div>
+
+  <div class="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-16">
+    <section>
+      <div class="flex items-baseline justify-between gap-4 border-b border-line pb-3">
+        <h2 class="text-heading text-ink"><%= t("account.dashboard.orders_heading") %></h2>
+        <%= link_to t("account.dashboard.all_orders"), account_orders_path, class: "text-caption text-accent no-underline" %>
+      </div>
+
+      <% if @orders.any? %>
+        <ul class="divide-y divide-line border-b border-line">
+          <% @orders.each do |order| %>
+            <li class="flex items-baseline justify-between gap-4 py-4">
+              <%= link_to order.number, account_order_path(order.number), class: "text-ui text-ink no-underline hover:text-accent tnum" %>
+              <span class="text-caption text-muted tnum"><%= order.created_at.utc.strftime("%-d %B %Y") %></span>
+              <span class="text-ui text-ink tnum"><%= price(order.total_cents, currency: order.currency) %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="mt-4 text-body"><%= t("account.dashboard.orders_empty") %></p>
+        <%= link_to t("account.dashboard.browse"), shop_path, class: "wt-btn wt-btn--secondary mt-6" %>
+      <% end %>
+    </section>
+
+    <section>
+      <div class="flex items-baseline justify-between gap-4 border-b border-line pb-3">
+        <h2 class="text-heading text-ink"><%= t("account.dashboard.addresses_heading") %></h2>
+        <%= link_to t("account.addresses.add"), new_account_address_path, class: "text-caption text-accent no-underline" %>
+      </div>
+
+      <% if @addresses.any? %>
+        <ul class="divide-y divide-line border-b border-line">
+          <% @addresses.each do |address| %>
+            <li class="py-4">
+              <p class="text-ui text-ink"><%= address.recipient %></p>
+              <p class="mt-1 text-caption text-muted"><%= address.one_line %></p>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="mt-4 text-body"><%= t("account.dashboard.addresses_empty") %></p>
+      <% end %>
+    </section>
+
+    <section>
+      <div class="flex items-baseline justify-between gap-4 border-b border-line pb-3">
+        <h2 class="text-heading text-ink"><%= t("account.dashboard.privacy_heading") %></h2>
+        <%= link_to t("account.dashboard.privacy_link"), account_data_requests_path, class: "text-caption text-accent no-underline" %>
+      </div>
+
+      <% if @open_requests.any? %>
+        <ul class="divide-y divide-line border-b border-line">
+          <% @open_requests.each do |request| %>
+            <li class="flex items-baseline justify-between gap-4 py-4">
+              <span class="text-ui text-ink"><%= t("account.data_requests.kinds.#{request.kind}") %></span>
+              <span class="wt-badge"><%= t("account.data_requests.statuses.#{request.status}") %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="mt-4 text-body"><%= t("account.dashboard.privacy_empty") %></p>
+      <% end %>
+    </section>
+
+    <section>
+      <h2 class="text-heading text-ink border-b border-line pb-3"><%= t("account.profile.title") %></h2>
+      <p class="mt-4 text-ui text-ink"><%= current_user.name %></p>
+      <p class="mt-1 text-caption text-muted"><%= current_user.email %></p>
+      <%= link_to t("account.profile.edit_title"), edit_account_profile_path, class: "wt-btn wt-btn--secondary mt-6" %>
+    </section>
+  </div>
+</section>

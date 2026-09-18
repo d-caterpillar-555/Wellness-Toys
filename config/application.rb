@@ -1,5 +1,15 @@
 require_relative "boot"
 
+# Middleware is configured while the application is being defined, which is
+# before autoloading is set up, so this one is required explicitly instead of
+# being autoloaded from lib.
+require_relative "../lib/redirect_middleware"
+
+# Middleware is configured while the application is being defined, which is
+# before autoloading is set up, so this one is required explicitly instead of
+# being autoloaded from lib.
+require_relative "../lib/redirect_middleware"
+
 require "rails"
 require "active_model/railtie"
 require "active_job/railtie"
@@ -37,6 +47,10 @@ module WellnessToys
     end
 
     config.action_view.form_with_generates_remote_forms = false
+
+    # Retired URLs are answered before routing, so a slug change is a redirect
+    # rather than a 404. See lib/redirect_middleware.rb.
+    config.middleware.use RedirectMiddleware
 
     config.i18n.available_locales = [ :en ]
     config.i18n.default_locale = :en

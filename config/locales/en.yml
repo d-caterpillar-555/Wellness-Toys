@@ -1,31 +1,98 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
+# Application copy: every user-facing string that is not page content.
 #
-# To use the locales, use `I18n.t`:
+# Product names, article bodies and page copy live in the database. Interface
+# strings live here, so each one has a single owner and a single place to
+# change. Keys are namespaced by the surface that renders them.
 #
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
+# Copy rules for this store (docs/design/DESIGN.md): plain language, no claims,
+# no euphemism, and hyphens rather than em-dashes.
 en:
-  hello: "Hello world"
+  forms:
+    errors_heading: "Please check the details below."
+
+  cart:
+    title: "Your cart"
+    heading: "Your cart"
+    link: "Cart"
+    quantity: "Quantity"
+    update: "Update"
+    remove: "Remove"
+    subtotal: "Subtotal"
+    shipping_note: "Shipping is added to the invoice. Nothing is charged on this site."
+    checkout: "Continue to checkout"
+    empty_heading: "Your cart is empty"
+    empty_body: "Nothing has been added yet. The catalogue is the place to start."
+    empty_action: "Browse the catalogue"
+    items:
+      added: "%{product} is in your cart."
+      updated: "Cart updated."
+      removed: "Removed from your cart."
+      out_of_stock: "%{product} does not have that many available right now."
+
+  checkout:
+    title: "Checkout"
+    intro: "The order is placed as a request. We email you to confirm it and arrange payment by invoice."
+    errors_heading: "The order was not placed. The details below need attention."
+    submit: "Place order"
+    trust: "No card details are collected on this site."
+    empty_cart: "There is nothing to check out yet."
+    created: "Order %{number} has been recorded. A confirmation is on its way."
+    out_of_stock: "%{product} sold out before the order was placed. Nothing was ordered."
+    out_of_stock_generic: "An item sold out before the order was placed. Nothing was ordered."
+    fields:
+      email: "Email"
+      recipient: "Recipient"
+      line1: "Address"
+      line2: "Address line 2"
+      city: "City"
+      region: "State or region"
+      postal_code: "Postal code"
+      country_code: "Country code"
+    hints:
+      email: "The confirmation and the invoice go here."
+      country_code: "Two letters, for example GB or US."
+
+  orders:
+    mailer:
+      subject: "Order %{number} received"
+      greeting: "Thank you for your order."
+      intro: "Order %{number} has been recorded as a request. We will follow up to confirm it and arrange payment by invoice."
+      link_note: "You can view the order at any time with the link below. Keep it: it is the only way to reach this order without an account."
+      link_label: "View the order"
+    show:
+      title: "Order %{number}"
+      eyebrow: "Order"
+      items_heading: "Items"
+      no_items: "No items are recorded on this order."
+      totals_heading: "Totals"
+      subtotal: "Subtotal"
+      shipping: "Shipping"
+      tax: "Tax"
+      total: "Total"
+      shipping_heading: "Shipping to"
+      timeline_heading: "History"
+      placed_fallback: "No events have been recorded on this order yet."
+      link_note: "Keep this link. It is the only way to reach this order without an account, and it cannot be guessed from the order number."
+    status:
+      pending: "Pending"
+      confirmed: "Confirmed"
+      processing: "Processing"
+      shipped: "Shipped"
+      delivered: "Delivered"
+      cancelled: "Cancelled"
+    payment_status:
+      awaiting_invoice: "Awaiting invoice"
+      unpaid: "Unpaid"
+      paid: "Paid"
+      refunded: "Refunded"
+      failed: "Failed"
+    events:
+      created: "Order placed"
+      confirmation_sent: "Confirmation email sent"
+      confirmed: "Confirmed"
+      processing: "Preparing"
+      shipped: "Shipped"
+      delivered: "Delivered"
+      cancelled: "Cancelled"
+      refunded: "Refunded"
+      note: "Note"

@@ -1,0 +1,43 @@
+<% content_for :title, t("account.orders.title") %>
+
+<section class="wt-container py-12 md:py-16">
+  <h1 class="text-display-sm text-ink md:text-display"><%= t("account.orders.title") %></h1>
+  <p class="mt-4 text-lede text-body"><%= t("account.orders.intro") %></p>
+
+  <div class="mt-10">
+    <%= render "account/nav" %>
+  </div>
+
+  <% if @orders.any? %>
+    <table class="mt-12 w-full border-t border-line text-ui">
+      <caption class="sr-only"><%= t("account.orders.title") %></caption>
+      <thead>
+        <tr class="border-b border-line text-caption text-muted">
+          <th scope="col" class="py-3 text-left font-normal"><%= t("account.orders.number") %></th>
+          <th scope="col" class="py-3 text-left font-normal"><%= t("account.orders.placed") %></th>
+          <th scope="col" class="py-3 text-left font-normal"><%= t("account.orders.status") %></th>
+          <th scope="col" class="py-3 text-right font-normal"><%= t("account.orders.total") %></th>
+          <th scope="col" class="py-3 text-right font-normal"><span class="sr-only"><%= t("account.orders.view") %></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @orders.each do |order| %>
+          <tr class="border-b border-line">
+            <td class="py-4 tnum"><%= link_to order.number, account_order_path(order.number), class: "text-ink no-underline hover:text-accent" %></td>
+            <td class="py-4 text-muted tnum"><%= order.created_at.utc.strftime("%-d %B %Y") %></td>
+            <td class="py-4"><span class="wt-badge"><%= t("orders.status.#{order.status}", default: order.status.humanize) %></span></td>
+            <td class="py-4 text-right text-ink tnum"><%= price(order.total_cents, currency: order.currency) %></td>
+            <td class="py-4 text-right"><%= link_to t("account.orders.view"), account_order_path(order.number), class: "text-accent no-underline" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= render "shared/pagination", pagy: @pagy %>
+  <% else %>
+    <div class="mt-12 max-w-[52ch] border-t border-line pt-8">
+      <p class="text-lede text-ink"><%= t("account.orders.empty") %></p>
+      <%= link_to t("account.dashboard.browse"), shop_path, class: "wt-btn wt-btn--secondary mt-6" %>
+    </div>
+  <% end %>
+</section>

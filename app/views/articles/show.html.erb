@@ -1,0 +1,69 @@
+<% content_for :title, @article.title %>
+<% content_for :meta_description, @article.excerpt.presence || "An article from the #{Store.name} education library." %>
+<% topic = @article.primary_topic %>
+
+<% trail = [ [ "Learn", learn_path ] ] %>
+<% trail << [ topic.name, learn_topic_path(topic) ] if topic %>
+<% trail << [ @article.title, request.path ] %>
+
+<% content_for :structured_data do %>
+  <%= json_ld(breadcrumb_schema(trail)) %>
+  <%= json_ld(article_schema(@article)) %>
+<% end %>
+
+<%# The evidence rail is the signature of this publication. On wide screens the
+    aside is a sticky right column; on narrow screens the same single render
+    falls below the body as an appendix. It is rendered once, never duplicated. %>
+<article class="wt-container py-16 md:py-24">
+  <nav aria-label="Breadcrumb" class="text-caption">
+    <%= link_to "Learn", learn_path, class: "text-body no-underline hover:text-ink" %>
+    <% if topic %>
+      <span aria-hidden="true" class="text-muted"> / </span>
+      <%= link_to topic.name, learn_topic_path(topic), class: "text-body no-underline hover:text-ink" %>
+    <% end %>
+    <span aria-hidden="true" class="text-muted"> / </span>
+    <span class="text-ink" aria-current="page"><%= @article.title %></span>
+  </nav>
+
+  <header class="mt-8 max-w-[68ch]" data-controller="reveal" data-reveal>
+    <p class="text-label text-muted"><%= kind_label(@article) %></p>
+    <h1 class="mt-3 text-display-sm text-ink md:text-display"><%= @article.title %></h1>
+
+    <% if @article.excerpt.present? %>
+      <p class="mt-6 text-lede text-body"><%= @article.excerpt %></p>
+    <% end %>
+
+    <p class="mt-6 text-caption text-muted"><%= article_meta(@article) %></p>
+  </header>
+
+  <div class="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
+    <div>
+      <div class="wt-prose">
+        <% @article.paragraphs.each do |paragraph| %>
+          <p><%= paragraph %></p>
+        <% end %>
+      </div>
+
+      <% if @article.sources.empty? %>
+        <p class="mt-12 text-ui text-muted">This piece does not cite external sources.</p>
+      <% end %>
+
+      <% if @related.any? %>
+        <section aria-labelledby="related-heading" class="mt-16 border-t border-line pt-8">
+          <h2 id="related-heading" class="text-heading-sm text-ink">Related reading</h2>
+          <div class="mt-6 grid gap-x-8 gap-y-8 sm:grid-cols-2">
+            <% @related.each do |article| %>
+              <%= render "articles/card", article: article %>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+    </div>
+
+    <% if @article.sources.any? %>
+      <aside class="lg:sticky lg:top-8 lg:self-start lg:border-l lg:border-line lg:pl-8">
+        <%= render "articles/sources_rail", article: @article %>
+      </aside>
+    <% end %>
+  </div>
+</article>

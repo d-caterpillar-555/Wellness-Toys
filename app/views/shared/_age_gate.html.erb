@@ -1,0 +1,16 @@
+<%# The soft age gate. It states the position, records the acknowledgement in the
+    visitor's own session, and lets browsing continue: the catalogue stays public
+    and indexable, which is the point of the plain name and the plain information.
+    It is not a modal and it does not block. %>
+<div class="border-b border-line bg-paper-sunk" role="region" aria-label="<%= t("age_gate.label") %>">
+  <div class="wt-container py-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <p class="max-w-[68ch] text-ui text-body">
+        <span class="text-ink"><%= t("age_gate.heading") %></span>
+        <%= t("age_gate.body") %>
+        <%= link_to t("age_gate.why"), page_path("standards"), class: "text-accent" %>
+      </p>
+      <%= button_to t("age_gate.confirm"), age_confirmation_path, class: "wt-btn wt-btn--secondary shrink-0" %>
+    </div>
+  </div>
+</div>

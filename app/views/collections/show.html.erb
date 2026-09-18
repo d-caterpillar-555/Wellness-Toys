@@ -1,0 +1,32 @@
+<% content_for :title, @collection[:title] %>
+<% content_for :meta_description, @collection[:description] %>
+
+<section class="wt-container pt-12 pb-8 md:pt-16" data-controller="reveal" data-reveal>
+  <nav aria-label="Breadcrumb" class="text-caption">
+    <%= link_to "Shop", shop_path, class: "text-body no-underline hover:text-ink" %>
+    <span aria-hidden="true" class="text-muted"> / </span>
+    <span class="text-ink" aria-current="page"><%= @collection[:title] %></span>
+  </nav>
+
+  <h1 class="mt-4 text-display-sm text-ink md:text-display"><%= @collection[:title] %></h1>
+  <p class="mt-4 max-w-[68ch] text-lede text-body"><%= @collection[:description] %></p>
+  <p class="mt-3 text-ui text-muted tnum"><%= pluralize(@products.size, "product") %></p>
+</section>
+
+<section class="wt-container pb-20" data-controller="reveal" data-reveal>
+  <h2 class="sr-only">Products</h2>
+
+  <% if @products.any? %>
+    <div class="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <% @products.each do |product| %>
+        <%= render "products/card", product: product %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="max-w-[52ch] border-t border-line pt-8">
+      <p class="text-lede text-ink">This selection is empty right now.</p>
+      <p class="mt-3 text-body">A curated set is only as good as what is in stock to fill it. The whole catalogue is a click away.</p>
+      <%= link_to "Browse the catalogue", shop_path, class: "wt-btn wt-btn--secondary mt-6" %>
+    </div>
+  <% end %>
+</section>

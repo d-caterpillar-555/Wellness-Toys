@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><%= content_for(:title).presence || Brand.title_for(nil) %></title>
-    <meta name="description" content="<%= content_for(:meta_description).presence || Brand.tagline %>">
+    <title><%= content_for(:title).presence || Store.title_for(nil) %></title>
+    <meta name="description" content="<%= content_for(:meta_description).presence || Store.tagline %>">
 
     <%# Self-referencing canonical. Override per page only when a different
         canonical is genuinely correct. %>
     <link rel="canonical" href="<%= content_for(:canonical).presence || request.base_url + request.path %>">
 
-    <meta property="og:site_name" content="<%= Brand.name %>">
-    <meta property="og:title" content="<%= content_for(:title).presence || Brand.title_for(nil) %>">
-    <meta property="og:description" content="<%= content_for(:meta_description).presence || Brand.tagline %>">
+    <meta property="og:site_name" content="<%= Store.name %>">
+    <meta property="og:title" content="<%= content_for(:title).presence || Store.title_for(nil) %>">
+    <meta property="og:description" content="<%= content_for(:meta_description).presence || Store.tagline %>">
     <meta property="og:type" content="<%= content_for(:og_type).presence || "website" %>">
     <meta property="og:url" content="<%= request.base_url + request.path %>">
     <% if content_for?(:og_image) %>
@@ -53,10 +53,23 @@
         }
       })();
     </script>
+
+    <%# The publisher and the site, as one server-rendered graph. A page adds its
+        own subject (a product, an article, a writer) through
+        content_for :structured_data. %>
+    <%= json_ld(organization_schema) %>
+    <%= json_ld(website_schema) %>
+    <%= yield :structured_data %>
   </head>
 
   <body class="min-h-[100dvh] flex flex-col bg-paper text-body">
     <a href="#main" class="wt-skip-link">Skip to content</a>
+
+    <%# One prompt at a time: the age acknowledgement first, consent once that is
+        answered. Both are recorded in the visitor's own session and neither
+        blocks the page. %>
+    <%= render "shared/age_gate" unless age_confirmed? %>
+    <%= render "shared/consent_banner" if age_confirmed? && !consent_decided? %>
 
     <%= render "layouts/header" %>
 

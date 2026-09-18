@@ -19,6 +19,14 @@ gem "solid_cable"
 gem "bootsnap", require: false
 gem "thruster", require: false
 
+# Pinned to 2.x. The json 3.0 release changed JSON.parse's signature and Rails
+# 8.1.3.1's ActiveRecord::Type::Json#deserialize still calls it the old way, so
+# reading ANY jsonb column raises ArgumentError. That is not a subtle edge case:
+# it breaks variant options, audit metadata and session payloads alike. Bundler
+# resolves json 3.0.2 by default because nothing else constrains it. Remove this
+# pin once Rails declares support for json 3.
+gem "json", "~> 2.7"
+
 gem "image_processing", "~> 1.2"
 # Loaded lazily: image_processing only needs the Vips constant when a variant is
 # actually processed. Requiring it at boot would make the whole application
@@ -77,8 +85,14 @@ end
 
 group :development do
   gem "web-console"
-  gem "bullet", "~> 8.2"
   gem "pry-rails"
+end
+
+group :development, :test do
+  # Bullet is a gate in the suite, not only a development advisory: gems.md
+  # section 35B keeps "Bullet warnings zero" as a CI condition, and a condition
+  # nobody runs is not a condition.
+  gem "bullet", "~> 8.2"
 end
 
 group :test do
@@ -91,4 +105,4 @@ group :test do
   gem "test-prof"
 end
 
-gem "dotenv-rails", "~> 3.2", groups: [:development, :test]
+gem "dotenv-rails", "~> 3.2", groups: [ :development, :test ]

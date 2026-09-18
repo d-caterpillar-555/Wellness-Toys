@@ -1,0 +1,64 @@
+<% content_for :title, @query.present? ? "Search: #{@query}" : "Search" %>
+<% content_for :meta_description, "Search the #{Store.name} catalogue and library." %>
+
+<section class="wt-container pt-12 pb-8 md:pt-16">
+  <h1 class="text-display-sm text-ink md:text-display">Search</h1>
+  <p class="mt-3 max-w-[52ch] text-lede text-body">Find a product, or an explanation. Results come from the catalogue and the library.</p>
+
+  <%= form_with url: search_path, method: :get, class: "mt-8 flex flex-wrap items-end gap-3" do |form| %>
+    <div class="min-w-[18rem] flex-1">
+      <%= form.label :q, "Search terms", class: "wt-label" %>
+      <%= form.search_field :q, value: @query, class: "wt-input", placeholder: "Try a material, a brand or a word" %>
+    </div>
+    <%= form.submit "Search", class: "wt-btn wt-btn--primary" %>
+  <% end %>
+</section>
+
+<% if @query.present? %>
+  <section class="wt-container pb-20" data-controller="reveal" data-reveal>
+    <h2 class="text-heading text-ink">Products</h2>
+    <p class="mt-2 text-ui text-muted tnum"><%= pluralize(@pagy.count, "product") %></p>
+
+    <% if @products.any? %>
+      <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <% @products.each do |product| %>
+          <%= render "products/card", product: product %>
+        <% end %>
+      </div>
+      <%= render "shared/pagination", pagy: @pagy %>
+    <% else %>
+      <div class="mt-8 max-w-[52ch] border-t border-line pt-8">
+        <p class="text-lede text-ink">Nothing matches "<%= @query %>".</p>
+        <p class="mt-3 text-body">Check the spelling, or try a broader word. The whole catalogue is a click away.</p>
+        <%= link_to "Browse the catalogue", shop_path, class: "wt-btn wt-btn--secondary mt-6" %>
+      </div>
+    <% end %>
+  </section>
+
+  <% if @articles.any? %>
+    <section class="wt-container pb-24">
+      <h2 class="text-heading text-ink">From the library</h2>
+      <ul class="mt-6 divide-y divide-line border-t border-line">
+        <% @articles.each do |article| %>
+          <% topic = article.primary_topic %>
+          <% href = case article.kind
+                    when "post" then blog_post_path(article)
+                    when "glossary" then learn_glossary_term_path(article)
+                    else (topic ? learn_article_path(topic, article) : nil)
+                    end %>
+          <% body = capture do %>
+            <h3 class="text-title text-ink group-hover:text-accent"><%= article.title %></h3>
+            <p class="mt-1 text-caption text-muted"><%= article.kind.capitalize %> - <%= article.reading_time_label %></p>
+          <% end %>
+          <li class="py-5">
+            <% if href %>
+              <%= link_to body, href, class: "group block no-underline" %>
+            <% else %>
+              <div class="group"><%= body %></div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+<% end %>

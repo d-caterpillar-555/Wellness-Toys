@@ -1,0 +1,17 @@
+<%# locals: (form:, attribute:, label:, type: :text_field, autocomplete: nil, hint: nil, required: true) %>
+<% errors = form.object.errors[attribute] %>
+<% error_id = "#{form.object_name}_#{attribute}_error" %>
+<div>
+  <%= form.label attribute, label, class: "wt-label" %>
+  <%= form.public_send(type, attribute,
+        class: "wt-input",
+        autocomplete: autocomplete,
+        required: required,
+        aria: { invalid: ("true" if errors.any?), describedby: (error_id if errors.any?) }) %>
+  <% if hint.present? %>
+    <p class="wt-hint"><%= hint %></p>
+  <% end %>
+  <% form.object.errors.full_messages_for(attribute).each do |message| %>
+    <p class="wt-error" id="<%= error_id %>"><%= message %></p>
+  <% end %>
+</div>

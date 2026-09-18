@@ -1,0 +1,21 @@
+<%# locals: (article:) %>
+<%# The evidence rail. A source the reader cannot check leaves the claim resting
+    on the author's authority alone, which this publication does not do. An
+    article with no sources renders nothing here and says so in the body. %>
+<% if article.sources.any? %>
+  <section aria-labelledby="sources-heading">
+    <h2 id="sources-heading" class="text-label font-medium tracking-label text-ink">Sources</h2>
+
+    <ol class="mt-4 space-y-5">
+      <% article.sources.each do |source| %>
+        <li>
+          <%= link_to source.title, source.url,
+                target: "_blank",
+                rel: "noopener noreferrer",
+                class: "text-ui text-ink underline decoration-line hover:decoration-accent" %>
+          <p class="mt-1 text-caption text-muted"><%= source_citation(source) %></p>
+        </li>
+      <% end %>
+    </ol>
+  </section>
+<% end %>

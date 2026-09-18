@@ -1,0 +1,19 @@
+<% content_for :title, t("auth.passwords.edit_title") %>
+
+<section class="wt-container py-12 md:py-16">
+  <div class="max-w-[34rem]">
+    <h1 class="text-display-sm text-ink md:text-display"><%= t("auth.passwords.edit_title") %></h1>
+
+    <%= render "shared/form_errors", resource: resource %>
+
+    <%= form_with model: resource, as: resource_name, url: password_path(resource_name), method: :put, class: "mt-10 space-y-6" do |form| %>
+      <%= form.hidden_field :reset_password_token %>
+      <%= render "shared/field", form: form, attribute: :password, label: t("auth.fields.password"), type: :password_field, autocomplete: "new-password", hint: t("auth.hints.password", count: @minimum_password_length || Devise.password_length.min) %>
+      <%= render "shared/field", form: form, attribute: :password_confirmation, label: t("auth.fields.password_confirmation"), type: :password_field, autocomplete: "new-password" %>
+
+      <div class="pt-2">
+        <%= form.submit t("auth.passwords.edit_submit"), class: "wt-btn wt-btn--primary w-full" %>
+      </div>
+    <% end %>
+  </div>
+</section>

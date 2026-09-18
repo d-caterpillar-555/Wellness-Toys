@@ -1,0 +1,186 @@
+#!/usr/bin/env bash
+#
+# Verify that database constraints actually reject bad data.
+#
+# A constraint that exists is not the same as a constraint that works. This
+# script attempts real violations inside a transaction, asserts that PostgreSQL
+# refuses each one, and rolls back. Anything that succeeds is reported as a
+# failure, because it means an invariant the application relies on is not
+# actually enforced.
+#
+# Every test builds its own fixture rows inside its own transaction. This
+# matters: an earlier version of this script used "insert ... select from
+# products limit 1" against an empty table, which inserts zero rows and
+# therefore always succeeds. Eleven tests were passing vacuously.
+#
+# This is gems.md section 14A made executable, and it applies the
+# database-assistant skill's rule: use constraints for data integrity, and
+# prove it rather than asserting it.
+#
+# Usage: script/db-verify
+#
+set -uo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+PSQL="bin/pg psql --dbname=wellness_toys_development"
+pass=0
+fail=0
+
+run() {
+  $PSQL -v ON_ERROR_STOP=1 -q -c "begin; $1 rollback;" 2>&1
+}
+
+expect_reject() {
+  local label="$1" sql="$2" out
+
+  out="$(run "$sql")"
+  if [ $? -ne 0 ]; then
+    printf '  rejected  %s\n' "$label"
+    pass=$((pass + 1))
+  else
+    printf '  ACCEPTED  %s   <-- constraint did not fire\n' "$label"
+    fail=$((fail + 1))
+  fi
+}
+
+expect_accept() {
+  local label="$1" sql="$2" out
+
+  out="$(run "$sql")"
+  if [ $? -eq 0 ]; then
+    printf '  accepted  %s\n' "$label"
+    pass=$((pass + 1))
+  else
+    printf '  REJECTED  %s   <-- legitimate data refused\n' "$label"
+    printf '            %s\n' "$(printf '%s' "$out" | grep -m1 ERROR)"
+    fail=$((fail + 1))
+  fi
+}
+
+# Fixture fragments reused across tests. Each is written to be safe to run
+# repeatedly inside a transaction that is always rolled back.
+PRODUCT="insert into products (name, slug, sku, created_at, updated_at) values ('Fixture', 'fixture-product', 'FIX-001', now(), now());"
+VARIANT="insert into variants (product_id, name, sku, price_cents, created_at, updated_at) select id, 'Fixture', 'FIX-V1', 1999, now(), now() from products where sku = 'FIX-001';"
+USER="insert into users (email, encrypted_password, name, age_confirmed_at, terms_accepted_at, created_at, updated_at) values ('fixture@example.com', 'x', 'Fixture', now(), now(), now(), now());"
+CART="insert into carts (guest_token, created_at, updated_at) values ('fixture-guest-token', now(), now());"
+ORDER="insert into orders (number, public_token, checkout_token, email, ship_to_recipient, ship_to_line1, ship_to_city, ship_to_postal_code, ship_to_country_code, created_at, updated_at) values ('WT-FIX', 'fixture-public-token-abcdef', 'fixture-checkout-token', 'fixture@example.com', 'Fixture', '1 Test Street', 'Testville', '12345', 'US', now(), now());"
+
+echo "Constraint verification against wellness_toys_development"
+echo
+echo "Commerce invariants"
+echo
+
+expect_reject "negative stock" \
+  "$PRODUCT $VARIANT insert into variants (product_id, name, sku, price_cents, stock_quantity, created_at, updated_at) select id, 'Bad', 'FIX-NEG', 100, -1, now(), now() from products where sku = 'FIX-001';"
+
+expect_reject "zero price" \
+  "$PRODUCT insert into variants (product_id, name, sku, price_cents, created_at, updated_at) select id, 'Bad', 'FIX-ZERO', 0, now(), now() from products where sku = 'FIX-001';"
+
+expect_reject "compare_at_price below price" \
+  "$PRODUCT insert into variants (product_id, name, sku, price_cents, compare_at_price_cents, created_at, updated_at) select id, 'Bad', 'FIX-CMP', 500, 400, now(), now() from products where sku = 'FIX-001';"
+
+expect_reject "duplicate variant sku" \
+  "$PRODUCT $VARIANT insert into variants (product_id, name, sku, price_cents, created_at, updated_at) select id, 'Dup', 'FIX-V1', 100, now(), now() from products where sku = 'FIX-001';"
+
+expect_reject "zero cart quantity" \
+  "$PRODUCT $VARIANT $CART insert into cart_items (cart_id, variant_id, quantity, created_at, updated_at) select c.id, v.id, 0, now(), now() from carts c, variants v where c.guest_token = 'fixture-guest-token' and v.sku = 'FIX-V1';"
+
+expect_reject "the same variant twice in one cart" \
+  "$PRODUCT $VARIANT $CART insert into cart_items (cart_id, variant_id, quantity, created_at, updated_at) select c.id, v.id, 1, now(), now() from carts c, variants v where c.guest_token = 'fixture-guest-token' and v.sku = 'FIX-V1'; insert into cart_items (cart_id, variant_id, quantity, created_at, updated_at) select c.id, v.id, 1, now(), now() from carts c, variants v where c.guest_token = 'fixture-guest-token' and v.sku = 'FIX-V1';"
+
+expect_reject "an active product with no published_at" \
+  "insert into products (name, slug, sku, status, created_at, updated_at) values ('x', 'x-a', 'FIX-A', 'active', now(), now());"
+
+expect_reject "an unknown product status" \
+  "insert into products (name, slug, sku, status, created_at, updated_at) values ('x', 'x-b', 'FIX-B', 'nonsense', now(), now());"
+
+expect_reject "a category parented to a missing row" \
+  "insert into categories (name, slug, parent_id, created_at, updated_at) values ('x', 'x-c', 99999999, now(), now());"
+
+echo
+echo "Cart ownership"
+echo
+
+expect_reject "a cart with no owner" \
+  "insert into carts (created_at, updated_at) values (now(), now());"
+
+expect_reject "a cart with two owners" \
+  "$USER insert into carts (user_id, guest_token, created_at, updated_at) select id, 'tok-both', now(), now() from users where email = 'fixture@example.com';"
+
+echo
+echo "Order integrity"
+echo
+
+expect_reject "a line total that contradicts the arithmetic" \
+  "$ORDER insert into order_items (order_id, product_name, variant_name, sku, unit_price_cents, quantity, line_total_cents, created_at, updated_at) select id, 'p', 'v', 's', 100, 3, 999, now(), now() from orders where number = 'WT-FIX';"
+
+expect_reject "a zero-quantity order line" \
+  "$ORDER insert into order_items (order_id, product_name, variant_name, sku, unit_price_cents, quantity, line_total_cents, created_at, updated_at) select id, 'p', 'v', 's', 100, 0, 0, now(), now() from orders where number = 'WT-FIX';"
+
+expect_reject "an unknown order status" \
+  "insert into orders (number, public_token, checkout_token, email, ship_to_recipient, ship_to_line1, ship_to_city, ship_to_postal_code, ship_to_country_code, status, created_at, updated_at) values ('WT-x', 'token-token-token-token', 'ct-1', 'a@b.com', 'r', 'l', 'c', 'p', 'US', 'nonsense', now(), now());"
+
+expect_reject "a short public token" \
+  "insert into orders (number, public_token, checkout_token, email, ship_to_recipient, ship_to_line1, ship_to_city, ship_to_postal_code, ship_to_country_code, created_at, updated_at) values ('WT-y', 'short', 'ct-2', 'a@b.com', 'r', 'l', 'c', 'p', 'US', now(), now());"
+
+expect_reject "a replayed checkout token" \
+  "$ORDER insert into orders (number, public_token, checkout_token, email, ship_to_recipient, ship_to_line1, ship_to_city, ship_to_postal_code, ship_to_country_code, created_at, updated_at) values ('WT-z', 'another-public-token-here', 'fixture-checkout-token', 'a@b.com', 'r', 'l', 'c', 'p', 'US', now(), now());"
+
+echo
+echo "Accounts and consent"
+echo
+
+expect_reject "a user with no age confirmation" \
+  "insert into users (email, encrypted_password, name, age_confirmed_at, terms_accepted_at, created_at, updated_at) values ('noconsent@example.com', 'x', 'n', null, now(), now(), now());"
+
+expect_reject "an unknown role" \
+  "insert into users (email, encrypted_password, name, role, age_confirmed_at, terms_accepted_at, created_at, updated_at) values ('role@example.com', 'x', 'n', 'superuser', now(), now(), now(), now());"
+
+expect_reject "a malformed email" \
+  "insert into users (email, encrypted_password, name, age_confirmed_at, terms_accepted_at, created_at, updated_at) values ('not-an-email', 'x', 'n', now(), now(), now(), now());"
+
+expect_reject "a duplicate email" \
+  "$USER insert into users (email, encrypted_password, name, age_confirmed_at, terms_accepted_at, created_at, updated_at) values ('fixture@example.com', 'x', 'n', now(), now(), now(), now());"
+
+expect_reject "an address that is both default shipping and default billing" \
+  "$USER insert into addresses (user_id, recipient, line1, city, postal_code, country_code, default_shipping, default_billing, created_at, updated_at) select id, 'r', 'l', 'c', 'p', 'US', true, true, now(), now() from users where email = 'fixture@example.com';"
+
+expect_reject "an unknown consent kind" \
+  "insert into consent_records (subject_token, kind, granted_at, policy_version, created_at) values ('t', 'sell-everything', now(), 'v1', now());"
+
+expect_reject "updating a consent record" \
+  "insert into consent_records (subject_token, kind, granted_at, policy_version, created_at) values ('t-upd', 'analytics', now(), 'v1', now()); update consent_records set policy_version = 'tampered' where subject_token = 't-upd';"
+
+expect_reject "deleting a consent record" \
+  "insert into consent_records (subject_token, kind, granted_at, policy_version, created_at) values ('t-del', 'analytics', now(), 'v1', now()); delete from consent_records where subject_token = 't-del';"
+
+expect_reject "a completed data request with no completion time" \
+  "$USER insert into data_requests (user_id, kind, status, requested_at, created_at, updated_at) select id, 'export', 'completed', now(), now(), now() from users where email = 'fixture@example.com';"
+
+expect_reject "a retroactively revoked consent" \
+  "insert into consent_records (subject_token, kind, granted_at, revoked_at, policy_version, created_at) values ('t-rev', 'analytics', now(), now() - interval '1 day', 'v1', now());"
+
+echo
+echo "Legitimate data must still be accepted"
+echo
+
+expect_accept "a valid variant" \
+  "$PRODUCT $VARIANT select 1;"
+
+expect_accept "a valid guest cart with an item" \
+  "$PRODUCT $VARIANT $CART insert into cart_items (cart_id, variant_id, quantity, created_at, updated_at) select c.id, v.id, 2, now(), now() from carts c, variants v where c.guest_token = 'fixture-guest-token' and v.sku = 'FIX-V1';"
+
+expect_accept "a valid order with a consistent line" \
+  "$ORDER insert into order_items (order_id, product_name, variant_name, sku, unit_price_cents, quantity, line_total_cents, created_at, updated_at) select id, 'p', 'v', 's', 1999, 2, 3998, now(), now() from orders where number = 'WT-FIX';"
+
+expect_accept "a valid consent grant and its withdrawal" \
+  "insert into consent_records (subject_token, kind, granted_at, policy_version, created_at) values ('t-ok', 'analytics', now(), 'v1', now()); insert into consent_records (subject_token, kind, granted_at, revoked_at, policy_version, created_at) values ('t-ok', 'analytics', now() - interval '1 hour', now(), 'v1', now());"
+
+expect_accept "a valid user with a saved address" \
+  "$USER insert into addresses (user_id, recipient, line1, city, postal_code, country_code, default_shipping, created_at, updated_at) select id, 'Fixture', '1 Test Street', 'Testville', '12345', 'US', true, now(), now() from users where email = 'fixture@example.com';"
+
+echo
+echo "Result: $pass passed, $fail failed"
+exit $((fail > 0))

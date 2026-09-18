@@ -1,0 +1,18 @@
+<%= t("orders.mailer.greeting") %>
+
+<%= t("orders.mailer.intro", number: @order.number) %>
+
+<%= t("orders.show.items_heading") %>
+<% @items.each do |item| %>
+- <%= item.product_name %> (<%= item.variant_name %> / <%= item.sku %>): <%= item.quantity %> x <%= number_to_currency(item.unit_price_cents / 100.0, unit: "$") %>
+<% end %>
+
+<%= t("orders.show.total") %>: <%= number_to_currency(@order.total_cents / 100.0, unit: "$") %>
+
+<%= t("orders.show.shipping_heading") %>
+<%= @order.ship_to_recipient %>
+<%= [ @order.ship_to_line1, @order.ship_to_line2, @order.ship_to_city, @order.ship_to_region, @order.ship_to_postal_code, @order.ship_to_country_code ].compact_blank.join(", ") %>
+
+<%= t("orders.mailer.link_note") %>
+
+<%= order_url(@order.public_token) %>

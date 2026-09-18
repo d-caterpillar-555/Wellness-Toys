@@ -1,0 +1,44 @@
+# Trading identity for this storefront. Single source of truth.
+#
+# Read through the Store class (app/models/store.rb), and used in page titles,
+# the wordmark, mailer templates, schema.org Organization output, and the
+# default meta description.
+#
+# NOT to be confused with `Brand`, which is a domain model and refers to the
+# maker of a product.
+#
+# Environment variables override these values (STORE_NAME, STORE_URL), which is
+# how staging and production avoid hardcoding an identity.
+
+default: &default
+  name: "Wellness Toys"
+  # Shown in the footer and used as the default meta description when a page
+  # does not define its own. One sentence. No hype, no claims.
+  tagline: "Sexual health and wellness, plainly explained."
+
+  # Placeholders. Replace with real, monitored addresses before launch.
+  support_email: "support@example.com"
+  privacy_email: "privacy@example.com"
+  press_email: "press@example.com"
+
+  # Used for schema.org Organization and absolute URL generation.
+  url: "http://localhost:3000"
+
+  # The legal entity that operates the store. Appears on the terms and privacy
+  # pages and in policy text. Must be set before launch.
+  legal_entity: "Wellness Toys"
+
+  # The version of the privacy policy that consent records refer to. Bump this
+  # when the policy text changes: consent given under an older version stays
+  # distinguishable from consent given under the current one.
+  privacy_policy_version: "1.0"
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  url: "http://www.example.com"
+
+production:
+  <<: *default

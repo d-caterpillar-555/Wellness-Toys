@@ -1,0 +1,33 @@
+<p><%= t("orders.mailer.greeting") %></p>
+
+<p><%= t("orders.mailer.intro", number: @order.number) %></p>
+
+<h2><%= t("orders.show.items_heading") %></h2>
+<table cellpadding="0" cellspacing="0">
+  <% @items.each do |item| %>
+    <tr>
+      <td>
+        <%= item.product_name %>
+        <% if item.variant_name.present? %>
+          <br><small><%= item.variant_name %> / <%= item.sku %></small>
+        <% end %>
+      </td>
+      <td align="right"><%= item.quantity %> x <%= number_to_currency(item.unit_price_cents / 100.0, unit: "$") %></td>
+      <td align="right"><%= number_to_currency(item.line_total_cents / 100.0, unit: "$") %></td>
+    </tr>
+  <% end %>
+  <tr>
+    <td colspan="2" align="right"><%= t("orders.show.total") %></td>
+    <td align="right"><%= number_to_currency(@order.total_cents / 100.0, unit: "$") %></td>
+  </tr>
+</table>
+
+<h2><%= t("orders.show.shipping_heading") %></h2>
+<p>
+  <%= @order.ship_to_recipient %><br>
+  <%= [ @order.ship_to_line1, @order.ship_to_line2, @order.ship_to_city, @order.ship_to_region, @order.ship_to_postal_code, @order.ship_to_country_code ].compact_blank.join(", ") %>
+</p>
+
+<p><%= t("orders.mailer.link_note") %></p>
+
+<p><%= link_to t("orders.mailer.link_label"), order_url(@order.public_token) %></p>

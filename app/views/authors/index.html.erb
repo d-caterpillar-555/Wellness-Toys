@@ -1,0 +1,43 @@
+<% content_for :title, "The writers" %>
+<% content_for :meta_description, "The people who write for the #{Store.name} education library, each credited and each with their credentials in their own words." %>
+
+<section class="wt-container pt-12 pb-8 md:pt-16" data-controller="reveal" data-reveal>
+  <nav aria-label="Breadcrumb" class="text-caption">
+    <%= link_to "Learn", learn_path, class: "text-body no-underline hover:text-ink" %>
+    <span aria-hidden="true" class="text-muted"> / </span>
+    <span class="text-ink" aria-current="page">Writers</span>
+  </nav>
+
+  <h1 class="mt-4 text-display-sm text-ink md:text-display">The writers</h1>
+  <p class="mt-4 max-w-[64ch] text-lede text-body">
+    Every article carries a name. Credentials are stated in the writer's own
+    words, or left blank, because an invented qualification is worse than a
+    missing one.
+  </p>
+</section>
+
+<section class="wt-container pb-20" data-controller="reveal" data-reveal>
+  <% if @authors.any? %>
+    <ul class="divide-y divide-line border-y border-line">
+      <% @authors.each do |author| %>
+        <li>
+          <%= link_to learn_expert_path(author), class: "group flex items-baseline justify-between gap-6 py-6 no-underline" do %>
+            <span class="max-w-[54ch]">
+              <span class="block text-title text-ink group-hover:text-accent"><%= author.name %></span>
+              <% if author.bio.present? %>
+                <span class="mt-2 block text-body"><%= author.bio %></span>
+              <% end %>
+            </span>
+            <span class="shrink-0 text-caption text-muted tnum"><%= pluralize(author.published_article_count, "article") %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="max-w-[52ch] border-t border-line pt-8">
+      <p class="text-lede text-ink">No writers are listed yet.</p>
+      <p class="mt-3 text-body">The articles are all still here in the library.</p>
+      <%= link_to "Back to the library", learn_path, class: "wt-btn wt-btn--secondary mt-6" %>
+    </div>
+  <% end %>
+</section>

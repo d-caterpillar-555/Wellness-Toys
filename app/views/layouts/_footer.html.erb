@@ -3,8 +3,8 @@
     <div class="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
 
       <div>
-        <p class="font-display text-title text-ink tracking-title mb-4"><%= Brand.name %></p>
-        <p class="text-ui text-muted max-w-[36ch]"><%= Brand.tagline %></p>
+        <p class="font-display text-title text-ink tracking-title mb-4"><%= Store.name %></p>
+        <p class="text-ui text-muted max-w-[36ch]"><%= Store.tagline %></p>
       </div>
 
       <nav aria-label="Company">
@@ -32,10 +32,10 @@
 
     <div class="mt-12 pt-8 border-t border-line flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <p class="text-caption text-muted">
-        <%= Brand.legal_entity %>. You must be of legal age in your jurisdiction to purchase.
+        <%= Store.legal_entity %>. You must be of legal age in your jurisdiction to purchase.
       </p>
       <p class="text-caption text-muted">
-        <%= mail_to Brand.support_email, Brand.support_email, class: "text-body underline decoration-line hover:decoration-accent" %>
+        <%= mail_to Store.support_email, Store.support_email, class: "text-body underline decoration-line hover:decoration-accent" %>
       </p>
     </div>
   </div>

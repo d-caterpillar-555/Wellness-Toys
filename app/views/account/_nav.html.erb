@@ -1,0 +1,10 @@
+<%# The account area's own navigation, rendered by every account page so the set
+    of links has one owner. %>
+<nav aria-label="Account" class="flex flex-wrap items-center gap-x-6 gap-y-2 border-b border-line pb-4">
+  <%= link_to t("account.dashboard.title"), account_root_path, class: "wt-nav-link", aria: { current: ("page" if current_page?(account_root_path)) } %>
+  <%= link_to t("account.orders.title"), account_orders_path, class: "wt-nav-link", aria: { current: ("page" if current_page?(account_orders_path)) } %>
+  <%= link_to t("account.addresses.title"), account_addresses_path, class: "wt-nav-link", aria: { current: ("page" if current_page?(account_addresses_path)) } %>
+  <%= link_to t("account.profile.title"), account_profile_path, class: "wt-nav-link", aria: { current: ("page" if current_page?(account_profile_path)) } %>
+  <%= link_to t("account.data_requests.title"), account_data_requests_path, class: "wt-nav-link", aria: { current: ("page" if current_page?(account_data_requests_path)) } %>
+  <%= link_to t("account.consent.title"), account_consent_path, class: "wt-nav-link", aria: { current: ("page" if current_page?(account_consent_path)) } %>
+</nav>

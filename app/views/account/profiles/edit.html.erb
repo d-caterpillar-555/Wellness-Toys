@@ -1,0 +1,19 @@
+<% content_for :title, t("account.profile.edit_title") %>
+
+<section class="wt-container py-12 md:py-16">
+  <div class="max-w-[34rem]">
+    <h1 class="text-display-sm text-ink md:text-display"><%= t("account.profile.edit_title") %></h1>
+
+    <%= render "shared/form_errors", resource: current_user %>
+
+    <%= form_with model: current_user, url: account_profile_path, method: :patch, class: "mt-10 space-y-6" do |form| %>
+      <%= render "shared/field", form: form, attribute: :name, label: t("auth.fields.name"), autocomplete: "name" %>
+      <%= render "shared/field", form: form, attribute: :phone, label: t("auth.fields.phone"), type: :telephone_field, autocomplete: "tel", required: false, hint: t("auth.hints.phone") %>
+
+      <div class="pt-2">
+        <%= form.submit t("account.profile.submit"), class: "wt-btn wt-btn--primary" %>
+        <%= link_to t("account.nav.account"), account_root_path, class: "wt-btn wt-btn--quiet" %>
+      </div>
+    <% end %>
+  </div>
+</section>

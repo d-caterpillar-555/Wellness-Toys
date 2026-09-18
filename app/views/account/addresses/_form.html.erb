@@ -1,0 +1,22 @@
+<%# locals: (form:, address:) %>
+<div class="space-y-6">
+  <%= render "shared/field", form: form, attribute: :label, label: t("account.addresses.fields.label"), required: false, hint: t("account.addresses.hints.label") %>
+  <%= render "shared/field", form: form, attribute: :recipient, label: t("account.addresses.fields.recipient"), autocomplete: "name" %>
+  <%= render "shared/field", form: form, attribute: :line1, label: t("account.addresses.fields.line1"), autocomplete: "address-line1" %>
+  <%= render "shared/field", form: form, attribute: :line2, label: t("account.addresses.fields.line2"), autocomplete: "address-line2", required: false %>
+  <%= render "shared/field", form: form, attribute: :city, label: t("account.addresses.fields.city"), autocomplete: "address-level2" %>
+  <%= render "shared/field", form: form, attribute: :region, label: t("account.addresses.fields.region"), autocomplete: "address-level1", required: false %>
+  <%= render "shared/field", form: form, attribute: :postal_code, label: t("account.addresses.fields.postal_code"), autocomplete: "postal-code" %>
+  <%= render "shared/field", form: form, attribute: :country_code, label: t("account.addresses.fields.country_code"), autocomplete: "country", hint: t("account.addresses.hints.country_code") %>
+
+  <fieldset class="space-y-3 border-t border-line pt-6">
+    <label class="flex items-start gap-3 text-body">
+      <%= check_box_tag "address[default_shipping]", "1", address.default_shipping?, class: "mt-1" %>
+      <span><%= t("account.addresses.default_shipping") %></span>
+    </label>
+    <label class="flex items-start gap-3 text-body">
+      <%= check_box_tag "address[default_billing]", "1", address.default_billing?, class: "mt-1" %>
+      <span><%= t("account.addresses.default_billing") %></span>
+    </label>
+  </fieldset>
+</div>

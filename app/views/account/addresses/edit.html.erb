@@ -1,0 +1,18 @@
+<% content_for :title, t("account.addresses.edit") %>
+
+<section class="wt-container py-12 md:py-16">
+  <div class="max-w-[34rem]">
+    <h1 class="text-display-sm text-ink md:text-display"><%= t("account.addresses.edit") %></h1>
+
+    <%= render "shared/form_errors", resource: @address %>
+
+    <%= form_with model: @address, url: account_address_path(@address), method: :patch, class: "mt-10" do |form| %>
+      <%= render "account/addresses/form", form: form, address: @address %>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <%= form.submit t("account.addresses.submit"), class: "wt-btn wt-btn--primary" %>
+        <%= link_to t("account.addresses.back"), account_addresses_path, class: "wt-btn wt-btn--quiet" %>
+      </div>
+    <% end %>
+  </div>
+</section>

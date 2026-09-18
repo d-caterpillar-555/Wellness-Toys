@@ -1,0 +1,39 @@
+<% content_for :title, @term.title %>
+<% content_for :meta_description, @term.excerpt.presence || "A glossary term from the #{Store.name} education library." %>
+
+<article class="wt-container py-16 md:py-24">
+  <nav aria-label="Breadcrumb" class="text-caption">
+    <%= link_to "Learn", learn_path, class: "text-body no-underline hover:text-ink" %>
+    <span aria-hidden="true" class="text-muted"> / </span>
+    <%= link_to "Glossary", learn_glossary_path, class: "text-body no-underline hover:text-ink" %>
+    <span aria-hidden="true" class="text-muted"> / </span>
+    <span class="text-ink" aria-current="page"><%= @term.title %></span>
+  </nav>
+
+  <header class="mt-8 max-w-[68ch]" data-controller="reveal" data-reveal>
+    <p class="text-label text-muted">Glossary</p>
+    <h1 class="mt-3 text-display-sm text-ink md:text-display"><%= @term.title %></h1>
+
+    <% if @term.excerpt.present? %>
+      <p class="mt-6 text-lede text-body"><%= @term.excerpt %></p>
+    <% end %>
+  </header>
+
+  <div class="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
+    <div class="wt-prose">
+      <% @term.paragraphs.each do |paragraph| %>
+        <p><%= paragraph %></p>
+      <% end %>
+
+      <% if @term.sources.empty? %>
+        <p class="mt-12 text-ui text-muted">This piece does not cite external sources.</p>
+      <% end %>
+    </div>
+
+    <% if @term.sources.any? %>
+      <aside class="lg:self-start">
+        <%= render "articles/sources_rail", article: @term %>
+      </aside>
+    <% end %>
+  </div>
+</article>

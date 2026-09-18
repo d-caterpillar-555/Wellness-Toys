@@ -1,0 +1,179 @@
+#!/usr/bin/env python3
+"""Query the skill-retrieval-mcp corpus directly.
+
+WHY THIS EXISTS
+---------------
+skills.md mandates that agents route through skill-retrieval-mcp rather than
+preloading the whole catalogue. That server is a stdio MCP process, and it is
+not registered with every agent runtime that works in this repository. When it
+is not available as an MCP tool, reading the corpus by hand is worse than
+querying it: you find the skills you already thought of, and miss the ones you
+did not.
+
+This reads the same SQLite store the server reads, and reproduces the
+`keyword_search` tool using the FTS5 index that is already in the database. The
+semantic `search_skills` path needs the FAISS index and sentence-transformers,
+so it is not reproduced here; FTS is enough to find a skill by subject.
+
+READ-ONLY. It opens the database with mode=ro and never writes.
+
+USAGE
+-----
+    script/skill-query "database schema constraints"
+    script/skill-query "authorisation policy" --limit 8
+    script/skill-query --show rails-conventions
+    script/skill-query --list
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import sqlite3
+import sys
+import textwrap
+
+DEFAULT_DB = os.environ.get(
+    "SKILL_DB",
+    os.path.expanduser("~/transplant-teddy/.skills-mcp/data/skills.db"),
+)
+
+
+def connect(path: str) -> sqlite3.Connection:
+    if not os.path.exists(path):
+        sys.exit(
+            f"Skill database not found at {path}\n"
+            "Set SKILL_DB to the correct path, or pass --db."
+        )
+    return sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+
+
+def columns(conn: sqlite3.Connection, table: str) -> list[str]:
+    return [row[1] for row in conn.execute(f"pragma table_info({table})")]
+
+
+def fts_table(conn: sqlite3.Connection) -> str | None:
+    names = [
+        row[0]
+        for row in conn.execute(
+            "select name from sqlite_master where type = 'table' order by 1"
+        )
+    ]
+    for candidate in names:
+        if candidate.endswith("_fts") or candidate == "skills_fts":
+            return candidate
+    return None
+
+
+def description_column(cols: list[str]) -> str | None:
+    for candidate in ("summary", "description", "short_description"):
+        if candidate in cols:
+            return candidate
+    return None
+
+
+def search(conn: sqlite3.Connection, query: str, limit: int) -> int:
+    skills_cols = columns(conn, "skills")
+    fts = fts_table(conn)
+
+    if fts is None:
+        sys.exit("No FTS index found in this database. Use --list instead.")
+
+    fts_cols = columns(conn, fts)
+    # FTS tables carry the same column names as their source, plus the shadow
+    # columns. Matching on any text column is what the server's keyword_search
+    # does.
+    text_cols = [c for c in fts_cols if c not in ("rank",) and not c.startswith("__")]
+    match_target = ", ".join(text_cols) if text_cols else None
+
+    sql = f"""
+        select s.id,
+               s.name,
+               {('s.' + description_column(skills_cols)) if description_column(skills_cols) else "''"} as summary,
+               bm25({fts}) as score
+        from {fts}
+        join skills s on s.rowid = {fts}.rowid
+        where {fts} match ?
+        order by score
+        limit ?
+    """
+
+    try:
+        rows = list(conn.execute(sql, (query, limit)))
+    except sqlite3.OperationalError as exc:
+        # Retry with a looser OR query, which is what a human would type.
+        terms = " OR ".join(query.split())
+        try:
+            rows = list(conn.execute(sql, (terms, limit)))
+        except sqlite3.OperationalError:
+            sys.exit(f"Search failed: {exc}")
+
+    if not rows:
+        print(f"No matches for: {query}")
+        return 1
+
+    print(f"Top {len(rows)} for: {query}\n")
+    for skill_id, name, summary, score in rows:
+        print(f"  {name}")
+        if summary:
+            for line in textwrap.wrap(summary.strip(), 96)[:3]:
+                print(f"      {line}")
+        print()
+    return 0
+
+
+def show(conn: sqlite3.Connection, name: str) -> int:
+    cols = columns(conn, "skills")
+    body_col = None
+    for candidate in ("content", "body", "instructions", "markdown", "text"):
+        if candidate in cols:
+            body_col = candidate
+            break
+
+    if body_col is None:
+        sys.exit(f"No content column in skills table. Columns: {cols}")
+
+    row = conn.execute(
+        f"select name, {body_col} from skills where name = ? or id = ?", (name, name)
+    ).fetchone()
+
+    if row is None:
+        sys.exit(f"No skill named {name!r}. Try --list.")
+
+    print(f"===== {row[0]} =====\n")
+    print(row[1] or "(empty)")
+    return 0
+
+
+def list_skills(conn: sqlite3.Connection) -> int:
+    rows = conn.execute("select name from skills order by name").fetchall()
+    print(f"{len(rows)} skills in the corpus:\n")
+    for (name,) in rows:
+        print(f"  {name}")
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("query", nargs="?", help="search terms")
+    parser.add_argument("--db", default=DEFAULT_DB, help="path to skills.db")
+    parser.add_argument("--limit", "-k", type=int, default=5)
+    parser.add_argument("--show", metavar="NAME", help="print a skill in full")
+    parser.add_argument("--list", action="store_true", help="list every skill")
+    args = parser.parse_args()
+
+    conn = connect(args.db)
+
+    if args.list:
+        return list_skills(conn)
+    if args.show:
+        return show(conn, args.show)
+    if args.query:
+        return search(conn, args.query, args.limit)
+
+    parser.print_help()
+    return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

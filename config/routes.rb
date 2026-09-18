@@ -4,18 +4,87 @@ Rails.application.routes.draw do
 
   root "pages#home"
 
+  # --- Shop -----------------------------------------------------------------
+  get "/shop", to: "products#index", as: :shop
+  get "/collections/:slug", to: "collections#show", as: :collection
+  get "/search", to: "searches#show", as: :search
+  # Most specific first. The category segment is validated against existing
+  # slugs by the controller, so a bad segment is a 404 rather than a product
+  # lookup.
+  get "/shop/:category_slug", to: "categories#show", as: :category
+  get "/shop/:category_slug/:slug", to: "products#show", as: :product
+
+  # --- Cart -----------------------------------------------------------------
+  # State changes are resources rather than custom actions on an existing
+  # resource, per the routing convention in skills.md.
+  resource :cart, only: [ :show ] do
+    resources :items, only: [ :create, :update, :destroy ], module: :cart
+  end
+
+  # --- Checkout and orders --------------------------------------------------
+  resource :checkout, only: [ :new, :create ]
+  get "/orders/:public_token", to: "orders#show", as: :order
+
+  # --- Accounts -------------------------------------------------------------
+  devise_for :users,
+    path: "account",
+    controllers: { registrations: "users/registrations", passwords: "users/passwords" },
+    skip: [ :sessions ]
+
+  # Devise's session routes are redefined so the sign-in action can be rate
+  # limited alongside the other authentication endpoints.
+  devise_scope :user do
+    get "/account/sign_in", to: "users/sessions#new", as: :new_user_session
+    post "/account/sign_in", to: "users/sessions#create", as: :user_session
+    delete "/account/sign_out", to: "users/sessions#destroy", as: :destroy_user_session
+  end
+
+  namespace :account do
+    root "dashboard#show"
+    resource :profile, only: [ :show, :edit, :update ]
+    resources :orders, only: [ :index, :show ], param: :number
+    resources :addresses, except: [ :show ]
+    resources :data_requests, only: [ :index, :new, :create ]
+    resource :consent, only: [ :show, :update ]
+  end
+
+  # --- Learn ----------------------------------------------------------------
+  # Evergreen education. Separate from /blog, which carries timely posts.
+  get "/learn", to: "topics#index", as: :learn
+  get "/learn/glossary", to: "glossary#index", as: :learn_glossary
+  get "/learn/glossary/:term", to: "glossary#show", as: :learn_glossary_term
+  get "/learn/experts", to: "authors#index", as: :learn_experts
+  get "/learn/experts/:slug", to: "authors#show", as: :learn_expert
+  get "/learn/:topic_slug", to: "topics#show", as: :learn_topic
+  get "/learn/:topic_slug/:slug", to: "articles#show", as: :learn_article
+
+  # --- Blog -----------------------------------------------------------------
+  get "/blog", to: "posts#index", as: :blog
+  get "/blog/:slug", to: "posts#show", as: :blog_post
+
+  # --- Consent --------------------------------------------------------------
+  resource :consent, only: [ :create ], controller: "consent" do
+    post :withdraw
+  end
+
+  # --- Age gate -------------------------------------------------------------
+  # A soft gate: it records an acknowledgement rather than blocking at the edge.
+  resource :age_confirmation, only: [ :create ]
+
+  # --- Machine-readable -----------------------------------------------------
+  get "/sitemap.xml", to: "sitemaps#show", as: :sitemap, defaults: { format: "xml" }
+  get "/robots.txt", to: "robots#show", as: :robots, defaults: { format: "text" }
+
   # --- Static pages ---------------------------------------------------------
   # An explicit allowlist rather than a catch-all, so an unknown path is a
   # genuine 404 rather than a database lookup on every request.
   #
-  # A local variable, not a constant: routes are reloaded, and a constant would
-  # warn about reinitialisation on every reload.
-  page_slugs = %w[
-    about standards contact shipping returns privacy terms accessibility
-    discreet-shipping faq
-  ]
-
-  page_slugs.each do |slug|
+  # The list lives on the Page model, because the sitemap needs the same list
+  # and a second copy would drift.
+  Page::ROUTED_SLUGS.each do |slug|
     get "/#{slug}", to: "pages#show", defaults: { slug: slug }, as: :"page_#{slug.tr('-', '_')}"
   end
+
+  # --- Admin ----------------------------------------------------------------
+  mount Avo::Engine, at: "/admin"
 end

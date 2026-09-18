@@ -1,0 +1,32 @@
+<% content_for :title, t("auth.sign_in.title") %>
+<% content_for :meta_description, t("auth.sign_in.intro") %>
+
+<section class="wt-container py-12 md:py-16">
+  <div class="max-w-[34rem]">
+    <h1 class="text-display-sm text-ink md:text-display"><%= t("auth.sign_in.title") %></h1>
+    <p class="mt-4 text-lede text-body"><%= t("auth.sign_in.intro") %></p>
+
+    <%= render "shared/form_errors", resource: resource %>
+
+    <%= form_with model: resource, as: resource_name, url: session_path(resource_name), class: "mt-10 space-y-6" do |form| %>
+      <%= render "shared/field", form: form, attribute: :email, label: t("auth.fields.email"), type: :email_field, autocomplete: "email" %>
+      <%= render "shared/field", form: form, attribute: :password, label: t("auth.fields.password"), type: :password_field, autocomplete: "current-password" %>
+
+      <% if devise_mapping.rememberable? %>
+        <label class="flex items-center gap-3 text-body">
+          <%= form.check_box :remember_me %>
+          <span>Keep me signed in on this device</span>
+        </label>
+      <% end %>
+
+      <div class="pt-2">
+        <%= form.submit t("auth.sign_in.submit"), class: "wt-btn wt-btn--primary w-full" %>
+        <p class="wt-hint">
+          <%= link_to t("auth.sign_in.sign_up_link"), new_user_registration_path, class: "text-accent" %>
+          <span aria-hidden="true"> / </span>
+          <%= link_to t("auth.sign_in.forgot_password_link"), new_user_password_path, class: "text-accent" %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</section>
