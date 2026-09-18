@@ -60,14 +60,34 @@ the "respectable" half of the name would undercut the whole point.
 | Razorpay is the only payment provider (§2 rule 16) | **No payment provider in v1.** Orders are created in `awaiting_invoice`. | Payment provider eligibility for this product category is an open human decision. The order flow is built to the transactional standard so a gateway drops into existing plug points. |
 | HIPAA / PHI compliance is a first-class concern | **Not a HIPAA covered entity.** The strict posture is kept anyway, under FTC HBNR and state consumer-health law. | See §6. |
 | Devise + devise-two-factor for doctors and admin | **Devise for customers. No 2FA in v1.** | There are no clinical staff accounts. Admin 2FA is a deferred follow-up, not a silent omission. |
-| Meilisearch self-hosted on our own server | **Meilisearch, run as a project-local binary**, proxied through Rails so no key reaches the browser. | Docker was specified but is not enabled in this environment. Functionally equivalent, better isolated. |
-| Avo Pro / paid tiers | **Avo Community** (free open-core). | Sufficient for the CRUD surface this app needs. |
+| Meilisearch self-hosted on our own server | **Installed and server-proxied, but v1 search runs the PostgreSQL `ILIKE` fallback.** No index is wired yet. | The binary at `.tools/meilisearch` has to be running to index, and the fallback needed no service, so it shipped first. The swap points are `Product.search_by_text` and `Article.search_by_title`; the controller and the key-hiding architecture are already in place. An open item, not a silent omission. |
+| Avo Pro / paid tiers | **Avo Community** (free open-core). Per-action authorization inside Avo lives in the paid `avo-authorization` add-on, so the application supplies its own adapter. | `Avo::PunditResource` plus `lib/avo/pundit_authorization.rb` answer Avo's questions from the same Pundit policies the storefront uses, through a separate `avo_*?` set so a customer-facing rule is never reused for the console. The panel itself is staff-only (`config/initializers/avo.rb`). |
+| Bullet in development only, per `gems.md` | **Bullet in development and test**, with `Bullet.raise` on in the suite. | `gems.md` §35B keeps "Bullet warnings zero" as a CI condition, and a condition nobody runs is not a condition. Switching it on found and fixed several real N+1s and unused eager loads. |
 | RSpec (per `gems.md` §15) | **RSpec retained.** | The `rails-conventions` skill says Minitest and forbids factory gems. `gems.md` is the declared dependency authority and this project's existing tooling is RSpec. Recorded as a deliberate, reasoned deviation. |
 | ABDM, MSG91, WhatsApp Cloud API, Daily.co, FullCalendar, Leaflet, Hotwire Native | **Not installed.** | Medical-tourism and telehealth concerns. No equivalent need here. |
 
 **Everything else in `gems.md` still applies**: Rails 8 built-ins before gems, dependency
 restraint, database-level constraints, transactional and idempotent writes, Pundit on every
 action, expand/contract migrations, CI gates.
+
+### Known gaps at the end of this build
+
+Each of these is deliberate and each is a follow-up rather than a surprise.
+
+- **The live browser pass has not run.** Capybara system specs cover the purchase, account
+  and reading flows, and the design pre-flight was checked against the tokens (contrast,
+  states, banned patterns, copy rules), but a real browser cannot start in this environment:
+  Chrome is fetched at `.tools/chrome/chrome` and fails on missing system libraries
+  (`libnspr4` and friends). `script/install-system-deps` prints the `apt-get` line, which
+  needs an interactive `sudo`. The Playwright CLI is not installed either.
+- **`data-test-id` selectors are not used.** The suite asserts on rendered text and roles,
+  which is what a reader actually sees. The plan asked for test ids; this is a knowing
+  deviation, recorded here rather than quietly.
+- **`paper_trail` is installed and unused.** No model declares `has_paper_trail`. Audit
+  history currently lives in `audit_events` and `order_events`, which record who did what;
+  the `versions` table stays empty until a model needs full field history.
+- **Meilisearch indexing is unwired** (see the table above).
+- **Admin 2FA is still deferred**, as the plan states, and needs a decision before launch.
 
 ## 4. Two sides of the product
 
