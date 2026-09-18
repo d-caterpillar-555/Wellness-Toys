@@ -1,4 +1,8 @@
 <%# locals: (cart:) %>
-<%= link_to cart_path, id: "cart-count", class: "wt-nav-link px-2", aria: { label: t("cart.link") } do %>
-  <%= t("cart.link") %> <span class="tnum"><%= cart.item_count %></span>
+<%# The label and the count are separate flex items: a whitespace text node is
+    dropped in an inline-flex container, which is what ran "Cart" and "0"
+    together. %>
+<%= link_to cart_path, id: "cart-count", class: "wt-nav-link gap-2 px-2", aria: { label: t("cart.link") } do %>
+  <span><%= t("cart.link") %></span>
+  <span class="tnum"><%= cart.item_count %></span>
 <% end %>

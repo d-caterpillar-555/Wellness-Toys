@@ -23,7 +23,7 @@
     <ul class="mt-4 flex flex-wrap gap-2">
       <% @children.each do |child| %>
         <li>
-          <%= link_to child.name, category_path(child), class: "wt-badge min-h-[44px] px-4 text-ui text-body hover:border-ink hover:text-ink" %>
+          <%= link_to child.name, category_path(child), class: "wt-mark min-h-[44px] px-4 text-ui text-body hover:border-ink hover:text-ink" %>
         </li>
       <% end %>
     </ul>
@@ -34,7 +34,7 @@
   <h2 class="sr-only">Products</h2>
 
   <% if @products.any? %>
-    <div class="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div class="wt-catalogue__grid">
       <% @products.each do |product| %>
         <%= render "products/card", product: product %>
       <% end %>

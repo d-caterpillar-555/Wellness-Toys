@@ -1,0 +1,28 @@
+<%# locals: (product:, category:) %>
+<%# One product, printed as a plate: a frame that holds the image, a stamp with
+    the SKU, and the name and price set as data. Used on the home page and
+    anywhere else a specimen row is wanted. %>
+<% body = capture do %>
+  <div class="wt-specimen aspect-[4/5]">
+    <%= product_cover_tag(product) %>
+    <span class="wt-specimen__stamp wt-register"><%= product.sku %></span>
+    <% unless product.in_stock? %>
+      <span class="wt-mark wt-mark--ember absolute right-3 top-3 bg-paper">Sold out</span>
+    <% end %>
+  </div>
+
+  <div class="mt-4 flex items-baseline justify-between gap-4">
+    <h3 class="text-title text-ink"><%= product.name %></h3>
+    <p class="wt-numeral shrink-0 text-ui"><%= price(product.lowest_price_cents) %></p>
+  </div>
+
+  <% if product.brand %>
+    <p class="wt-register mt-1"><%= product.brand.name %></p>
+  <% end %>
+<% end %>
+
+<% if category %>
+  <%= link_to body, product_path(category, product), class: "wt-specimen-link group block no-underline" %>
+<% else %>
+  <div class="group"><%= body %></div>
+<% end %>

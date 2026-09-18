@@ -23,7 +23,7 @@
       <ul class="flex flex-wrap gap-2">
         <% grouped.keys.sort.each do |letter| %>
           <li>
-            <%= link_to letter, "#letter-#{initial_anchor(letter)}", class: "wt-badge min-h-[44px] px-3 text-ui text-body hover:border-ink hover:text-ink" %>
+            <%= link_to letter, "#letter-#{initial_anchor(letter)}", class: "wt-mark min-h-[44px] px-3 text-ui text-body hover:border-ink hover:text-ink" %>
           </li>
         <% end %>
       </ul>

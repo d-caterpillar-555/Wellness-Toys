@@ -1,0 +1,203 @@
+- generic [active] [ref=f5e1]:
+  - link "Skip to content" [ref=f5e2] [cursor=pointer]:
+    - /url: "#main"
+  - region "Age confirmation" [ref=f5e3]:
+    - generic [ref=f5e5]:
+      - paragraph [ref=f5e6]:
+        - text: Adult products. This store sells products intended for adults. Confirm you are of legal age where you live.
+        - link "Why we ask" [ref=f5e7] [cursor=pointer]:
+          - /url: /standards
+      - button "I am of legal age" [ref=f5e9] [cursor=pointer]
+  - banner [ref=f5e10]:
+    - generic [ref=f5e12]:
+      - link "Wellness Toys" [ref=f5e13] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f5e15]:
+        - link "Shop" [ref=f5e16] [cursor=pointer]:
+          - /url: /shop
+        - link "Learn" [ref=f5e17] [cursor=pointer]:
+          - /url: /learn
+        - link "About" [ref=f5e18] [cursor=pointer]:
+          - /url: /about
+        - link "Standards" [ref=f5e19] [cursor=pointer]:
+          - /url: /standards
+        - link "Contact" [ref=f5e20] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f5e21]:
+        - link "Sign in" [ref=f5e22] [cursor=pointer]:
+          - /url: /account/sign_in
+        - link "Cart" [ref=f5e23] [cursor=pointer]:
+          - /url: /cart
+          - generic [ref=f5e25]: "0"
+        - button "Switch colour theme" [ref=f5e26]:
+          - generic [ref=f5e27]: Dark
+  - main [ref=f5e28]:
+    - navigation "Visual style" [ref=f5e29]:
+      - button "Tidewater" [ref=f5e30] [cursor=pointer]
+      - button "Solarium" [ref=f5e31] [cursor=pointer]
+      - button "Studio B" [ref=f5e32] [cursor=pointer]
+      - button "Herbarium" [pressed] [ref=f5e33] [cursor=pointer]
+    - article [ref=f5e34]:
+      - navigation "Breadcrumb" [ref=f5e35]:
+        - link "Shop" [ref=f5e36] [cursor=pointer]:
+          - /url: /shop
+        - text: /
+        - link "Lubricants" [ref=f5e37] [cursor=pointer]:
+          - /url: /shop/lubricants
+        - text: / Ashgrove Water-Based
+      - generic [ref=f5e38]:
+        - generic [ref=f5e40]:
+          - img "Ashgrove Water-Based, studio rendering" [ref=f5e41]
+          - generic [ref=f5e42]: WT-004
+        - generic [ref=f5e43]:
+          - paragraph [ref=f5e44]: Ashgrove · WT-004
+          - heading "Ashgrove Water-Based" [level=1] [ref=f5e45]
+          - paragraph [ref=f5e46]: A plain water-based lubricant with no glycerine and no fragrance.
+          - paragraph [ref=f5e47]:
+            - generic [ref=f5e48]: $18.00
+          - generic [ref=f5e50]:
+            - group "Configuration" [ref=f5e51]:
+              - generic [ref=f5e53]:
+                - generic [ref=f5e54] [cursor=pointer]:
+                  - generic [ref=f5e55]:
+                    - radio "150 ml $18.00" [checked] [ref=f5e56]
+                    - generic [ref=f5e57]: 150 ml
+                  - generic [ref=f5e58]: $18.00
+                - generic [ref=f5e61] [cursor=pointer]:
+                  - generic [ref=f5e62]:
+                    - radio "250 ml $26.00" [ref=f5e63]
+                    - generic [ref=f5e64]: 250 ml
+                  - generic [ref=f5e65]: $26.00
+            - generic [ref=f5e69]:
+              - generic [ref=f5e70]: Quantity
+              - combobox "Quantity" [ref=f5e71]:
+                - option "1" [selected]
+                - option "2"
+                - option "3"
+                - option "4"
+                - option "5"
+                - option "6"
+                - option "7"
+                - option "8"
+                - option "9"
+                - option "10"
+            - button "Add to cart" [ref=f5e72] [cursor=pointer]
+      - generic [ref=f5e73]:
+        - navigation "Contents" [ref=f5e74]:
+          - paragraph [ref=f5e75]: Contents
+          - list [ref=f5e76]:
+            - listitem [ref=f5e77]:
+              - link "Materials and safety" [ref=f5e78] [cursor=pointer]:
+                - /url: "#specifications"
+            - listitem [ref=f5e79]:
+              - link "How it works" [ref=f5e80] [cursor=pointer]:
+                - /url: "#how"
+            - listitem [ref=f5e81]:
+              - link "Care" [ref=f5e82] [cursor=pointer]:
+                - /url: "#care"
+            - listitem [ref=f5e83]:
+              - link "Dimensions" [ref=f5e84] [cursor=pointer]:
+                - /url: "#dimensions"
+            - listitem [ref=f5e85]:
+              - link "Reviews" [ref=f5e86] [cursor=pointer]:
+                - /url: "#reviews"
+        - generic [ref=f5e87]:
+          - region [ref=f5e88]:
+            - heading "Materials and safety" [level=2] [ref=f5e89]
+            - generic [ref=f5e90]:
+              - generic [ref=f5e91]:
+                - term [ref=f5e92]: Materials
+                - definition [ref=f5e94]: Water, propanediol, hydroxyethylcellulose, sodium benzoate, citric acid.
+              - generic [ref=f5e95]:
+                - term [ref=f5e96]: Body safe
+                - definition [ref=f5e98]: "Yes"
+          - region [ref=f5e99]:
+            - heading "How it works" [level=2] [ref=f5e100]
+            - paragraph [ref=f5e102]: A plain water-based lubricant with no glycerine and no fragrance.
+          - region [ref=f5e103]:
+            - heading "Care" [level=2] [ref=f5e104]
+            - paragraph [ref=f5e106]: Store upright below 25C. Discard six months after opening.
+          - region [ref=f5e107]:
+            - heading "Dimensions" [level=2] [ref=f5e108]
+            - generic [ref=f5e109]:
+              - generic [ref=f5e110]:
+                - term [ref=f5e111]: Dimensions
+                - definition [ref=f5e113]: 150 ml
+              - generic [ref=f5e114]:
+                - term [ref=f5e115]: Weight
+                - definition [ref=f5e117]: 190 g
+          - region [ref=f5e118]:
+            - heading "Reviews" [level=2] [ref=f5e119]
+            - generic [ref=f5e120]:
+              - paragraph [ref=f5e121]: No reviews here yet.
+              - paragraph [ref=f5e122]: Reviews open once ordering and accounts are live. Nothing is invented to fill this space in the meantime.
+              - link "Ask us a question" [ref=f5e123] [cursor=pointer]:
+                - /url: /contact
+          - complementary [ref=f5e124]:
+            - heading "Education" [level=2] [ref=f5e125]
+            - paragraph [ref=f5e126]: Materials, safety and use, explained without a sales pitch. The library carries the sources.
+            - link "Read the library" [ref=f5e127] [cursor=pointer]:
+              - /url: /learn
+  - contentinfo [ref=f5e128]:
+    - generic [ref=f5e129]:
+      - generic [ref=f5e130]:
+        - generic [ref=f5e131]:
+          - paragraph [ref=f5e132]: Wellness Toys
+          - paragraph [ref=f5e133]: Sexual health and wellness, plainly explained.
+        - navigation "Company" [ref=f5e134]:
+          - heading "Company" [level=2] [ref=f5e135]
+          - list [ref=f5e136]:
+            - listitem [ref=f5e137]:
+              - link "About" [ref=f5e138] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f5e139]:
+              - link "Our standards" [ref=f5e140] [cursor=pointer]:
+                - /url: /standards
+            - listitem [ref=f5e141]:
+              - link "Contact" [ref=f5e142] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=f5e143]:
+              - link "FAQ" [ref=f5e144] [cursor=pointer]:
+                - /url: /faq
+        - navigation "Trust and legal" [ref=f5e145]:
+          - heading "Trust" [level=2] [ref=f5e146]
+          - list [ref=f5e147]:
+            - listitem [ref=f5e148]:
+              - link "Shipping" [ref=f5e149] [cursor=pointer]:
+                - /url: /shipping
+            - listitem [ref=f5e150]:
+              - link "Discreet shipping" [ref=f5e151] [cursor=pointer]:
+                - /url: /discreet-shipping
+            - listitem [ref=f5e152]:
+              - link "Returns" [ref=f5e153] [cursor=pointer]:
+                - /url: /returns
+            - listitem [ref=f5e154]:
+              - link "Privacy" [ref=f5e155] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=f5e156]:
+              - link "Terms" [ref=f5e157] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=f5e158]:
+              - link "Accessibility" [ref=f5e159] [cursor=pointer]:
+                - /url: /accessibility
+      - generic [ref=f5e160]:
+        - paragraph [ref=f5e161]: Wellness Toys. You must be of legal age in your jurisdiction to purchase.
+        - paragraph [ref=f5e162]:
+          - link "support@example.com" [ref=f5e163] [cursor=pointer]:
+            - /url: mailto:support@example.com
+  - toolbar "variate" [ref=f5e164]:
+    - button "home-html" [ref=f5e165] [cursor=pointer]
+    - generic [ref=f5e166]:
+      - button "previous" [ref=f5e167] [cursor=pointer]: ‹
+      - button "1" [ref=f5e168] [cursor=pointer]
+      - button "2 ·the index" [ref=f5e169] [cursor=pointer]:
+        - text: "2"
+        - generic [ref=f5e170]: ·the index
+      - button "3" [ref=f5e171] [cursor=pointer]
+      - button "4" [ref=f5e172] [cursor=pointer]
+      - button "next" [ref=f5e173] [cursor=pointer]: ›
+    - generic [ref=f5e174]:
+      - button "pick a section" [ref=f5e175] [cursor=pointer]
+      - button "refine this one" [ref=f5e181] [cursor=pointer]
+      - button "keep this one" [ref=f5e185] [cursor=pointer]
+      - button "hide" [ref=f5e188] [cursor=pointer]: ▾

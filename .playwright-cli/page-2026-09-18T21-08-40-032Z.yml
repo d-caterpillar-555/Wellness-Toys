@@ -1,0 +1,239 @@
+- generic [active] [ref=f1e1]:
+  - link "Skip to content" [ref=f1e2] [cursor=pointer]:
+    - /url: "#main"
+  - region "Age confirmation" [ref=f1e3]:
+    - generic [ref=f1e5]:
+      - paragraph [ref=f1e6]:
+        - text: Adult products. This store sells products intended for adults. Confirm you are of legal age where you live.
+        - link "Why we ask" [ref=f1e7] [cursor=pointer]:
+          - /url: /standards
+      - button "I am of legal age" [ref=f1e9] [cursor=pointer]
+  - banner [ref=f1e10]:
+    - generic [ref=f1e12]:
+      - link "Wellness Toys" [ref=f1e13] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f1e15]:
+        - link "Shop" [ref=f1e16] [cursor=pointer]:
+          - /url: /shop
+        - link "Learn" [ref=f1e17] [cursor=pointer]:
+          - /url: /learn
+        - link "About" [ref=f1e18] [cursor=pointer]:
+          - /url: /about
+        - link "Standards" [ref=f1e19] [cursor=pointer]:
+          - /url: /standards
+        - link "Contact" [ref=f1e20] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f1e21]:
+        - link "Sign in" [ref=f1e22] [cursor=pointer]:
+          - /url: /account/sign_in
+        - link "Cart" [ref=f1e23] [cursor=pointer]:
+          - /url: /cart
+          - generic [ref=f1e25]: "0"
+        - button "Switch colour theme" [ref=f1e26]:
+          - generic [ref=f1e27]: Dark
+  - main [ref=f1e28]:
+    - navigation "Visual style" [ref=f1e29]:
+      - button "Tidewater" [ref=f1e30] [cursor=pointer]
+      - button "Solarium" [ref=f1e31] [cursor=pointer]
+      - button "Studio B" [pressed] [ref=f1e32] [cursor=pointer]
+      - button "Herbarium" [ref=f1e33] [cursor=pointer]
+    - generic [ref=f1e34]:
+      - navigation "Breadcrumb" [ref=f1e35]: Shop
+      - heading "The catalogue" [level=1] [ref=f1e36]
+      - paragraph [ref=f1e37]: 12 products
+    - generic [ref=f1e39]:
+      - generic [ref=f1e40]:
+        - generic [ref=f1e41]: Brand
+        - combobox "Brand" [ref=f1e42]:
+          - option "All brands" [selected]
+          - option "Ashgrove"
+          - option "Corvid"
+          - option "Fenwick"
+          - option "Northlight"
+      - button "Apply" [ref=f1e43] [cursor=pointer]
+    - generic [ref=f1e44]:
+      - heading "Products" [level=2] [ref=f1e45]
+      - generic [ref=f1e46]:
+        - link "Northlight Storage Case, studio rendering WT-012 Northlight Storage Case $34.00 Northlight" [ref=f1e47] [cursor=pointer]:
+          - /url: /shop/care-and-storage/northlight-storage-case
+          - generic [ref=f1e48]:
+            - img "Northlight Storage Case, studio rendering" [ref=f1e49]
+            - generic [ref=f1e50]: WT-012
+          - generic [ref=f1e51]:
+            - heading "Northlight Storage Case" [level=3] [ref=f1e52]
+            - paragraph [ref=f1e53]:
+              - generic [ref=f1e54]: $34.00
+          - paragraph [ref=f1e55]: Northlight
+        - link "Corvid Toy Cleaner, studio rendering WT-011 Corvid Toy Cleaner $14.00 Corvid" [ref=f1e56] [cursor=pointer]:
+          - /url: /shop/care-and-storage/corvid-toy-cleaner
+          - generic [ref=f1e57]:
+            - img "Corvid Toy Cleaner, studio rendering" [ref=f1e58]
+            - generic [ref=f1e59]: WT-011
+          - generic [ref=f1e60]:
+            - heading "Corvid Toy Cleaner" [level=3] [ref=f1e61]
+            - paragraph [ref=f1e62]:
+              - generic [ref=f1e63]: $14.00
+          - paragraph [ref=f1e64]: Corvid
+        - link "Fenwick Condoms, studio rendering WT-010 Fenwick Condoms $12.00 Fenwick" [ref=f1e65] [cursor=pointer]:
+          - /url: /shop/barrier-methods/fenwick-condoms
+          - generic [ref=f1e66]:
+            - img "Fenwick Condoms, studio rendering" [ref=f1e67]
+            - generic [ref=f1e68]: WT-010
+          - generic [ref=f1e69]:
+            - heading "Fenwick Condoms" [level=3] [ref=f1e70]
+            - paragraph [ref=f1e71]:
+              - generic [ref=f1e72]: $12.00
+          - paragraph [ref=f1e73]: Fenwick
+        - link "Ashgrove Pelvic Trainer Set, studio rendering WT-009 Ashgrove Pelvic Trainer Set $42.00 Ashgrove" [ref=f1e74] [cursor=pointer]:
+          - /url: /shop/pelvic-health/ashgrove-pelvic-trainer-set
+          - generic [ref=f1e75]:
+            - img "Ashgrove Pelvic Trainer Set, studio rendering" [ref=f1e76]
+            - generic [ref=f1e77]: WT-009
+          - generic [ref=f1e78]:
+            - heading "Ashgrove Pelvic Trainer Set" [level=3] [ref=f1e79]
+            - paragraph [ref=f1e80]:
+              - generic [ref=f1e81]: $42.00
+          - paragraph [ref=f1e82]: Ashgrove
+        - link "Northlight Massage Stone, studio rendering WT-008 Northlight Massage Stone $19.00 Northlight" [ref=f1e83] [cursor=pointer]:
+          - /url: /shop/massage/northlight-massage-stone
+          - generic [ref=f1e84]:
+            - img "Northlight Massage Stone, studio rendering" [ref=f1e85]
+            - generic [ref=f1e86]: WT-008
+          - generic [ref=f1e87]:
+            - heading "Northlight Massage Stone" [level=3] [ref=f1e88]
+            - paragraph [ref=f1e89]:
+              - generic [ref=f1e90]: $19.00
+          - paragraph [ref=f1e91]: Northlight
+        - link "Corvid Massage Oil, studio rendering WT-007 Corvid Massage Oil $24.00 Corvid" [ref=f1e92] [cursor=pointer]:
+          - /url: /shop/massage/corvid-massage-oil
+          - generic [ref=f1e93]:
+            - img "Corvid Massage Oil, studio rendering" [ref=f1e94]
+            - generic [ref=f1e95]: WT-007
+          - generic [ref=f1e96]:
+            - heading "Corvid Massage Oil" [level=3] [ref=f1e97]
+            - paragraph [ref=f1e98]:
+              - generic [ref=f1e99]: $24.00
+          - paragraph [ref=f1e100]: Corvid
+        - link "Fenwick Hybrid, studio rendering WT-006 Fenwick Hybrid $16.00 Fenwick" [ref=f1e101] [cursor=pointer]:
+          - /url: /shop/lubricants/fenwick-hybrid
+          - generic [ref=f1e102]:
+            - img "Fenwick Hybrid, studio rendering" [ref=f1e103]
+            - generic [ref=f1e104]: WT-006
+          - generic [ref=f1e105]:
+            - heading "Fenwick Hybrid" [level=3] [ref=f1e106]
+            - paragraph [ref=f1e107]:
+              - generic [ref=f1e108]: $16.00
+          - paragraph [ref=f1e109]: Fenwick
+        - link "Ashgrove Silicone, studio rendering WT-005 Ashgrove Silicone $22.00 Ashgrove" [ref=f1e110] [cursor=pointer]:
+          - /url: /shop/lubricants/ashgrove-silicone
+          - generic [ref=f1e111]:
+            - img "Ashgrove Silicone, studio rendering" [ref=f1e112]
+            - generic [ref=f1e113]: WT-005
+          - generic [ref=f1e114]:
+            - heading "Ashgrove Silicone" [level=3] [ref=f1e115]
+            - paragraph [ref=f1e116]:
+              - generic [ref=f1e117]: $22.00
+          - paragraph [ref=f1e118]: Ashgrove
+        - link "Ashgrove Water-Based, studio rendering WT-004 Ashgrove Water-Based $18.00 Ashgrove" [ref=f1e119] [cursor=pointer]:
+          - /url: /shop/lubricants/ashgrove-water-based
+          - generic [ref=f1e120]:
+            - img "Ashgrove Water-Based, studio rendering" [ref=f1e121]
+            - generic [ref=f1e122]: WT-004
+          - generic [ref=f1e123]:
+            - heading "Ashgrove Water-Based" [level=3] [ref=f1e124]
+            - paragraph [ref=f1e125]:
+              - generic [ref=f1e126]: $18.00
+          - paragraph [ref=f1e127]: Ashgrove
+        - link "Northlight Internal, studio rendering WT-003 Northlight Internal $72.00 Northlight" [ref=f1e128] [cursor=pointer]:
+          - /url: /shop/vibrators/northlight-internal
+          - generic [ref=f1e129]:
+            - img "Northlight Internal, studio rendering" [ref=f1e130]
+            - generic [ref=f1e131]: WT-003
+          - generic [ref=f1e132]:
+            - heading "Northlight Internal" [level=3] [ref=f1e133]
+            - paragraph [ref=f1e134]:
+              - generic [ref=f1e135]: $72.00
+          - paragraph [ref=f1e136]: Northlight
+        - link "Aperture Mini, studio rendering WT-002 Aperture Mini $54.00 Corvid" [ref=f1e137] [cursor=pointer]:
+          - /url: /shop/vibrators/aperture-mini
+          - generic [ref=f1e138]:
+            - img "Aperture Mini, studio rendering" [ref=f1e139]
+            - generic [ref=f1e140]: WT-002
+          - generic [ref=f1e141]:
+            - heading "Aperture Mini" [level=3] [ref=f1e142]
+            - paragraph [ref=f1e143]:
+              - generic [ref=f1e144]: $54.00
+          - paragraph [ref=f1e145]: Corvid
+        - link "Aperture Wand, studio rendering WT-001 Aperture Wand $89.00 Corvid" [ref=f1e146] [cursor=pointer]:
+          - /url: /shop/vibrators/aperture-wand
+          - generic [ref=f1e147]:
+            - img "Aperture Wand, studio rendering" [ref=f1e148]
+            - generic [ref=f1e149]: WT-001
+          - generic [ref=f1e150]:
+            - heading "Aperture Wand" [level=3] [ref=f1e151]
+            - paragraph [ref=f1e152]:
+              - generic [ref=f1e153]: $89.00
+          - paragraph [ref=f1e154]: Corvid
+  - contentinfo [ref=f1e155]:
+    - generic [ref=f1e156]:
+      - generic [ref=f1e157]:
+        - generic [ref=f1e158]:
+          - paragraph [ref=f1e159]: Wellness Toys
+          - paragraph [ref=f1e160]: Sexual health and wellness, plainly explained.
+        - navigation "Company" [ref=f1e161]:
+          - heading "Company" [level=2] [ref=f1e162]
+          - list [ref=f1e163]:
+            - listitem [ref=f1e164]:
+              - link "About" [ref=f1e165] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f1e166]:
+              - link "Our standards" [ref=f1e167] [cursor=pointer]:
+                - /url: /standards
+            - listitem [ref=f1e168]:
+              - link "Contact" [ref=f1e169] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=f1e170]:
+              - link "FAQ" [ref=f1e171] [cursor=pointer]:
+                - /url: /faq
+        - navigation "Trust and legal" [ref=f1e172]:
+          - heading "Trust" [level=2] [ref=f1e173]
+          - list [ref=f1e174]:
+            - listitem [ref=f1e175]:
+              - link "Shipping" [ref=f1e176] [cursor=pointer]:
+                - /url: /shipping
+            - listitem [ref=f1e177]:
+              - link "Discreet shipping" [ref=f1e178] [cursor=pointer]:
+                - /url: /discreet-shipping
+            - listitem [ref=f1e179]:
+              - link "Returns" [ref=f1e180] [cursor=pointer]:
+                - /url: /returns
+            - listitem [ref=f1e181]:
+              - link "Privacy" [ref=f1e182] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=f1e183]:
+              - link "Terms" [ref=f1e184] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=f1e185]:
+              - link "Accessibility" [ref=f1e186] [cursor=pointer]:
+                - /url: /accessibility
+      - generic [ref=f1e187]:
+        - paragraph [ref=f1e188]: Wellness Toys. You must be of legal age in your jurisdiction to purchase.
+        - paragraph [ref=f1e189]:
+          - link "support@example.com" [ref=f1e190] [cursor=pointer]:
+            - /url: mailto:support@example.com
+  - toolbar "variate" [ref=f1e191]:
+    - button "home-html" [ref=f1e192] [cursor=pointer]
+    - generic [ref=f1e193]:
+      - button "previous" [ref=f1e194] [cursor=pointer]: ‹
+      - button "1" [ref=f1e195] [cursor=pointer]
+      - button "2 ·the index" [ref=f1e196] [cursor=pointer]:
+        - text: "2"
+        - generic [ref=f1e197]: ·the index
+      - button "3" [ref=f1e198] [cursor=pointer]
+      - button "4" [ref=f1e199] [cursor=pointer]
+      - button "next" [ref=f1e200] [cursor=pointer]: ›
+    - generic [ref=f1e201]:
+      - button "pick a section" [ref=f1e202] [cursor=pointer]
+      - button "refine this one" [ref=f1e208] [cursor=pointer]
+      - button "keep this one" [ref=f1e212] [cursor=pointer]
+      - button "hide" [ref=f1e215] [cursor=pointer]: ▾

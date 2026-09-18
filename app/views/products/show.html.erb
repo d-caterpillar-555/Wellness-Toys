@@ -12,7 +12,17 @@
   <%= json_ld(product_schema(@product, variants: @variants, category: @primary_category)) %>
 <% end %>
 
-<article class="wt-container pt-10 pb-24 md:pt-14">
+<%# The contents rail is built from the sections this product actually has, so
+    a sparse record does not advertise sections it cannot fill. %>
+<% contents = [] %>
+<% contents << [ "specifications", "Materials and safety" ] if @product.materials.present? || @product.safety_notes.present? || @product.weight_grams.present? %>
+<% contents << [ "how", "How it works" ] if @product.description.present? %>
+<% contents << [ "care", "Care" ] if @product.care_instructions.present? %>
+<% contents << [ "dimensions", "Dimensions" ] if @product.dimensions.present? || @product.weight_grams.present? %>
+<% contents << [ "reviews", "Reviews" ] %>
+<% contents << [ "questions", "Questions" ] if @faqs.any? %>
+
+<article class="wt-container pt-8 pb-24 md:pt-12" data-controller="register">
   <nav aria-label="Breadcrumb" class="text-caption">
     <%= link_to "Shop", shop_path, class: "text-body no-underline hover:text-ink" %>
     <% if @primary_category %>
@@ -23,45 +33,52 @@
     <span class="text-ink" aria-current="page"><%= @product.name %></span>
   </nav>
 
-  <div class="mt-8 grid gap-12 lg:grid-cols-2 lg:gap-16">
+  <%# --- The plate ---------------------------------------------------------
+      Image on the left, the record on the right. The register line above the
+      title carries the real identifiers: brand and SKU. %>
+  <div class="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16">
     <div data-controller="reveal" data-reveal>
-      <%= product_cover_tag(@product, size: :detail) %>
+      <div class="wt-specimen aspect-square">
+        <%= product_cover_tag(@product) %>
+        <span class="wt-specimen__stamp wt-register"><%= @product.sku %></span>
+      </div>
     </div>
 
-    <div>
-      <% if @product.brand %>
-        <p class="text-label text-muted"><%= @product.brand.name %></p>
-      <% end %>
-      <h1 class="mt-2 text-heading-lg text-ink md:text-display-sm"><%= @product.name %></h1>
+    <div data-controller="reveal" data-reveal>
+      <p class="wt-register">
+        <% if @product.brand %><%= @product.brand.name %> · <% end %><%= @product.sku %>
+      </p>
+      <h1 class="mt-3 text-heading-lg text-ink md:text-display-sm"><%= @product.name %></h1>
 
       <% if @product.subtitle.present? %>
         <p class="mt-4 max-w-[46ch] text-lede text-body"><%= @product.subtitle %></p>
       <% end %>
 
-      <p class="mt-6 text-heading-sm text-ink"><%= price(@product.lowest_price_cents) %></p>
+      <p class="wt-numeral mt-6 text-heading"><%= price(@product.lowest_price_cents) %></p>
 
       <div class="mt-8">
         <% if @variants.any? %>
-          <%= form_with url: cart_items_path, method: :post, class: "space-y-4" do |form| %>
+          <%= form_with url: cart_items_path, method: :post, class: "space-y-6" do |form| %>
             <fieldset>
-              <legend class="wt-label"><%= t("products.configuration") %></legend>
-              <div class="space-y-2">
+              <legend class="wt-register mb-2"><%= t("products.configuration") %></legend>
+              <div>
                 <% @variants.each_with_index do |variant, index| %>
-                  <label class="flex min-h-[44px] items-center justify-between gap-4 rounded-lg border border-line px-4 py-3">
+                  <label class="wt-choice-row">
                     <span class="flex items-center gap-3">
-                      <%= radio_button_tag "variant_id", variant.id, index.zero?, id: "variant_#{variant.id}" %>
+                      <%= radio_button_tag "variant_id", variant.id, index.zero?, id: "variant_#{variant.id}", class: "wt-choice" %>
                       <span class="text-ui text-ink"><%= variant.name %></span>
                     </span>
                     <span class="flex items-center gap-3">
                       <%= stock_label(variant) %>
-                      <span class="text-ui text-ink"><%= price(variant.price_cents, currency: variant.currency) %></span>
+                      <span class="wt-numeral text-ui"><%= price(variant.price_cents, currency: variant.currency) %></span>
                     </span>
                   </label>
                 <% end %>
+                <div class="border-t border-line"></div>
               </div>
             </fieldset>
 
-            <div>
+            <div class="max-w-[12rem]">
               <label class="wt-label" for="quantity"><%= t("cart.quantity") %></label>
               <%= form.select :quantity, quantity_options, {}, class: "wt-input", id: "quantity" %>
             </div>
@@ -69,21 +86,34 @@
             <%= form.submit t("products.add_to_cart"), class: "wt-btn wt-btn--primary w-full" %>
           <% end %>
         <% else %>
-          <p class="wt-panel px-5 py-4 text-ui text-ink">No configuration of this product is available right now.</p>
+          <p class="wt-plate wt-plate--sunk px-5 py-4 text-ui text-ink">No configuration of this product is available right now.</p>
         <% end %>
       </div>
     </div>
   </div>
 
-  <% has_specs = @product.materials.present? || @product.safety_notes.present? || @product.dimensions.present? || @product.weight_grams.present? %>
+  <%# --- The monograph ----------------------------------------------------
+      Contents rail on the left, the record on the right. The rail is the same
+      instrument the education library uses for its evidence. %>
+  <div class="mt-20 grid gap-16 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-20">
+    <nav class="wt-rail" aria-label="Contents">
+      <p class="wt-register mb-2">Contents</p>
+      <ul>
+        <% contents.each do |id, label| %>
+          <li>
+            <a href="#<%= id %>" class="wt-rail__link" data-register-target="link"><%= label %></a>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
 
-  <div class="mt-20 grid gap-16 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-20">
     <div class="space-y-16">
-      <section aria-labelledby="materials-heading">
-        <h2 id="materials-heading" class="text-heading text-ink">Materials and safety</h2>
+      <section id="specifications" aria-labelledby="specifications-heading" data-register-target="section">
+        <h2 id="specifications-heading" class="text-heading text-ink">Materials and safety</h2>
 
+        <% has_specs = @product.materials.present? || @product.safety_notes.present? %>
         <% if has_specs %>
-          <dl class="mt-6 border-t border-line text-ui">
+          <dl class="mt-6">
             <% if @product.materials.present? %>
               <%= render "products/spec_row", label: "Materials", value: @product.materials %>
             <% end %>
@@ -98,23 +128,23 @@
       </section>
 
       <% if @product.description.present? %>
-        <section aria-labelledby="how-heading" data-controller="reveal" data-reveal>
+        <section id="how" aria-labelledby="how-heading" data-register-target="section" data-controller="reveal" data-reveal>
           <h2 id="how-heading" class="text-heading text-ink">How it works</h2>
           <div class="wt-prose mt-6"><p><%= @product.description %></p></div>
         </section>
       <% end %>
 
       <% if @product.care_instructions.present? %>
-        <section aria-labelledby="care-heading">
+        <section id="care" aria-labelledby="care-heading" data-register-target="section">
           <h2 id="care-heading" class="text-heading text-ink">Care</h2>
           <div class="wt-prose mt-6"><p><%= @product.care_instructions %></p></div>
         </section>
       <% end %>
 
       <% if @product.dimensions.present? || @product.weight_grams.present? %>
-        <section aria-labelledby="dimensions-heading">
+        <section id="dimensions" aria-labelledby="dimensions-heading" data-register-target="section">
           <h2 id="dimensions-heading" class="text-heading text-ink">Dimensions</h2>
-          <dl class="mt-6 border-t border-line text-ui">
+          <dl class="mt-6">
             <% if @product.dimensions.present? %>
               <%= render "products/spec_row", label: "Dimensions", value: @product.dimensions %>
             <% end %>
@@ -125,7 +155,7 @@
         </section>
       <% end %>
 
-      <section aria-labelledby="reviews-heading">
+      <section id="reviews" aria-labelledby="reviews-heading" data-register-target="section">
         <h2 id="reviews-heading" class="text-heading text-ink">Reviews</h2>
 
         <% if @reviews.any? %>
@@ -134,7 +164,7 @@
               <li class="border-t border-line pt-6 pb-2">
                 <div class="flex flex-wrap items-center gap-3">
                   <p class="text-ui text-ink"><span class="tnum"><%= review.rating %></span> out of 5</p>
-                  <%= tag.span("Verified purchase", class: "wt-badge wt-badge--accent") if review.verified_purchase? %>
+                  <%= tag.span("Verified purchase", class: "wt-mark wt-mark--accent") if review.verified_purchase? %>
                 </div>
                 <% if review.title.present? %>
                   <h3 class="mt-3 text-title text-ink"><%= review.title %></h3>
@@ -155,26 +185,25 @@
       </section>
 
       <% if @faqs.any? %>
-        <section aria-labelledby="faqs-heading">
-          <h2 id="faqs-heading" class="text-heading text-ink">Questions</h2>
-          <div class="mt-6 border-t border-line">
+        <section id="questions" aria-labelledby="questions-heading" data-register-target="section">
+          <h2 id="questions-heading" class="text-heading text-ink">Questions</h2>
+          <div class="mt-6">
             <% @faqs.each do |faq| %>
-              <details class="border-b border-line">
+              <details class="border-t border-line">
                 <summary class="flex min-h-[44px] cursor-pointer items-center text-ui text-ink"><%= faq.question %></summary>
                 <p class="mt-3 max-w-[68ch] pb-4 text-body"><%= faq.answer %></p>
               </details>
             <% end %>
+            <div class="border-t border-line"></div>
           </div>
         </section>
       <% end %>
-    </div>
 
-    <aside class="lg:border-l lg:border-line lg:pl-8">
-      <div class="wt-panel p-6">
+      <aside class="wt-plate wt-plate--sunk p-6">
         <h2 class="text-title text-ink">Education</h2>
-        <p class="mt-3 text-ui text-body">Materials, safety and use, explained without a sales pitch. The library carries the sources.</p>
+        <p class="mt-3 max-w-[52ch] text-ui text-body">Materials, safety and use, explained without a sales pitch. The library carries the sources.</p>
         <%= link_to "Read the library", learn_path, class: "wt-btn wt-btn--secondary mt-5" %>
-      </div>
-    </aside>
+      </aside>
+    </div>
   </div>
 </article>

@@ -20,7 +20,7 @@
     <p class="mt-2 text-ui text-muted tnum"><%= pluralize(@pagy.count, "product") %></p>
 
     <% if @products.any? %>
-      <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div class="mt-8 wt-catalogue__grid">
         <% @products.each do |product| %>
           <%= render "products/card", product: product %>
         <% end %>

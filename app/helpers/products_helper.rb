@@ -3,26 +3,57 @@ module ProductsHelper
   # threshold, not a stocked/out-of-stock one, so it lives here and not on Variant.
   LOW_STOCK_THRESHOLD = 3
 
-  # The cover when one is attached, otherwise a reserved placeholder of the
-  # same box. The placeholder still carries a role and a label, so a screen
-  # reader hears which product has no image rather than meeting an unlabelled
-  # empty box.
-  def product_cover_tag(product, size: :card)
-    classes = cover_box_classes(size)
-    return cover_image_tag(product, classes) if cover_attached?(product)
+  # The cover when one is attached; otherwise a plate that has not been printed
+  # yet. A grey box reading "No image" is the loudest element on a catalogue
+  # page and says nothing, so a missing photograph is drawn as an archival
+  # plate: the frame stays, the label is centred, and the object is identified.
+  #
+  # The caller owns the frame (see the .wt-specimen wrapper); this returns the
+  # content that goes inside it.
+  def product_cover_tag(product)
+    return cover_image_tag(product) if cover_attached?(product)
+    return catalogue_render_tag(product) if catalogue_render_for(product)
 
-    tag.div(class: classes, role: "img", aria: { label: "#{product.name}: no image available" }) do
-      tag.span("No image", class: "text-caption text-muted")
+    tag.div(
+      class: "wt-specimen--empty h-full w-full",
+      role: "img",
+      aria: { label: "#{product.name}: photograph not supplied" }
+    ) do
+      tag.span(class: "wt-specimen__plate-label") do
+        safe_join([
+          tag.span("Photograph not supplied", class: "wt-register"),
+          tag.span(product.sku, class: "wt-numeral text-title")
+        ])
+      end
     end
   end
 
   # nil when the variant is comfortably stocked. A badge only when it is not,
   # so the grid stays quiet until something actually needs attention.
   def stock_label(variant)
-    return tag.span("Sold out", class: "wt-badge wt-badge--ember") if variant.stock_quantity.zero?
-    return tag.span("Low stock", class: "wt-badge wt-badge--accent") if variant.stock_quantity <= LOW_STOCK_THRESHOLD
+    return tag.span("Sold out", class: "wt-mark wt-mark--ember") if variant.stock_quantity.zero?
+    return tag.span("Low stock", class: "wt-mark wt-mark--accent") if variant.stock_quantity <= LOW_STOCK_THRESHOLD
 
     nil
+  end
+
+  # The catalogue ships with one studio rendering per product, made from
+  # scratch for this shop. They are not photographs, and nothing in the markup
+  # or the alt text claims they are: a rendering of the form is what this
+  # catalogue honestly has until real photography exists.
+  def catalogue_render_for(product)
+    name = "catalogue/#{product.slug}.png"
+    return nil unless Rails.application.assets.load_path&.find(name)
+
+    name
+  end
+
+  def catalogue_render_tag(product)
+    image_tag catalogue_render_for(product),
+      alt: "#{product.name}, studio rendering",
+      class: "h-full w-full object-cover",
+      loading: "lazy",
+      decoding: "async"
   end
 
   private
@@ -41,14 +72,10 @@ module ProductsHelper
       @active_storage_ready = ActiveStorage::Attachment.table_exists?
     end
 
-    def cover_image_tag(product, classes)
-      image_tag url_for(product.cover_image), alt: product.name, class: classes, loading: "lazy"
-    end
-
-    # Both sizes reserve an aspect box so a grid of cards keeps its rhythm
-    # whether or not each product has a cover.
-    def cover_box_classes(size)
-      aspect = size == :detail ? "aspect-square" : "aspect-[4/5]"
-      "#{aspect} flex w-full items-center justify-center rounded-xl border border-line bg-paper-sunk"
+    def cover_image_tag(product)
+      image_tag url_for(product.cover_image),
+        alt: product.name,
+        class: "h-full w-full object-cover",
+        loading: "lazy"
     end
 end

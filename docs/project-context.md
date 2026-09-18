@@ -74,12 +74,20 @@ action, expand/contract migrations, CI gates.
 
 Each of these is deliberate and each is a follow-up rather than a surprise.
 
-- **The live browser pass has not run.** Capybara system specs cover the purchase, account
-  and reading flows, and the design pre-flight was checked against the tokens (contrast,
-  states, banned patterns, copy rules), but a real browser cannot start in this environment:
-  Chrome is fetched at `.tools/chrome/chrome` and fails on missing system libraries
-  (`libnspr4` and friends). `script/install-system-deps` prints the `apt-get` line, which
-  needs an interactive `sudo`. The Playwright CLI is not installed either.
+- **The live browser pass has run, without root.** Chrome's missing libraries
+  (`libnspr4`, `libnss3`, `libasound2`) were extracted to `~/.local/lib/chrome-deps` and
+  `LD_LIBRARY_PATH` points there, so Playwright's bundled Chromium starts. Every page in
+  the build has since been rendered and read at 1440px and 390px. What is still unrun is
+  `script/install-system-deps` itself: it needs an interactive `sudo`, and until it runs
+  `libvips` is unavailable, so Active Storage variants (thumbnails, resizes) cannot be
+  generated. The catalogue carries no photography yet, so nothing depends on it today.
+- **Development runs the content security policy in report-only mode.** Design tooling
+  (the `variate` card, which injects its own styles from a local port) cannot run under an
+  enforcing policy with style nonces. Production enforces the policy exactly as written.
+  `config/content_security_policy.rb` gates this on `Rails.env.development?`.
+- **`.variate/` is design-round scratch space, not application code.** It is gitignored.
+  While a round is open the layout carries one marker-bracketed line that loads the card;
+  `variate end` removes it, and it must never reach a release.
 - **`data-test-id` selectors are not used.** The suite asserts on rendered text and roles,
   which is what a reader actually sees. The plan asked for test ids; this is a knowing
   deviation, recorded here rather than quietly.

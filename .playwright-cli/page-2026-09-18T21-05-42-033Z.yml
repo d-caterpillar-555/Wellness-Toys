@@ -1,0 +1,303 @@
+- generic [active] [ref=f1e1]:
+  - link "Skip to content" [ref=f1e2] [cursor=pointer]:
+    - /url: "#main"
+  - region "Age confirmation" [ref=f1e3]:
+    - generic [ref=f1e5]:
+      - paragraph [ref=f1e6]:
+        - text: Adult products. This store sells products intended for adults. Confirm you are of legal age where you live.
+        - link "Why we ask" [ref=f1e7] [cursor=pointer]:
+          - /url: /standards
+      - button "I am of legal age" [ref=f1e9] [cursor=pointer]
+  - banner [ref=f1e10]:
+    - generic [ref=f1e12]:
+      - link "Wellness Toys" [ref=f1e13] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=f1e15]:
+        - link "Shop" [ref=f1e16] [cursor=pointer]:
+          - /url: /shop
+        - link "Learn" [ref=f1e17] [cursor=pointer]:
+          - /url: /learn
+        - link "About" [ref=f1e18] [cursor=pointer]:
+          - /url: /about
+        - link "Standards" [ref=f1e19] [cursor=pointer]:
+          - /url: /standards
+        - link "Contact" [ref=f1e20] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f1e21]:
+        - link "Sign in" [ref=f1e22] [cursor=pointer]:
+          - /url: /account/sign_in
+        - link "Cart" [ref=f1e23] [cursor=pointer]:
+          - /url: /cart
+          - generic [ref=f1e25]: "0"
+        - button "Switch colour theme" [ref=f1e26]:
+          - generic [ref=f1e27]: Dark
+  - main [ref=f1e28]:
+    - navigation "Visual style" [ref=f1e29]:
+      - button "Tidewater" [pressed] [ref=f1e30] [cursor=pointer]
+      - button "Solarium" [ref=f1e31] [cursor=pointer]
+      - button "Studio B" [ref=f1e32] [cursor=pointer]
+      - button "Herbarium" [ref=f1e33] [cursor=pointer]
+    - generic [ref=f1e34]:
+      - generic [ref=f1e35]:
+        - paragraph [ref=f1e36]: Wellness Toys
+        - paragraph [ref=f1e37]: 12 products across 6 departments · discreet shipping · billed as Wellness Toys
+      - generic [ref=f1e38]:
+        - heading "Everything we sell has a materials list, and everything we publish has a source." [level=1] [ref=f1e39]
+        - paragraph [ref=f1e40]: Products we can explain, and an education library we cite. No euphemisms, no shame, and no guessing.
+      - generic [ref=f1e42]:
+        - generic [ref=f1e43]:
+          - generic [ref=f1e44]:
+            - heading "Departments" [level=2] [ref=f1e45]
+            - link "Shop the catalogue" [ref=f1e46] [cursor=pointer]:
+              - /url: /shop
+          - list [ref=f1e47]:
+            - listitem [ref=f1e48]:
+              - link "Vibrators 3 products" [ref=f1e49] [cursor=pointer]:
+                - /url: /shop/vibrators
+                - generic [ref=f1e50]: Vibrators
+                - generic [ref=f1e52]: 3 products
+            - listitem [ref=f1e53]:
+              - link "Lubricants 3 products" [ref=f1e54] [cursor=pointer]:
+                - /url: /shop/lubricants
+                - generic [ref=f1e55]: Lubricants
+                - generic [ref=f1e57]: 3 products
+            - listitem [ref=f1e58]:
+              - link "Massage 2 products" [ref=f1e59] [cursor=pointer]:
+                - /url: /shop/massage
+                - generic [ref=f1e60]: Massage
+                - generic [ref=f1e62]: 2 products
+            - listitem [ref=f1e63]:
+              - link "Pelvic health 1 product" [ref=f1e64] [cursor=pointer]:
+                - /url: /shop/pelvic-health
+                - generic [ref=f1e65]: Pelvic health
+                - generic [ref=f1e67]: 1 product
+            - listitem [ref=f1e68]:
+              - link "Barrier methods 1 product" [ref=f1e69] [cursor=pointer]:
+                - /url: /shop/barrier-methods
+                - generic [ref=f1e70]: Barrier methods
+                - generic [ref=f1e72]: 1 product
+            - listitem [ref=f1e73]:
+              - link "Care and storage 2 products" [ref=f1e74] [cursor=pointer]:
+                - /url: /shop/care-and-storage
+                - generic [ref=f1e75]: Care and storage
+                - generic [ref=f1e77]: 2 products
+        - generic [ref=f1e78]:
+          - generic [ref=f1e79]:
+            - heading "The library" [level=2] [ref=f1e80]
+            - link "Read" [ref=f1e81] [cursor=pointer]:
+              - /url: /learn
+          - list [ref=f1e82]:
+            - listitem [ref=f1e83]:
+              - link "Guides and explainers Learn" [ref=f1e84] [cursor=pointer]:
+                - /url: /learn
+                - generic [ref=f1e85]: Guides and explainers
+                - generic [ref=f1e87]: Learn
+            - listitem [ref=f1e88]:
+              - link "Glossary of terms Terms" [ref=f1e89] [cursor=pointer]:
+                - /url: /learn/glossary
+                - generic [ref=f1e90]: Glossary of terms
+                - generic [ref=f1e92]: Terms
+            - listitem [ref=f1e93]:
+              - link "Who writes it Writers" [ref=f1e94] [cursor=pointer]:
+                - /url: /learn/experts
+                - generic [ref=f1e95]: Who writes it
+                - generic [ref=f1e97]: Writers
+            - listitem [ref=f1e98]:
+              - link "The blog Posts" [ref=f1e99] [cursor=pointer]:
+                - /url: /blog
+                - generic [ref=f1e100]: The blog
+                - generic [ref=f1e102]: Posts
+      - generic [ref=f1e104]:
+        - generic [ref=f1e105]:
+          - heading "Recent specimens" [level=2] [ref=f1e106]
+          - link "All products" [ref=f1e107] [cursor=pointer]:
+            - /url: /shop
+        - list [ref=f1e108]:
+          - listitem [ref=f1e109]:
+            - link "Northlight Storage Case, studio rendering WT-012 Northlight Storage Case $34.00 Northlight" [ref=f1e110] [cursor=pointer]:
+              - /url: /shop/care-and-storage/northlight-storage-case
+              - generic [ref=f1e111]:
+                - img "Northlight Storage Case, studio rendering" [ref=f1e112]
+                - generic [ref=f1e113]: WT-012
+              - generic [ref=f1e114]:
+                - heading "Northlight Storage Case" [level=3] [ref=f1e115]
+                - paragraph [ref=f1e116]:
+                  - generic [ref=f1e117]: $34.00
+              - paragraph [ref=f1e118]: Northlight
+          - listitem [ref=f1e119]:
+            - link "Corvid Toy Cleaner, studio rendering WT-011 Corvid Toy Cleaner $14.00 Corvid" [ref=f1e120] [cursor=pointer]:
+              - /url: /shop/care-and-storage/corvid-toy-cleaner
+              - generic [ref=f1e121]:
+                - img "Corvid Toy Cleaner, studio rendering" [ref=f1e122]
+                - generic [ref=f1e123]: WT-011
+              - generic [ref=f1e124]:
+                - heading "Corvid Toy Cleaner" [level=3] [ref=f1e125]
+                - paragraph [ref=f1e126]:
+                  - generic [ref=f1e127]: $14.00
+              - paragraph [ref=f1e128]: Corvid
+          - listitem [ref=f1e129]:
+            - link "Fenwick Condoms, studio rendering WT-010 Fenwick Condoms $12.00 Fenwick" [ref=f1e130] [cursor=pointer]:
+              - /url: /shop/barrier-methods/fenwick-condoms
+              - generic [ref=f1e131]:
+                - img "Fenwick Condoms, studio rendering" [ref=f1e132]
+                - generic [ref=f1e133]: WT-010
+              - generic [ref=f1e134]:
+                - heading "Fenwick Condoms" [level=3] [ref=f1e135]
+                - paragraph [ref=f1e136]:
+                  - generic [ref=f1e137]: $12.00
+              - paragraph [ref=f1e138]: Fenwick
+          - listitem [ref=f1e139]:
+            - link "Ashgrove Pelvic Trainer Set, studio rendering WT-009 Ashgrove Pelvic Trainer Set $42.00 Ashgrove" [ref=f1e140] [cursor=pointer]:
+              - /url: /shop/pelvic-health/ashgrove-pelvic-trainer-set
+              - generic [ref=f1e141]:
+                - img "Ashgrove Pelvic Trainer Set, studio rendering" [ref=f1e142]
+                - generic [ref=f1e143]: WT-009
+              - generic [ref=f1e144]:
+                - heading "Ashgrove Pelvic Trainer Set" [level=3] [ref=f1e145]
+                - paragraph [ref=f1e146]:
+                  - generic [ref=f1e147]: $42.00
+              - paragraph [ref=f1e148]: Ashgrove
+          - listitem [ref=f1e149]:
+            - link "Northlight Massage Stone, studio rendering WT-008 Northlight Massage Stone $19.00 Northlight" [ref=f1e150] [cursor=pointer]:
+              - /url: /shop/massage/northlight-massage-stone
+              - generic [ref=f1e151]:
+                - img "Northlight Massage Stone, studio rendering" [ref=f1e152]
+                - generic [ref=f1e153]: WT-008
+              - generic [ref=f1e154]:
+                - heading "Northlight Massage Stone" [level=3] [ref=f1e155]
+                - paragraph [ref=f1e156]:
+                  - generic [ref=f1e157]: $19.00
+              - paragraph [ref=f1e158]: Northlight
+          - listitem [ref=f1e159]:
+            - link "Corvid Massage Oil, studio rendering WT-007 Corvid Massage Oil $24.00 Corvid" [ref=f1e160] [cursor=pointer]:
+              - /url: /shop/massage/corvid-massage-oil
+              - generic [ref=f1e161]:
+                - img "Corvid Massage Oil, studio rendering" [ref=f1e162]
+                - generic [ref=f1e163]: WT-007
+              - generic [ref=f1e164]:
+                - heading "Corvid Massage Oil" [level=3] [ref=f1e165]
+                - paragraph [ref=f1e166]:
+                  - generic [ref=f1e167]: $24.00
+              - paragraph [ref=f1e168]: Corvid
+          - listitem [ref=f1e169]:
+            - link "Fenwick Hybrid, studio rendering WT-006 Fenwick Hybrid $16.00 Fenwick" [ref=f1e170] [cursor=pointer]:
+              - /url: /shop/lubricants/fenwick-hybrid
+              - generic [ref=f1e171]:
+                - img "Fenwick Hybrid, studio rendering" [ref=f1e172]
+                - generic [ref=f1e173]: WT-006
+              - generic [ref=f1e174]:
+                - heading "Fenwick Hybrid" [level=3] [ref=f1e175]
+                - paragraph [ref=f1e176]:
+                  - generic [ref=f1e177]: $16.00
+              - paragraph [ref=f1e178]: Fenwick
+          - listitem [ref=f1e179]:
+            - link "Ashgrove Silicone, studio rendering WT-005 Ashgrove Silicone $22.00 Ashgrove" [ref=f1e180] [cursor=pointer]:
+              - /url: /shop/lubricants/ashgrove-silicone
+              - generic [ref=f1e181]:
+                - img "Ashgrove Silicone, studio rendering" [ref=f1e182]
+                - generic [ref=f1e183]: WT-005
+              - generic [ref=f1e184]:
+                - heading "Ashgrove Silicone" [level=3] [ref=f1e185]
+                - paragraph [ref=f1e186]:
+                  - generic [ref=f1e187]: $22.00
+              - paragraph [ref=f1e188]: Ashgrove
+      - generic [ref=f1e190]:
+        - heading "Most of this industry talks to you like a joke." [level=2] [ref=f1e191]
+        - generic [ref=f1e192]:
+          - paragraph [ref=f1e193]: Open a typical shop in this category and you get black backgrounds, neon glow, and product names that are embarrassed by their own subject. The information you actually need is buried under the winking.
+          - paragraph [ref=f1e194]: So we started from the other direction. Everything we sell has a materials list, care instructions and dimensions. Everything we publish has a source. Where a question is medical, we say so and point you at a clinician instead of quietly implying a product will fix it.
+          - paragraph [ref=f1e195]: That is the whole idea. Treat people as adults, and treat the subject the way any other part of health gets treated.
+      - generic [ref=f1e197]:
+        - heading "Three things we will not do" [level=2] [ref=f1e198]
+        - generic [ref=f1e199]:
+          - generic [ref=f1e200]:
+            - term [ref=f1e201]: We will not invent facts.
+            - definition [ref=f1e202]: No made up statistics, no borrowed credentials, no studies that do not exist. If we cite something, you can follow the link and read it.
+          - generic [ref=f1e203]:
+            - term [ref=f1e204]: We will not make medical claims.
+            - definition [ref=f1e205]: A product can be described accurately without pretending to be a treatment. Anything clinical belongs with a clinician.
+          - generic [ref=f1e206]:
+            - term [ref=f1e207]: We will not sell your privacy.
+            - definition [ref=f1e208]: Purchase history and browsing in this category reveal health intent. No advertising trackers, no session recording, and nothing in a URL that identifies you.
+          - generic [ref=f1e209]:
+            - term [ref=f1e210]: We will not pretend to be discreet.
+            - definition [ref=f1e211]: Plain packaging and a neutral billing descriptor, stated once, on the shipping page. It is a standard we meet, not a slogan we shout.
+      - list [ref=f1e214]:
+        - listitem [ref=f1e215]:
+          - link "How we choose what we stock Standards" [ref=f1e216] [cursor=pointer]:
+            - /url: /standards
+            - generic [ref=f1e217]: How we choose what we stock
+            - generic [ref=f1e219]: Standards
+        - listitem [ref=f1e220]:
+          - link "What arrives, and what it says on it Shipping" [ref=f1e221] [cursor=pointer]:
+            - /url: /discreet-shipping
+            - generic [ref=f1e222]: What arrives, and what it says on it
+            - generic [ref=f1e224]: Shipping
+        - listitem [ref=f1e225]:
+          - link "What we collect, and what we refuse to Privacy" [ref=f1e226] [cursor=pointer]:
+            - /url: /privacy
+            - generic [ref=f1e227]: What we collect, and what we refuse to
+            - generic [ref=f1e229]: Privacy
+  - contentinfo [ref=f1e230]:
+    - generic [ref=f1e231]:
+      - generic [ref=f1e232]:
+        - generic [ref=f1e233]:
+          - paragraph [ref=f1e234]: Wellness Toys
+          - paragraph [ref=f1e235]: Sexual health and wellness, plainly explained.
+        - navigation "Company" [ref=f1e236]:
+          - heading "Company" [level=2] [ref=f1e237]
+          - list [ref=f1e238]:
+            - listitem [ref=f1e239]:
+              - link "About" [ref=f1e240] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f1e241]:
+              - link "Our standards" [ref=f1e242] [cursor=pointer]:
+                - /url: /standards
+            - listitem [ref=f1e243]:
+              - link "Contact" [ref=f1e244] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=f1e245]:
+              - link "FAQ" [ref=f1e246] [cursor=pointer]:
+                - /url: /faq
+        - navigation "Trust and legal" [ref=f1e247]:
+          - heading "Trust" [level=2] [ref=f1e248]
+          - list [ref=f1e249]:
+            - listitem [ref=f1e250]:
+              - link "Shipping" [ref=f1e251] [cursor=pointer]:
+                - /url: /shipping
+            - listitem [ref=f1e252]:
+              - link "Discreet shipping" [ref=f1e253] [cursor=pointer]:
+                - /url: /discreet-shipping
+            - listitem [ref=f1e254]:
+              - link "Returns" [ref=f1e255] [cursor=pointer]:
+                - /url: /returns
+            - listitem [ref=f1e256]:
+              - link "Privacy" [ref=f1e257] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=f1e258]:
+              - link "Terms" [ref=f1e259] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=f1e260]:
+              - link "Accessibility" [ref=f1e261] [cursor=pointer]:
+                - /url: /accessibility
+      - generic [ref=f1e262]:
+        - paragraph [ref=f1e263]: Wellness Toys. You must be of legal age in your jurisdiction to purchase.
+        - paragraph [ref=f1e264]:
+          - link "support@example.com" [ref=f1e265] [cursor=pointer]:
+            - /url: mailto:support@example.com
+  - toolbar "variate" [ref=f1e266]:
+    - button "home-html" [ref=f1e267] [cursor=pointer]
+    - generic [ref=f1e268]:
+      - button "previous" [ref=f1e269] [cursor=pointer]: ‹
+      - button "1" [ref=f1e270] [cursor=pointer]
+      - button "2 ·the index" [ref=f1e271] [cursor=pointer]:
+        - text: "2"
+        - generic [ref=f1e272]: ·the index
+      - button "3" [ref=f1e273] [cursor=pointer]
+      - button "4" [ref=f1e274] [cursor=pointer]
+      - button "next" [ref=f1e275] [cursor=pointer]: ›
+    - generic [ref=f1e276]:
+      - button "pick a section" [ref=f1e277] [cursor=pointer]
+      - button "refine this one" [ref=f1e283] [cursor=pointer]
+      - button "keep this one" [ref=f1e287] [cursor=pointer]
+      - button "hide" [ref=f1e290] [cursor=pointer]: ▾

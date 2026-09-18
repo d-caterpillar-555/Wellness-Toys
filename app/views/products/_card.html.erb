@@ -1,27 +1,5 @@
 <%# locals: (product:) %>
-<%# A product is only reachable under a category, so the card links through the
-    product's own category. A product with no category yet renders the same
-    content unlinked rather than as a dead link. %>
-<% category = product.primary_category %>
-<% body = capture do %>
-  <div class="relative">
-    <%= product_cover_tag(product) %>
-    <% unless product.in_stock? %>
-      <span class="wt-badge wt-badge--ember absolute left-3 top-3 bg-paper">Sold out</span>
-    <% end %>
-  </div>
-
-  <% if product.brand %>
-    <p class="mt-4 text-caption text-muted"><%= product.brand.name %></p>
-  <% end %>
-  <h3 class="mt-1 text-title text-ink group-hover:text-accent"><%= product.name %></h3>
-  <p class="mt-1 text-ui text-ink"><%= price(product.lowest_price_cents) %></p>
-<% end %>
-
-<article>
-  <% if category %>
-    <%= link_to body, product_path(category, product), class: "group block no-underline" %>
-  <% else %>
-    <div class="group"><%= body %></div>
-  <% end %>
-</article>
+<%# One product, wherever it is listed. The plate treatment lives in _specimen,
+    so the catalogue, a category, a search result and the home page all print
+    the same object instead of four variations of it. %>
+<%= render "products/specimen", product: product, category: product.primary_category %>

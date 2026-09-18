@@ -1,0 +1,1 @@
+[      62ms] [ERROR] Loading the script 'http://127.0.0.1:4875/v.js' violates the following Content Security Policy directive: "script-src 'self' 'nonce-K4LgibXc3uFII2xaLvR2bQ=='". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked. @ http://127.0.0.1:3000/:0

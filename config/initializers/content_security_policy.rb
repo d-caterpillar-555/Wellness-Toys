@@ -12,6 +12,13 @@ Rails.application.configure do
     policy.frame_ancestors :none
   end
 
+  # Development runs the policy in report-only mode. Design tooling (the
+  # variate card, and anything like it) injects styles the enforcing policy
+  # would block; here those violations are reported to the console and nothing
+  # is blocked, so the policy still documents itself while the tool stays
+  # usable. Production enforces it exactly as written above.
+  config.content_security_policy_report_only = true if Rails.env.development?
+
   # Nonces for the importmap tag and the one inline theme resolver in the
   # layout. No policy allows unsafe-inline for scripts.
   #

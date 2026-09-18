@@ -1,6 +1,9 @@
 <header class="border-b border-line bg-paper">
   <div class="wt-container">
-    <div class="flex items-center justify-between gap-6 min-h-[72px]">
+    <%# The row wraps rather than overflowing: at 390px the wordmark and the
+        controls cannot share a line, and a horizontal scrollbar is not a
+        navigation model. %>
+    <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 min-h-[72px]">
 
       <%= link_to root_path, class: "flex items-center shrink-0 no-underline" do %>
         <span class="font-display text-title text-ink tracking-title"><%= Store.name %></span>

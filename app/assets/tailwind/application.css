@@ -1,77 +1,45 @@
 @import "tailwindcss";
 
-/* ==========================================================================
-   Self-hosted fonts. Five files, five weights, no more.
-   A font CDN would see the visitor's IP and referring URL, which is
-   unacceptable on health-adjacent pages. See script/fetch-fonts.
-   ========================================================================== */
-
-@font-face {
-  font-family: "Newsreader";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/newsreader-latin-400-normal.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Newsreader";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/newsreader-latin-500-normal.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Instrument Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/instrument-sans-latin-400-normal.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Instrument Sans";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("/fonts/instrument-sans-latin-500-normal.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Instrument Sans";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("/fonts/instrument-sans-latin-600-normal.woff2") format("woff2");
-}
-
-/* Dark mode follows an explicit data attribute, never the OS preference alone.
-   The theme is chosen once per page and never inverted mid-page. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* ==========================================================================
-   Design tokens.
-   The single source of truth is docs/design/DESIGN.md. Nothing appears here
-   that is not defined there. Adding a step to a scale is a design decision.
+   The Plate Archive — design tokens v2.
+
+   The world is a clinical cabinet: hard edges, drawn hairlines, real data
+   printed as data. Ink and jade remain the whole palette. v2 adds one surface
+   role (the plate) and a motion vocabulary, and removes every soft radius and
+   shadow that v1 used for comfort.
    ========================================================================== */
 
 @theme {
   /* --- Colour ------------------------------------------------------------
-     OKLCH only. See DESIGN.md section 1 for the verified contrast ratios. */
+     OKLCH only. See docs/design/DESIGN.md for the verified ratios. */
   --color-paper: oklch(96.2% 0.005 95);
   --color-paper-sunk: oklch(93.1% 0.007 96);
   --color-line: oklch(87.4% 0.01 95);
+  --color-line-strong: oklch(72% 0.012 258);
   --color-ink: oklch(19.8% 0.011 258);
   --color-ink-soft: oklch(30.4% 0.014 258);
   --color-body: oklch(38.9% 0.017 254);
   --color-muted: oklch(50.5% 0.024 259);
   --color-disabled: oklch(72% 0.01 258);
 
+  /* The plate: a full-bleed ink field that carries the register and any
+     moment the page wants to state rather than sell. */
+  --color-plate: oklch(19.8% 0.011 258);
+  --color-plate-soft: oklch(26.5% 0.013 258);
+  --color-plate-line: oklch(34% 0.014 258);
+  --color-plate-ink: oklch(96.2% 0.005 95);
+  --color-plate-body: oklch(82% 0.008 95);
+  /* Muted type on the plate still has to pass 4.5:1. */
+  --color-plate-muted: oklch(70% 0.02 258);
+
   --color-accent: oklch(52.4% 0.086 170);
   --color-accent-strong: oklch(40.6% 0.063 172);
   --color-accent-hover: oklch(52.4% 0.086 170);
   --color-accent-wash: oklch(94.1% 0.017 172);
+  /* Jade lifted for use on the plate, where 52% lightness is too heavy. */
+  --color-accent-plate: oklch(74% 0.105 168);
 
   --color-ember: oklch(50.8% 0.14 42);
 
@@ -141,12 +109,17 @@
   --tracking-headline: -0.02em;
   --tracking-title: -0.01em;
   --tracking-label: 0.01em;
+  /* The register voice: small, spaced, upper case. Used for real labels and
+     real data only, never as decoration above a heading. */
+  --tracking-register: 0.16em;
 
   /* --- Space -------------------------------------------------------------
      A 4-unit base. 4/8/12/16/24/32/48/64/80/112 all fall out of it. */
   --spacing: 0.25rem;
 
-  /* --- Radius ------------------------------------------------------------ */
+  /* --- Radius ------------------------------------------------------------
+     v2 has two edges: 2px for anything that can be touched, 4px for a plate
+     that holds content. Nothing is a pill. */
   --radius-*: initial;
   --radius-xs: 2px;
   --radius-sm: 4px;
@@ -157,12 +130,29 @@
   --radius-pill: 9999px;
 
   /* --- Elevation ---------------------------------------------------------
-     Hairline first. Shadow only for genuinely floating surfaces. */
+     There are no resting shadows in v2. Depth is drawn with hairlines. The
+     only two shadows left are for surfaces that genuinely float above the
+     page, and they are used by the menu and dialog layers alone. */
   --shadow-popover: 0 8px 24px -8px oklch(19.8% 0.011 258 / 0.16);
   --shadow-dialog: 0 24px 64px -16px oklch(19.8% 0.011 258 / 0.24);
 
-  /* --- Motion ------------------------------------------------------------ */
+  /* --- Motion ------------------------------------------------------------
+     One vocabulary for the whole site. 150ms is the baseline: faster reads
+     twitchy, slower reads laggy. Exits run at roughly 70% of their entrance. */
+  --dur-touch: 100ms;
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+  --dur-draw: 620ms;
+  --dur-exit: 180ms;
+
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* The cascade between siblings. Small, so a list of twelve rows is not a
+     two-second performance. */
+  --stagger: 45ms;
 
   /* --- Layout ------------------------------------------------------------ */
   --breakpoint-sm: 640px;
@@ -173,16 +163,25 @@
 }
 
 /* Dark mode swaps the surface and text tokens. Same names, so no component
-   needs a dark: variant for the base palette. */
+   needs a dark: variant for the base palette. The plate inverts: in dark mode
+   it becomes the lighter, deeper surface that still separates from paper. */
 [data-theme="dark"] {
   --color-paper: oklch(17.5% 0.01 258);
   --color-paper-sunk: oklch(21% 0.012 258);
   --color-line: oklch(29% 0.014 258);
+  --color-line-strong: oklch(42% 0.016 258);
   --color-ink: oklch(95% 0.006 95);
   --color-ink-soft: oklch(88% 0.007 95);
   --color-body: oklch(84% 0.008 95);
   --color-muted: oklch(68% 0.012 258);
   --color-disabled: oklch(45% 0.012 258);
+
+  --color-plate: oklch(12% 0.008 258);
+  --color-plate-soft: oklch(16% 0.009 258);
+  --color-plate-line: oklch(30% 0.014 258);
+  --color-plate-ink: oklch(95% 0.006 95);
+  --color-plate-body: oklch(84% 0.008 95);
+  --color-plate-muted: oklch(70% 0.014 258);
 
   --color-accent: oklch(70% 0.098 168);
   --color-accent-strong: oklch(62% 0.1 169);
@@ -284,26 +283,143 @@
     border-color: var(--color-line);
   }
 
-  /* The single authored motion moment. Content is visible by default and the
-     reveal is additive, so a reduced-motion visitor sees the finished state
-     immediately rather than a blank page. */
+  /* --- Reveal ------------------------------------------------------------
+     The finished state is the DEFAULT. Nothing is hidden unless the reveal
+     controller is running, which is why the gating attribute is set by that
+     controller on connect rather than by the stylesheet: with JavaScript
+     unavailable, on a slow script, or on an error, the page renders complete
+     instead of blank.
+
+     Two beats, both additive: a 12px rise, and any group cascading its
+     children by index. */
   [data-reveal] {
     opacity: 1;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    [data-reveal]:not([data-revealed]) {
+    html[data-motion="ready"] [data-reveal]:not([data-revealed]) {
       opacity: 0;
       transform: translateY(12px);
     }
 
-    [data-reveal] {
+    html[data-motion="ready"] [data-reveal] {
       transition:
-        opacity 500ms var(--ease-out-expo),
-        transform 500ms var(--ease-out-expo);
+        opacity var(--dur-slow) var(--ease-out-expo),
+        transform var(--dur-slow) var(--ease-out-expo);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    /* A group cascades its children instead of revealing them as one slab. */
+    html[data-motion="ready"] [data-reveal-group]:not([data-revealed]) > * {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    html[data-motion="ready"] [data-reveal-group] > * {
+      transition:
+        opacity var(--dur-base) var(--ease-out-quart),
+        transform var(--dur-base) var(--ease-out-quart);
+      transition-delay: calc(var(--i, 0) * var(--stagger));
     }
   }
 
+  /* --- Drawn rules -------------------------------------------------------
+     The signature of the archive: a hairline that is drawn rather than
+     printed. It animates from the left, once, when its container is revealed. */
+  .wt-draw {
+    position: relative;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wt-draw::before {
+      transform-origin: left center;
+      transition: transform var(--dur-draw) var(--ease-out-expo);
+    }
+
+    .wt-draw:not([data-revealed])::before {
+      transform: scaleX(0);
+    }
+  }
+
+  /* --- Reading rule ------------------------------------------------------
+     Where you are in a long document, measured against the document itself.
+     CSS scroll timelines where they exist; where they do not, the rule simply
+     is not drawn. No scroll listener anywhere on this site. */
+  .wt-reading-rule {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 2px;
+    background-color: var(--color-accent);
+    transform-origin: left center;
+    transform: scaleX(0);
+    z-index: 60;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .wt-reading-rule {
+        animation: wt-reading-rule linear both;
+        animation-timeline: scroll(root block);
+      }
+    }
+  }
+
+  @keyframes wt-reading-rule {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* --- The cart tick -----------------------------------------------------
+     The count is replaced by Turbo when an item is added, so the animation
+     runs on insertion. Motion here only says "that landed". */
+  #cart-count .tnum {
+    display: inline-block;
+    animation: wt-tick var(--dur-base) var(--ease-out-expo);
+  }
+
+  @keyframes wt-tick {
+    0% {
+      transform: translateY(-4px) scale(0.9);
+      opacity: 0.4;
+    }
+    100% {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  /* --- View transitions --------------------------------------------------
+     Turbo drives same-origin transitions through the View Transitions API
+     where it is available. The default cross-fade is replaced with a shorter
+     one plus a hairline sweep, so a navigation reads as turning a page. */
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root) {
+      animation: wt-page-out var(--dur-exit) var(--ease-soft) both;
+    }
+
+    ::view-transition-new(root) {
+      animation: wt-page-in var(--dur-base) var(--ease-out-expo) both;
+    }
+  }
+
+  @keyframes wt-page-out {
+    to {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes wt-page-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  /* The global kill switch. 0.01ms rather than none, so transitionend and
+     animationend still fire and nothing waits forever on them. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -336,26 +452,238 @@
     }
   }
 
-  /* --- Buttons --------------------------------------------------------- */
+  /* --- Voice -------------------------------------------------------------
+     The register: upper case, tracked, small. It labels real things (a
+     category, a SKU, a field). It is never an eyebrow above a heading. */
+  .wt-register {
+    font-family: var(--font-sans);
+    font-size: var(--text-fine);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-register);
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted);
+  }
 
+  .wt-plate .wt-register,
+  .wt-plate .wt-register-muted {
+    color: var(--color-plate-muted);
+  }
+
+  /* Data set in the display face. Prices, counts, dimensions. */
+  .wt-numeral {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-title);
+    color: var(--color-ink);
+  }
+
+  /* --- The plate ---------------------------------------------------------
+     A content surface with a drawn edge. No resting shadow, no rounding
+     beyond 2px, no nested plates inside plates. */
+  .wt-plate {
+    background-color: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-xs);
+  }
+
+  .wt-plate--sunk {
+    background-color: var(--color-paper-sunk);
+  }
+
+  /* The full-bleed ink field. */
+  .wt-plate--ink {
+    background-color: var(--color-plate);
+    border-color: var(--color-plate-line);
+    color: var(--color-plate-body);
+  }
+
+  .wt-plate--ink h1,
+  .wt-plate--ink h2,
+  .wt-plate--ink h3,
+  .wt-plate--ink .wt-numeral {
+    color: var(--color-plate-ink);
+  }
+
+  .wt-plate--ink a {
+    color: var(--color-plate-ink);
+  }
+
+  /* --- Rules -------------------------------------------------------------
+     Hairlines are the only depth device. `.wt-draw` animates the one it is
+     attached to; every rule is 1px of currentColor-tinted line. */
+  .wt-rule {
+    border-block-start: 1px solid var(--color-line);
+  }
+
+  .wt-rule--draw::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 1px;
+    background-color: var(--color-line-strong);
+  }
+
+  .wt-plate--ink .wt-rule--draw::before {
+    background-color: var(--color-plate-line);
+  }
+
+  /* --- Index rows --------------------------------------------------------
+     A register row: label, dot leader, data. Real values, never filler. */
+  .wt-index-row {
+    display: flex;
+    align-items: baseline;
+    gap: calc(var(--spacing) * 3);
+    min-height: 44px;
+    padding-block: calc(var(--spacing) * 3);
+    text-decoration: none;
+    color: var(--color-ink);
+    border-block-start: 1px solid var(--color-line);
+    transition: background-color var(--dur-fast) var(--ease-soft);
+  }
+
+  .wt-index-row:hover {
+    background-color: var(--color-paper-sunk);
+  }
+
+  .wt-plate--ink .wt-index-row {
+    color: var(--color-plate-ink);
+    border-block-start-color: var(--color-plate-line);
+  }
+
+  .wt-plate--ink .wt-index-row:hover {
+    background-color: var(--color-plate-soft);
+  }
+
+  .wt-index-row__label {
+    font-family: var(--font-display);
+    font-size: var(--text-title);
+    letter-spacing: var(--tracking-title);
+    /* A label wraps rather than forcing the row wider than the screen: a
+       department or product name is not a fixed-width column. */
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* Below the small breakpoint the register row stacks and drops its leaders.
+     Dot leaders need two aligned ends; on a phone there is only one line. */
+  @media (max-width: 47.99rem) {
+    .wt-index-row {
+      flex-wrap: wrap;
+      row-gap: calc(var(--spacing) * 1);
+    }
+
+    .wt-leader {
+      display: none;
+    }
+  }
+
+  /* The leader dots. Drawn with a repeating gradient rather than a border
+     style, so they sit on the baseline and never break the row's rhythm. */
+  .wt-leader {
+    flex: 1 1 auto;
+    align-self: end;
+    height: 1em;
+    background-image: radial-gradient(circle at 1px calc(100% - 2px), currentColor 0.9px, transparent 1px);
+    background-size: 6px 100%;
+    background-repeat: repeat-x;
+    opacity: 0.35;
+  }
+
+  .wt-index-row__data {
+    font-size: var(--text-ui);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* --- Contents rail -----------------------------------------------------
+     The same instrument on a product page and on an article: where you are
+     in the document, with the section you are reading marked. */
+  .wt-rail {
+    position: sticky;
+    inset-block-start: calc(var(--spacing) * 8);
+    align-self: start;
+  }
+
+  .wt-rail__link {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    min-height: 44px;
+    padding-block: calc(var(--spacing) * 2);
+    font-size: var(--text-ui);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-soft);
+  }
+
+  .wt-rail__link::before {
+    content: "";
+    inline-size: calc(var(--spacing) * 4);
+    block-size: 1px;
+    background-color: currentColor;
+    transform-origin: left center;
+    transition: transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  .wt-rail__link:hover {
+    color: var(--color-ink);
+  }
+
+  .wt-rail__link[aria-current="true"] {
+    color: var(--color-ink);
+  }
+
+  .wt-rail__link[aria-current="true"]::before {
+    inline-size: calc(var(--spacing) * 8);
+    background-color: var(--color-accent);
+  }
+
+  /* --- Buttons -----------------------------------------------------------
+     v2 buttons are ruled rectangles that fill from the left. The fill is a
+     pseudo-element, so only transform and colour animate. */
   .wt-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: calc(var(--spacing) * 2);
     min-height: 44px;
     padding: calc(var(--spacing) * 3) calc(var(--spacing) * 5);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-xs);
+    border: 1px solid transparent;
     font-size: var(--text-ui);
     font-weight: var(--font-weight-medium);
     line-height: 1.2;
     text-decoration: none;
     cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
     transition:
-      background-color 160ms var(--ease-out-expo),
-      border-color 160ms var(--ease-out-expo),
-      color 160ms var(--ease-out-expo),
-      transform 160ms var(--ease-out-expo);
+      color var(--dur-fast) var(--ease-soft),
+      border-color var(--dur-fast) var(--ease-soft),
+      transform var(--dur-touch) var(--ease-soft);
+  }
+
+  .wt-btn > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .wt-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  .wt-btn:hover::before,
+  .wt-btn:focus-visible::before {
+    transform: scaleX(1);
   }
 
   .wt-btn:active:not(:disabled, [aria-disabled="true"]) {
@@ -364,73 +692,136 @@
 
   .wt-btn:disabled,
   .wt-btn[aria-disabled="true"] {
-    opacity: 0.5;
+    opacity: 0.45;
     cursor: not-allowed;
     pointer-events: none;
   }
 
-  .wt-btn--primary {
-    background-color: var(--color-accent-strong);
-    color: var(--color-on-accent);
-    border: 1px solid var(--color-accent-strong);
+  /* The label is the only thing that shows while a form is submitting. */
+  .wt-btn[data-loading="true"] {
+    color: transparent;
+    pointer-events: none;
   }
 
-  .wt-btn--primary:hover {
-    background-color: var(--color-accent-hover);
-    border-color: var(--color-accent-hover);
+  .wt-btn[data-loading="true"]::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(var(--spacing) * 5);
+    inset-block-start: 50%;
+    inline-size: calc(var(--spacing) * 10);
+    block-size: 2px;
+    background-color: currentColor;
+    opacity: 0.5;
+    animation: wt-loading 800ms linear infinite;
+    transform-origin: left center;
+  }
+
+  @keyframes wt-loading {
+    0% {
+      transform: scaleX(0.2);
+    }
+    50% {
+      transform: scaleX(1);
+    }
+    100% {
+      transform: scaleX(0.2);
+    }
+  }
+
+  .wt-btn--primary {
+    background-color: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
+    color: var(--color-on-accent);
+  }
+
+  .wt-btn--primary::before {
+    background-color: var(--color-ink);
+  }
+
+  .wt-btn--primary:hover,
+  .wt-btn--primary:focus-visible {
+    border-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .wt-plate--ink .wt-btn--primary {
+    background-color: var(--color-plate-ink);
+    border-color: var(--color-plate-ink);
+    color: var(--color-plate);
+  }
+
+  .wt-plate--ink .wt-btn--primary::before {
+    background-color: var(--color-accent-plate);
+  }
+
+  .wt-plate--ink .wt-btn--primary:hover,
+  .wt-plate--ink .wt-btn--primary:focus-visible {
+    border-color: var(--color-accent-plate);
+    color: var(--color-plate);
   }
 
   .wt-btn--secondary {
     background-color: transparent;
+    border-color: var(--color-line-strong);
     color: var(--color-ink);
-    border: 1px solid var(--color-line);
   }
 
-  .wt-btn--secondary:hover {
+  .wt-btn--secondary::before {
+    background-color: var(--color-ink);
+  }
+
+  .wt-btn--secondary:hover,
+  .wt-btn--secondary:focus-visible {
+    color: var(--color-paper);
     border-color: var(--color-ink);
-    background-color: var(--color-paper-sunk);
   }
 
   .wt-btn--quiet {
     background-color: transparent;
+    border-color: transparent;
     color: var(--color-body);
-    border: 1px solid transparent;
     padding-inline: calc(var(--spacing) * 2);
     text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-color: var(--color-line);
+    text-underline-offset: 5px;
+    text-decoration-color: var(--color-line-strong);
+    text-decoration-thickness: 1px;
   }
 
-  .wt-btn--quiet:hover {
+  .wt-btn--quiet:hover,
+  .wt-btn--quiet:focus-visible {
     color: var(--color-ink);
     text-decoration-color: var(--color-accent);
   }
 
-  /* --- Forms ----------------------------------------------------------- */
-
+  /* --- Forms -------------------------------------------------------------
+     Underline fields: a hairline that thickens and turns to the accent on
+     focus. The boxed input of v1 is gone; the label sits above the rule. */
   .wt-label {
     display: block;
-    font-size: var(--text-label);
+    font-family: var(--font-sans);
+    font-size: var(--text-fine);
     font-weight: var(--font-weight-medium);
-    letter-spacing: var(--tracking-label);
-    color: var(--color-ink);
-    margin-bottom: calc(var(--spacing) * 2);
+    letter-spacing: var(--tracking-register);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: calc(var(--spacing) * 1);
   }
 
   .wt-input {
     display: block;
     width: 100%;
     min-height: 44px;
-    padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
-    background-color: var(--color-paper);
-    color: var(--color-body);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-md);
+    padding: calc(var(--spacing) * 2) 0;
+    background-color: transparent;
+    color: var(--color-ink);
+    border: 0;
+    border-block-end: 1px solid var(--color-line-strong);
+    border-radius: 0;
     font-size: var(--text-ui);
     line-height: 1.5;
     transition:
-      border-color 160ms var(--ease-out-expo),
-      box-shadow 160ms var(--ease-out-expo);
+      border-color var(--dur-fast) var(--ease-soft),
+      box-shadow var(--dur-fast) var(--ease-soft);
   }
 
   .wt-input::placeholder {
@@ -438,23 +829,24 @@
   }
 
   .wt-input:hover:not(:disabled) {
-    border-color: var(--color-muted);
+    border-block-end-color: var(--color-ink);
   }
 
   .wt-input:focus {
     outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px var(--color-accent-wash);
+    border-block-end-color: var(--color-accent);
+    box-shadow: 0 1px 0 0 var(--color-accent);
   }
 
   .wt-input:disabled {
-    background-color: var(--color-paper-sunk);
     color: var(--color-disabled);
+    border-block-end-color: var(--color-line);
     cursor: not-allowed;
   }
 
   .wt-input[aria-invalid="true"] {
-    border-color: var(--color-ember);
+    border-block-end-color: var(--color-ember);
+    box-shadow: 0 1px 0 0 var(--color-ember);
   }
 
   .wt-error {
@@ -464,51 +856,88 @@
   }
 
   .wt-hint {
-    margin-top: calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 1);
     font-size: var(--text-label);
     color: var(--color-muted);
   }
 
-  /* --- Surfaces -------------------------------------------------------- */
-
-  .wt-card {
-    background-color: var(--color-paper);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-xl);
-  }
-
-  .wt-panel {
-    background-color: var(--color-paper-sunk);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-xl);
-  }
-
-  .wt-badge {
+  /* --- Marks -------------------------------------------------------------
+     What v1 called a badge. Squared, ruled, tabular: a stamp rather than a
+     pill. */
+  .wt-mark {
     display: inline-flex;
     align-items: center;
     gap: calc(var(--spacing) * 1);
-    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-pill);
-    font-size: var(--text-caption);
-    line-height: 1.4;
+    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-sans);
+    font-size: var(--text-fine);
+    letter-spacing: var(--tracking-register);
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.6;
     color: var(--color-body);
     white-space: nowrap;
   }
 
-  .wt-badge--accent {
+  .wt-mark--accent {
     background-color: var(--color-accent-wash);
-    border-color: transparent;
+    border-color: var(--color-accent-strong);
     color: var(--color-accent-strong);
   }
 
-  .wt-badge--ember {
+  .wt-mark--ember {
     border-color: var(--color-ember);
     color: var(--color-ember);
   }
 
-  /* --- Prose ----------------------------------------------------------- */
+  .wt-plate--ink .wt-mark {
+    border-color: var(--color-plate-line);
+    color: var(--color-plate-body);
+  }
 
+  /* --- Specimen ----------------------------------------------------------
+     A product's image frame. The image scales inside a fixed frame; the frame
+     itself never moves. */
+  .wt-specimen {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-paper-sunk);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-xs);
+  }
+
+  .wt-specimen img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wt-specimen img {
+      transition: transform var(--dur-slow) var(--ease-out-quart);
+    }
+
+    .wt-specimen-link:hover .wt-specimen img,
+    .wt-specimen-link:focus-visible .wt-specimen img {
+      transform: scale(1.03);
+    }
+  }
+
+  /* The corner stamp: the SKU, printed where a plate number would be. */
+  .wt-specimen__stamp {
+    position: absolute;
+    inset-block-end: calc(var(--spacing) * 2);
+    inset-inline-start: calc(var(--spacing) * 2);
+    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+    background-color: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-xs);
+  }
+
+  /* --- Prose ------------------------------------------------------------- */
   .wt-prose {
     max-width: 68ch;
     font-size: var(--text-body);
@@ -531,9 +960,10 @@
   }
 
   .wt-prose a {
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
     text-decoration: underline;
-    text-decoration-color: var(--color-line);
+    text-decoration-color: var(--color-line-strong);
+    transition: text-decoration-color var(--dur-fast) var(--ease-soft);
   }
 
   .wt-prose a:hover {
@@ -558,36 +988,77 @@
   }
 
   .wt-prose blockquote {
-    border-left: 2px solid var(--color-accent);
-    padding-left: calc(var(--spacing) * 6);
+    border-inline-start: 2px solid var(--color-accent);
+    padding-inline-start: calc(var(--spacing) * 6);
     font-family: var(--font-display);
     font-size: var(--text-lede);
     color: var(--color-ink);
   }
 
-  /* --- Navigation ------------------------------------------------------ */
+  /* The opening paragraph of a piece, set as a journal would set it. */
+  .wt-prose--lede > p:first-of-type::first-letter {
+    float: inline-start;
+    margin-inline-end: calc(var(--spacing) * 2);
+    font-family: var(--font-display);
+    font-size: 3.4em;
+    line-height: 0.82;
+    color: var(--color-ink);
+  }
 
+  /* --- Navigation ------------------------------------------------------- */
   .wt-nav-link {
+    position: relative;
     display: inline-flex;
     align-items: center;
     min-height: 44px;
     font-size: var(--text-ui);
     color: var(--color-body);
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition:
-      color 160ms var(--ease-out-expo),
-      border-color 160ms var(--ease-out-expo);
+    transition: color var(--dur-fast) var(--ease-soft);
+  }
+
+  .wt-nav-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: calc(var(--spacing) * 2);
+    height: 1px;
+    background-color: var(--color-accent);
+    transform-origin: left center;
+    transition: transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wt-nav-link::after {
+      transform: scaleX(0);
+    }
   }
 
   .wt-nav-link:hover {
     color: var(--color-ink);
-    border-bottom-color: var(--color-accent);
+  }
+
+  .wt-nav-link:hover::after,
+  .wt-nav-link:focus-visible::after,
+  .wt-nav-link[aria-current="page"]::after {
+    transform: scaleX(1);
   }
 
   .wt-nav-link[aria-current="page"] {
     color: var(--color-ink);
-    border-bottom-color: var(--color-accent);
+  }
+
+  .wt-plate--ink .wt-nav-link {
+    color: var(--color-plate-body);
+  }
+
+  .wt-plate--ink .wt-nav-link:hover,
+  .wt-plate--ink .wt-nav-link[aria-current="page"] {
+    color: var(--color-plate-ink);
+  }
+
+  .wt-plate--ink .wt-nav-link::after {
+    background-color: var(--color-accent-plate);
   }
 
   /* --- Skip link ------------------------------------------------------- */
@@ -600,12 +1071,1063 @@
     padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
     background-color: var(--color-ink);
     color: var(--color-paper);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-xs);
     font-size: var(--text-ui);
-    transition: top 160ms var(--ease-out-expo);
+    transition: top var(--dur-fast) var(--ease-out-expo);
   }
 
   .wt-skip-link:focus {
     top: calc(var(--spacing) * 4);
+  }
+}
+
+/* ==========================================================================
+   v2.1 — corrections found by looking at the rendered page.
+
+   1. Plate colour overrides live OUTSIDE any @layer. Tailwind's utilities are
+      in a later cascade layer than components, so a `text-ink` utility in the
+      markup silently beat `.wt-plate--ink h2` and printed a dark heading on the
+      ink plate: invisible. Unlayered rules win over every layered rule, which is
+      the honest way to say "inside a plate, the plate decides".
+   2. Form controls had no v2 language at all: native radios sat next to ruled
+      rows like a default from another site.
+   3. The specimen drawer: the products travel sideways while the page scrolls
+      down, in pure CSS, with a swipeable shelf as the fallback.
+   ========================================================================== */
+
+/* --- 1. Inside a plate, the plate decides --------------------------------- */
+
+.wt-plate--ink h1,
+.wt-plate--ink h2,
+.wt-plate--ink h3,
+.wt-plate--ink h4,
+.wt-plate--ink .wt-numeral,
+.wt-plate--ink .text-ink {
+  color: var(--color-plate-ink);
+}
+
+.wt-plate--ink .text-body,
+.wt-plate--ink .text-muted,
+.wt-plate--ink .wt-register {
+  color: var(--color-plate-muted);
+}
+
+.wt-plate--ink .text-lede {
+  color: var(--color-plate-body);
+}
+
+/* --- 2. Controls ---------------------------------------------------------- */
+
+/* Radios and checkboxes are drawn as hairlines that fill, matching the ruled
+   rows they sit in. The native control is replaced, never hidden: the input
+   keeps its size, its label association, and its keyboard behaviour. */
+.wt-choice {
+  appearance: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-xs);
+  background-color: transparent;
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-soft),
+    background-color var(--dur-fast) var(--ease-soft);
+}
+
+.wt-choice::before {
+  content: "";
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  transform: scale(0);
+  background-color: var(--color-paper);
+  transition: transform var(--dur-fast) var(--ease-out-quart);
+}
+
+.wt-choice[type="radio"]::before {
+  border-radius: 1px;
+}
+
+.wt-choice:hover {
+  border-color: var(--color-ink);
+}
+
+.wt-choice:checked {
+  background-color: var(--color-accent-strong);
+  border-color: var(--color-accent-strong);
+}
+
+.wt-choice:checked::before {
+  transform: scale(1);
+}
+
+.wt-choice:disabled {
+  border-color: var(--color-line);
+  cursor: not-allowed;
+}
+
+/* The row that holds a choice: the whole row is the target, and checking the
+   input marks it. */
+.wt-choice-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--spacing) * 4);
+  min-block-size: 44px;
+  padding-block: calc(var(--spacing) * 3);
+  border-block-start: 1px solid var(--color-line);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-soft);
+}
+
+.wt-choice-row:hover {
+  background-color: var(--color-paper-sunk);
+}
+
+.wt-choice-row:has(.wt-choice:checked) {
+  background-color: var(--color-accent-wash);
+}
+
+.wt-choice-row:has(.wt-choice:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Selects keep the underline language of every other field. */
+.wt-select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right 0.55rem center, right 0.25rem center;
+  background-size: 0.3rem 0.3rem, 0.3rem 0.3rem;
+  background-repeat: no-repeat;
+  padding-inline-end: calc(var(--spacing) * 6);
+}
+
+/* --- 3. The specimen drawer ----------------------------------------------
+   A tall section with a sticky stage; the track of specimens travels left as
+   the page scrolls through the section. Scroll-driven where the browser has
+   timelines, a horizontal snap shelf where it does not, and simply a static
+   row when motion is reduced. Nothing here is JavaScript. */
+
+.wt-drawer {
+  position: relative;
+  view-timeline-name: --drawer;
+  view-timeline-axis: block;
+}
+
+.wt-drawer__stage {
+  position: sticky;
+  inset-block-start: 0;
+  min-block-size: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--spacing) * 6);
+  overflow: hidden;
+}
+
+/* The viewport is the scroller; the track is only ever as wide as its content,
+   which is what makes -100% below mean "the whole shelf". Without this split
+   the track would be the width of the container and the travel would be
+   invisible. */
+.wt-drawer__viewport {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.wt-drawer__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.wt-drawer__track {
+  display: flex;
+  gap: calc(var(--spacing) * 6);
+  padding-inline: calc(var(--spacing) * 6);
+  inline-size: max-content;
+}
+
+.wt-drawer__item {
+  flex: 0 0 auto;
+  inline-size: 17rem;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .wt-drawer__track {
+    padding-inline: calc(var(--spacing) * 10);
+  }
+
+  .wt-drawer__item {
+    inline-size: 20rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The feature test names the standard value, not this file's custom timeline
+     ident: a dashed ident in a supports query matches nothing. */
+  @supports (animation-timeline: view()) {
+    /* The tall section is what the scroll travels through: the stage stays put
+       while the reader scrolls, and the track moves the length of its own
+       overflow. */
+    .wt-drawer {
+      block-size: 260vh;
+    }
+
+    .wt-drawer__stage {
+      overflow: hidden;
+    }
+
+    .wt-drawer__viewport {
+      overflow-x: hidden;
+    }
+
+    .wt-drawer__track {
+      animation: wt-drawer-travel linear both;
+      animation-timeline: --drawer;
+      animation-range: cover 0% cover 100%;
+    }
+
+    @keyframes wt-drawer-travel {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(calc(-100% + 100vw - 2 * var(--spacing) * 10));
+      }
+    }
+  }
+}
+
+/* --- 4. A specimen with no photograph ------------------------------------
+   The seed catalogue has no photography yet. A big flat grey box reading "No
+   image" is worse than useless: it is the loudest element on the page and it
+   says nothing. A missing photograph is a plate that has not been printed yet,
+   so it is drawn as one: the frame stays, the label is centred, and the object
+   is identified instead of apologised for. */
+
+.wt-specimen--empty {
+  display: grid;
+  place-items: center;
+  background-color: var(--color-paper-sunk);
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 14px,
+    color-mix(in oklab, var(--color-line) 55%, transparent) 14px 15px
+  );
+  text-align: center;
+  padding: calc(var(--spacing) * 6);
+}
+
+.wt-specimen__plate-label {
+  display: grid;
+  gap: calc(var(--spacing) * 2);
+  justify-items: center;
+}
+
+/* ==========================================================================
+   FOUR WORLDS
+
+   Every style that came before this file has been deleted. What follows is
+   four storefronts, each with its own backstory, and each built so that the
+   story is visible in the structure of the page rather than in a caption.
+
+   The four are not colourways of one design. They disagree about what a
+   product is: a sighting, a plaque, a tape, a pressed sheet. They disagree
+   about how a page should move: a swell, nothing at all, tape wow, a settle.
+   They disagree about photography: fog, daylight, duotone, mounting.
+
+   The components stay the same. The world changes what a component is for.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. TIDEWATER
+
+   Backstory. In 1911 the keeper's wife at a light on the Frisian coast began
+   keeping a log of what the light showed and what the sea gave back: time,
+   bearing, condition of the water, what came in with it. Her logbooks are the
+   founding archive of this shop. Every product is still entered the way she
+   entered a sighting - a time, a bearing, a condition - and the catalogue is
+   read as a manifest rather than shopped as a shelf.
+
+   Feel. Salt-bleached chart paper, deep channel ink, one signal orange. Fogged
+   photography. A slow swell instead of an animation.
+   ========================================================================== */
+
+[data-style="tidewater"] {
+  --color-paper: oklch(96.5% 0.008 190);
+  --color-paper-sunk: oklch(93.5% 0.011 190);
+  --color-line: oklch(84% 0.014 195);
+  --color-line-strong: oklch(52% 0.02 205);
+  --color-ink: oklch(21% 0.035 245);
+  --color-ink-soft: oklch(29% 0.033 245);
+  --color-body: oklch(36% 0.028 240);
+  --color-muted: oklch(47% 0.022 225);
+  --color-disabled: oklch(72% 0.012 200);
+
+  --color-plate: oklch(21% 0.035 245);
+  --color-plate-soft: oklch(27% 0.038 245);
+  --color-plate-line: oklch(38% 0.035 240);
+  --color-plate-ink: oklch(96.5% 0.008 190);
+  --color-plate-body: oklch(88% 0.012 195);
+  --color-plate-muted: oklch(74% 0.018 210);
+
+  --color-accent: oklch(52% 0.165 42);
+  --color-accent-strong: oklch(44% 0.15 42);
+  --color-accent-hover: oklch(48% 0.16 42);
+  --color-accent-wash: oklch(94% 0.03 60);
+  --color-accent-plate: oklch(72% 0.16 50);
+
+  --color-ember: oklch(51% 0.18 30);
+  --color-on-accent: oklch(98% 0.01 60);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-pill: 0px;
+  --tracking-display: -0.025em;
+}
+
+/* Ledger paper: a faint rule every 24px, used only where an entry is written. */
+[data-style="tidewater"] body {
+  background-image: repeating-linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-ink) 4%, transparent) 0 1px,
+    transparent 1px 24px
+  );
+}
+
+[data-style="tidewater"] h1,
+[data-style="tidewater"] h2,
+[data-style="tidewater"] h3 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.025em;
+}
+
+[data-style="tidewater"] h1 {
+  font-size: clamp(2.1rem, 5vw, 3.75rem);
+  line-height: 1.04;
+}
+
+/* Log data is set in the mono face: bearings, times, counts. The register
+   labels stop being decoration and become the entries they always were. */
+[data-style="tidewater"] .wt-register {
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", monospace);
+  font-size: var(--text-fine);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+[data-style="tidewater"] .wt-numeral {
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", monospace);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The catalogue as a manifest. The same cards, read as ruled entries: the
+   name at the left, the department as a bearing, the price at the right. */
+[data-style="tidewater"] .wt-catalogue__grid {
+  display: block;
+  border-block-start: 2px solid var(--color-ink);
+}
+
+[data-style="tidewater"] .wt-catalogue__grid > * {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: calc(var(--spacing) * 4);
+  padding-block: calc(var(--spacing) * 3);
+  border-block-end: 1px solid var(--color-line);
+}
+
+[data-style="tidewater"] .wt-catalogue__grid > *:hover {
+  background-color: var(--color-paper-sunk);
+}
+
+[data-style="tidewater"] .wt-specimen {
+  aspect-ratio: auto;
+  background-color: transparent;
+  border: 0;
+  block-size: 4.5rem;
+  inline-size: 4.5rem;
+  order: -1;
+}
+
+[data-style="tidewater"] .wt-specimen__stamp {
+  background-color: transparent;
+  border: 0;
+  color: var(--color-muted);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  padding: 0;
+}
+
+/* Soundings: section rules drawn as dotted leads, the way a chart marks
+   depth. Not decoration, they carry the section break. */
+[data-style="tidewater"] section + section {
+  border-block-start: 1px dashed var(--color-line-strong);
+}
+
+[data-style="tidewater"] .wt-prose {
+  columns: 2;
+  column-gap: calc(var(--spacing) * 10);
+  max-width: 76ch;
+}
+
+@media (max-width: 47.99rem) {
+  [data-style="tidewater"] .wt-prose {
+    columns: 1;
+  }
+
+  [data-style="tidewater"] .wt-catalogue__grid > * {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+  }
+}
+
+[data-style="tidewater"] .wt-btn {
+  border-radius: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-caption);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+[data-style="tidewater"] .wt-btn--primary {
+  background-color: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
+[data-style="tidewater"] .wt-btn--primary:hover,
+[data-style="tidewater"] .wt-btn--primary:focus-visible {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* Photography, fogged: a cold wash, softened contrast, framed with chart
+   ticks so a photograph reads as a plate in a log. */
+[data-style="tidewater"] .wt-specimen img {
+  filter: saturate(0.82) contrast(0.94) brightness(1.03);
+}
+
+[data-style="tidewater"] .wt-plate img,
+[data-style="tidewater"] figure img {
+  filter: saturate(0.85) contrast(0.95) brightness(1.02);
+}
+
+/* The swell. Elements do not pop in, they surface, and they take their time
+   about it. */
+[data-style="tidewater"] [data-reveal] {
+  transition-duration: 900ms;
+  transition-timing-function: cubic-bezier(0.16, 0.68, 0.34, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-style="tidewater"] [data-reveal] {
+    transition-duration: 1ms;
+  }
+}
+/* ==========================================================================
+   2. SOLARIUM
+
+   Backstory. In 1968 an engineer who built greenhouse glass took over a
+   sanatorium's south wing and turned it into a room for looking at things in
+   daylight. Her rule became the shop's rule: nothing may be sold here that
+   cannot be photographed honestly at noon, without a lamp, a filter or a
+   flattering shadow. The catalogue is the wall of that room.
+
+   Feel. Hard noon light on chalk. Graphite text, one enamel blue. Painted
+   signage rules three pixels thick. No shadow anywhere, no rounding anywhere,
+   and no motion at all: the institute does not perform.
+   ========================================================================== */
+
+[data-style="solarium"] {
+  --color-paper: oklch(99.5% 0.001 240);
+  --color-paper-sunk: oklch(96% 0.003 240);
+  --color-line: oklch(84% 0.006 240);
+  --color-line-strong: oklch(40% 0.01 240);
+  --color-ink: oklch(17% 0.012 250);
+  --color-ink-soft: oklch(25% 0.012 250);
+  --color-body: oklch(33% 0.01 250);
+  --color-muted: oklch(45% 0.01 250);
+  --color-disabled: oklch(78% 0.006 240);
+
+  --color-plate: oklch(17% 0.012 250);
+  --color-plate-soft: oklch(23% 0.012 250);
+  --color-plate-line: oklch(32% 0.012 250);
+  --color-plate-ink: oklch(99.5% 0.001 240);
+  --color-plate-body: oklch(89% 0.005 240);
+  --color-plate-muted: oklch(73% 0.01 240);
+
+  --color-accent: oklch(46% 0.13 245);
+  --color-accent-strong: oklch(37% 0.12 245);
+  --color-accent-hover: oklch(41% 0.13 245);
+  --color-accent-wash: oklch(94% 0.025 245);
+  --color-accent-plate: oklch(76% 0.1 245);
+
+  --color-ember: oklch(50% 0.17 28);
+  --color-on-accent: oklch(99.5% 0.001 240);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-pill: 0px;
+  --tracking-register: 0.16em;
+  --tracking-display: -0.01em;
+}
+
+/* Signage. Section headings are painted on the wall: uppercase, ruled, thick. */
+[data-style="solarium"] h1,
+[data-style="solarium"] h2,
+[data-style="solarium"] h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+}
+
+[data-style="solarium"] h2 {
+  border-block-end: 3px solid var(--color-ink);
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  letter-spacing: 0.02em;
+  padding-block-end: calc(var(--spacing) * 2);
+  text-transform: uppercase;
+}
+
+[data-style="solarium"] section + section {
+  border-block-start: 3px solid var(--color-ink);
+}
+
+[data-style="solarium"] .wt-register {
+  font-size: var(--text-fine);
+  letter-spacing: 0.16em;
+}
+
+[data-style="solarium"] .wt-numeral {
+  font-size: var(--text-lede);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-medium);
+}
+
+/* The tiled wall. Cards meet edge to edge with a single hairline between them:
+   a wall of tiles, not a grid of floating cards. */
+[data-style="solarium"] .wt-catalogue__grid {
+  gap: 1px;
+  background-color: var(--color-ink);
+  border: 1px solid var(--color-ink);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 64rem) {
+  [data-style="solarium"] .wt-catalogue__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+[data-style="solarium"] .wt-catalogue__grid > * {
+  background-color: var(--color-paper);
+  padding: calc(var(--spacing) * 4);
+}
+
+[data-style="solarium"] .wt-specimen {
+  aspect-ratio: 1 / 1;
+  border: 0;
+  border-radius: 0;
+}
+
+[data-style="solarium"] .wt-specimen__stamp {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  color: var(--color-ink);
+  letter-spacing: 0.14em;
+}
+
+[data-style="solarium"] .wt-btn {
+  border-radius: 0;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.06em;
+  min-block-size: 3rem;
+  text-transform: uppercase;
+}
+
+[data-style="solarium"] .wt-btn--primary {
+  background-color: var(--color-ink);
+  border: 2px solid var(--color-ink);
+  color: var(--color-paper);
+}
+
+[data-style="solarium"] .wt-btn--primary:hover,
+[data-style="solarium"] .wt-btn--primary:focus-visible {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+[data-style="solarium"] .wt-btn--secondary {
+  border-width: 2px;
+}
+
+/* Daylight photography: high key, honest contrast, nothing flattered. */
+[data-style="solarium"] .wt-specimen img,
+[data-style="solarium"] .wt-plate img,
+[data-style="solarium"] figure img {
+  filter: brightness(1.12) contrast(1.06) saturate(0.96);
+}
+
+/* No motion. State changes are instantaneous, as a light switch is. */
+[data-style="solarium"] [data-reveal],
+[data-style="solarium"] .wt-specimen,
+[data-style="solarium"] .wt-btn {
+  transition-duration: 1ms;
+  transition-timing-function: linear;
+}
+
+[data-style="solarium"] .wt-drawer__track {
+  animation-timing-function: steps(12, end);
+}
+
+/* ==========================================================================
+   3. STUDIO B
+
+   Backstory. A converted bakery, 1983. Studio B pressed the country's first
+   spoken-word sex-education records there, and kept every master tape. The
+   shop is that tape library, read as a catalogue: reel number, side, running
+   time, session note. The records are gone. The masters are not.
+
+   Feel. Tape black and silver with one hot magenta misregistration. Mono for
+   every piece of data. Halftone photographs, printed slightly out of register.
+   Motion has wow and flutter: two pixels of slip, a flicker, never a glide.
+   ========================================================================== */
+
+[data-style="studio"] {
+  --color-paper: oklch(95% 0.004 260);
+  --color-paper-sunk: oklch(91% 0.006 260);
+  --color-line: oklch(80% 0.008 260);
+  --color-line-strong: oklch(38% 0.02 280);
+  --color-ink: oklch(15% 0.015 280);
+  --color-ink-soft: oklch(23% 0.02 280);
+  --color-body: oklch(32% 0.02 280);
+  --color-muted: oklch(44% 0.02 280);
+  --color-disabled: oklch(72% 0.01 260);
+
+  --color-plate: oklch(15% 0.015 280);
+  --color-plate-soft: oklch(21% 0.02 280);
+  --color-plate-line: oklch(34% 0.03 285);
+  --color-plate-ink: oklch(96% 0.004 260);
+  --color-plate-body: oklch(88% 0.01 260);
+  --color-plate-muted: oklch(72% 0.02 280);
+
+  --color-accent: oklch(51% 0.23 15);
+  --color-accent-strong: oklch(43% 0.21 15);
+  --color-accent-hover: oklch(47% 0.22 15);
+  --color-accent-wash: oklch(94% 0.04 15);
+  --color-accent-plate: oklch(68% 0.22 15);
+
+  --color-ember: oklch(55% 0.24 15);
+  --color-on-accent: oklch(98% 0.005 20);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-pill: 0px;
+  --tracking-register: 0.12em;
+  --tracking-display: -0.03em;
+}
+
+/* Every piece of data is monospaced, the way it was typed onto a tape label. */
+[data-style="studio"] .wt-register,
+[data-style="studio"] .wt-numeral,
+[data-style="studio"] .wt-btn {
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", monospace);
+}
+
+[data-style="studio"] .wt-register {
+  font-size: var(--text-fine);
+  letter-spacing: 0.12em;
+}
+
+[data-style="studio"] h1,
+[data-style="studio"] h2,
+[data-style="studio"] h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.03em;
+}
+
+[data-style="studio"] h1 {
+  font-size: clamp(2rem, 4.8vw, 3.5rem);
+  line-height: 1.02;
+}
+
+/* Two across, with the space of a cutting room. */
+[data-style="studio"] .wt-catalogue__grid {
+  gap: calc(var(--spacing) * 16) calc(var(--spacing) * 12);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48rem) {
+  [data-style="studio"] .wt-catalogue__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The tape label: a black bar across the top of the plate carrying the reel
+   number, in mono, reversed out. */
+/* The plate is the magenta ink and the photograph is multiplied into it: a
+   grayscale image over a saturated ground is a duotone. The first version
+   blended the image with the near-black plate underneath, which produced a
+   black rectangle and no photograph at all. */
+[data-style="studio"] .wt-specimen {
+  background-color: var(--color-paper-sunk);
+  border: 0;
+  border-radius: 0;
+  padding-block-start: calc(var(--spacing) * 7);
+}
+
+/* The label bar runs across the top of the tape and stops. The base stamp is
+   pinned to the bottom left with inset-block-end, so without the auto below the
+   element stretches from top to bottom and paints the whole plate black, hiding
+   the photograph underneath it. That was the black rectangle. */
+[data-style="studio"] .wt-specimen__stamp {
+  background-color: var(--color-ink);
+  block-size: auto;
+  border: 0;
+  border-radius: 0;
+  color: var(--color-plate-ink);
+  font-size: var(--text-fine);
+  inset-block-end: auto;
+  inset-block-start: 0;
+  inset-inline: 0;
+  letter-spacing: 0.18em;
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+  position: absolute;
+  text-align: start;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+/* Halftone: grey photograph, magenta ink, printed slightly out of register. */
+[data-style="studio"] .wt-specimen img,
+[data-style="studio"] .wt-plate img {
+  filter: grayscale(1) contrast(1.58) brightness(0.88) sepia(1) hue-rotate(292deg) saturate(5.4);
+}
+
+
+[data-style="studio"] .wt-btn {
+  border-width: 2px;
+  box-shadow: 3px 3px 0 var(--color-ink);
+  font-size: var(--text-caption);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+[data-style="studio"] .wt-btn:hover,
+[data-style="studio"] .wt-btn:focus-visible {
+  box-shadow: 5px 5px 0 var(--color-ink);
+  transform: translate(-1px, -1px);
+}
+
+[data-style="studio"] .wt-btn:active {
+  box-shadow: 0 0 0 var(--color-ink);
+  transform: translate(3px, 3px);
+}
+
+/* Wow and flutter: on hover the plate slips two pixels out of register and the
+   label bar slips the other way. */
+[data-style="studio"] .wt-specimen img {
+  transition: transform 120ms cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+[data-style="studio"] .wt-specimen:hover img {
+  transform: translateX(-2px);
+}
+
+[data-style="studio"] .wt-specimen:hover .wt-specimen__stamp {
+  transform: translateX(2px);
+}
+
+[data-style="studio"] [data-reveal] {
+  transition-duration: 380ms;
+  transition-timing-function: steps(3, end);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-style="studio"] .wt-specimen img,
+  [data-style="studio"] .wt-specimen__stamp,
+  [data-style="studio"] .wt-btn {
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   4. HERBARIUM
+
+   Backstory. A women's health dispensary that kept a herbarium: every
+   preparation was pressed, mounted, labelled and dated, and the labels became
+   the shop's record. The cabinet is the catalogue. Nothing here was written by
+   a marketing department, because nothing here was written at all: it was
+   typed, one sheet at a time, and filed.
+
+   Feel. Pressed linen paper, moss ink, one deep berry. Names in a typeset
+   serif, data in typewriter mono. Sheets that settle into place instead of
+   appearing. Photography mounted and washed, never glossy.
+   ========================================================================== */
+
+[data-style="herbarium"] {
+  --color-paper: oklch(96% 0.012 125);
+  --color-paper-sunk: oklch(93% 0.016 125);
+  --color-line: oklch(84% 0.018 130);
+  --color-line-strong: oklch(48% 0.03 140);
+  --color-ink: oklch(27% 0.035 145);
+  --color-ink-soft: oklch(33% 0.032 145);
+  --color-body: oklch(39% 0.028 140);
+  --color-muted: oklch(50% 0.024 135);
+  --color-disabled: oklch(74% 0.014 130);
+
+  --color-plate: oklch(27% 0.035 145);
+  --color-plate-soft: oklch(33% 0.038 145);
+  --color-plate-line: oklch(43% 0.035 140);
+  --color-plate-ink: oklch(96% 0.012 125);
+  --color-plate-body: oklch(89% 0.016 130);
+  --color-plate-muted: oklch(77% 0.02 135);
+
+  --color-accent: oklch(44% 0.15 350);
+  --color-accent-strong: oklch(36% 0.14 350);
+  --color-accent-hover: oklch(39% 0.15 350);
+  --color-accent-wash: oklch(94% 0.03 350);
+  --color-accent-plate: oklch(74% 0.13 350);
+
+  --color-ember: oklch(44% 0.15 350);
+  --color-on-accent: oklch(97% 0.008 350);
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --tracking-register: 0.08em;
+  --tracking-display: -0.02em;
+}
+
+/* Names are typeset. Data is typed. Two hands, as on a real sheet. */
+[data-style="herbarium"] h1,
+[data-style="herbarium"] h2,
+[data-style="herbarium"] h3 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.02em;
+}
+
+[data-style="herbarium"] .wt-register,
+[data-style="herbarium"] .wt-numeral {
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", monospace);
+  font-size: var(--text-fine);
+  letter-spacing: 0.08em;
+}
+
+[data-style="herbarium"] .wt-prose {
+  font-size: var(--text-body);
+  line-height: 1.75;
+  max-width: 66ch;
+}
+
+/* A cabinet of sheets: two across, wide gaps, no two sheets quite straight. */
+[data-style="herbarium"] .wt-catalogue__grid {
+  gap: calc(var(--spacing) * 16) calc(var(--spacing) * 12);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48rem) {
+  [data-style="herbarium"] .wt-catalogue__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The specimen sheet: paper, a ruled mount, the photograph inside it. */
+[data-style="herbarium"] .wt-catalogue__grid > * {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  padding: calc(var(--spacing) * 5);
+  transition:
+    transform var(--dur-fast) var(--ease-soft),
+    box-shadow var(--dur-fast) var(--ease-soft);
+}
+
+[data-style="herbarium"] .wt-catalogue__grid > *:nth-child(odd) {
+  rotate: -0.35deg;
+}
+
+[data-style="herbarium"] .wt-catalogue__grid > *:nth-child(even) {
+  rotate: 0.4deg;
+}
+
+[data-style="herbarium"] .wt-catalogue__grid > *:hover {
+  box-shadow: 0 12px 26px -18px color-mix(in oklab, var(--color-ink) 55%, transparent);
+  transform: translateY(-3px);
+}
+
+[data-style="herbarium"] .wt-specimen {
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: calc(var(--spacing) * 3);
+}
+
+[data-style="herbarium"] .wt-specimen__stamp {
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+  color: var(--color-muted);
+  letter-spacing: 0.1em;
+}
+
+[data-style="herbarium"] .wt-btn {
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-caption);
+  letter-spacing: 0.08em;
+  min-block-size: 2.75rem;
+}
+
+/* Mounted and washed: a pressed photograph is never glossy. */
+[data-style="herbarium"] .wt-specimen img,
+[data-style="herbarium"] .wt-plate img,
+[data-style="herbarium"] figure img {
+  filter: saturate(0.88) contrast(0.96) brightness(1.02) sepia(0.06);
+}
+
+/* The settle: a sheet laid down on a desk comes to rest, it does not appear. */
+[data-style="herbarium"] [data-reveal] {
+  rotate: 1deg;
+  transform: translateY(14px);
+  transition:
+    opacity 700ms var(--ease-soft),
+    rotate 700ms cubic-bezier(0.2, 0.9, 0.3, 1),
+    transform 700ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+[data-style="herbarium"] [data-reveal][data-revealed] {
+  rotate: 0deg;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-style="herbarium"] [data-reveal] {
+    rotate: 0deg;
+    transform: none;
+  }
+
+  [data-style="herbarium"] .wt-catalogue__grid > *:nth-child(odd),
+  [data-style="herbarium"] .wt-catalogue__grid > *:nth-child(even) {
+    rotate: 0deg;
+  }
+}
+
+/* ==========================================================================
+   Shared: the catalogue grid, prices as data, and the switch itself.
+   ========================================================================== */
+
+.wt-catalogue__grid {
+  display: grid;
+  gap: calc(var(--spacing) * 12) calc(var(--spacing) * 6);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 40rem) {
+  .wt-catalogue__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .wt-catalogue__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Product plates show the whole object. The renders are framed tight, so
+   object-cover cropped them into abstract close-ups: a catalogue that hides
+   what it is selling is worse than one with no pictures at all. */
+.wt-specimen img,
+.wt-specimen picture img,
+.wt-plate img {
+  object-fit: contain;
+  padding: 4%;
+}
+
+.wt-numeral {
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.wt-style-switch {
+  align-items: stretch;
+  background-color: var(--color-paper);
+  border-block-start: 1px solid var(--color-line);
+  border-inline-end: 1px solid var(--color-line);
+  display: flex;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  max-inline-size: 100vw;
+  overflow-x: auto;
+  padding-block-end: env(safe-area-inset-bottom, 0px);
+  position: fixed;
+  scrollbar-width: none;
+  user-select: none;
+  z-index: 40;
+}
+
+.wt-style-switch::-webkit-scrollbar {
+  display: none;
+}
+
+.wt-style-switch__option {
+  appearance: none;
+  background-color: transparent;
+  border: 0;
+  border-inline-start: 1px solid var(--color-line);
+  color: var(--color-body);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem
+;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.14em;
+  min-block-size: 2.5rem;
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.wt-style-switch__option:first-child {
+  border-inline-start: 0;
+}
+
+.wt-style-switch__option:hover,
+.wt-style-switch__option:focus-visible {
+  background-color: var(--color-accent-wash);
+  color: var(--color-ink);
+}
+
+.wt-style-switch__option[data-active="true"] {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+@media (max-width: 47.99rem) {
+  .wt-style-switch__option {
+    font-size: 0.625rem;
+    padding-inline: calc(var(--spacing) * 2);
+  }
+}
+
+@media print {
+  .wt-style-switch {
+    display: none;
   }
 }

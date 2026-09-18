@@ -18,7 +18,7 @@
   <h1 class="mt-4 text-display-sm text-ink md:text-display"><%= @author.name %></h1>
 
   <% if @author.is_clinician? %>
-    <p class="mt-4"><%= tag.span("Clinician", class: "wt-badge wt-badge--accent") %></p>
+    <p class="mt-4"><%= tag.span("Clinician", class: "wt-mark wt-mark--accent") %></p>
   <% end %>
 
   <% if @author.bio.present? %>

@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Contrast check for the visual worlds.
+#
+# Every world defines the same token names, and this script proves the pairs
+# that carry text clear their floors: body, muted, accent and reversed accent at
+# 4.5:1, and accent on a plate at 3:1. Run it after touching any world's tokens.
+#
+#   bin/rails runner script/check-contrast
+#
+# It reads the stylesheet as text rather than through a browser, so it runs in
+# CI without a display and without a build step.
+
+STYLESHEET = Rails.root.join("app/assets/tailwind/application.css")
+WORLDS = STYLE_WORLDS
+
+CHECKS = [
+  ["body on paper", "body", "paper", 4.5],
+  ["ink on paper", "ink", "paper", 4.5],
+  ["muted on paper", "muted", "paper", 4.5],
+  ["accent on paper", "accent", "paper", 4.5],
+  ["on-accent on accent", "on-accent", "accent", 4.5],
+  ["on-accent on accent-strong", "on-accent", "accent-strong", 4.5],
+  ["plate-body on plate", "plate-body", "plate", 4.5],
+  ["plate-ink on plate", "plate-ink", "plate", 4.5],
+  ["plate-muted on plate", "plate-muted", "plate", 4.5],
+  ["accent-plate on plate", "accent-plate", "plate", 3.0]
+].freeze
+
+def tokens_in(css)
+  css.scan(/--color-([a-z0-9-]+):\s*oklch\(([^)]+)\)/).to_h do |name, raw|
+    lightness, chroma, hue = raw.delete("%").split.map(&:to_f)
+    [name, [lightness / 100.0, chroma, hue]]
+  end
+end
+
+# oklch to linear sRGB to relative luminance, per WCAG.
+def luminance(lightness, chroma, hue_degrees)
+  hue = hue_degrees * Math::PI / 180
+  a = chroma * Math.cos(hue)
+  b = chroma * Math.sin(hue)
+
+  l_ = lightness + (0.3963377774 * a) + (0.2158037573 * b)
+  m_ = lightness - (0.1055613458 * a) - (0.0638541728 * b)
+  s_ = lightness - (0.0894841775 * a) - (1.2914855480 * b)
+
+  l = l_**3
+  m = m_**3
+  s = s_**3
+
+  red = (4.0767416621 * l) - (3.3077115913 * m) + (0.2309699292 * s)
+  green = (-1.2684380046 * l) + (2.6097574011 * m) - (0.3413193965 * s)
+  blue = (-0.0041960863 * l) - (0.7034186147 * m) + (1.7076147010 * s)
+
+  [red, green, blue].map { |value| value.clamp(0.0, 1.0) }.then do |r, g, b|
+    (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
+  end
+end
+
+def ratio(tokens, foreground, background)
+  a = luminance(*tokens.fetch(foreground))
+  b = luminance(*tokens.fetch(background))
+  high, low = [a, b].max, [a, b].min
+  (high + 0.05) / (low + 0.05)
+end
+
+css = STYLESHEET.read
+base = tokens_in(css[css.index("@theme")...css.index('[data-theme="dark"]')])
+
+failures = []
+
+WORLDS.each do |world|
+  start = css.index(%([data-style="#{world}"]))
+  raise "no block for world #{world}" unless start
+
+  finish = css.index('[data-style="', start + 10) || css.length
+  tokens = base.merge(tokens_in(css[start...finish]))
+
+  puts "--- #{world} ---"
+
+  CHECKS.each do |description, foreground, background, floor|
+    value = ratio(tokens, foreground, background)
+    verdict = value >= floor ? "ok" : "BELOW"
+    failures << "#{world}: #{description} #{format('%.2f', value)} < #{floor}" if value < floor
+    puts format("  %-28s %5.2f:1  floor %.1f  %s", description, value, floor, verdict)
+  end
+end
+
+if failures.any?
+  warn "\nFAILED:"
+  failures.each { |failure| warn "  #{failure}" }
+  exit 1
+end
+
+puts "\nAll #{WORLDS.size} worlds clear every floor."

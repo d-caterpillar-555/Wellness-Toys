@@ -1,0 +1,205 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - region "Age confirmation" [ref=e3]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]:
+        - text: Adult products. This store sells products intended for adults. Confirm you are of legal age where you live.
+        - link "Why we ask" [ref=e7] [cursor=pointer]:
+          - /url: /standards
+      - button "I am of legal age" [ref=e9] [cursor=pointer]
+  - banner [ref=e10]:
+    - generic [ref=e12]:
+      - link "Wellness Toys" [ref=e13] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=e15]:
+        - link "Shop" [ref=e16] [cursor=pointer]:
+          - /url: /shop
+        - link "Learn" [ref=e17] [cursor=pointer]:
+          - /url: /learn
+        - link "About" [ref=e18] [cursor=pointer]:
+          - /url: /about
+        - link "Standards" [ref=e19] [cursor=pointer]:
+          - /url: /standards
+        - link "Contact" [ref=e20] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=e21]:
+        - link "Sign in" [ref=e22] [cursor=pointer]:
+          - /url: /account/sign_in
+        - link "Cart" [ref=e23] [cursor=pointer]:
+          - /url: /cart
+          - generic [ref=e25]: "0"
+        - button "Switch visual style" [ref=e26]:
+          - generic [aria-hidden] [ref=e27]: Style
+          - generic [ref=e28]: Archive
+        - button "Switch colour theme" [ref=e29]:
+          - generic [ref=e30]: Dark
+  - main [ref=e31]:
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - paragraph [ref=e35]: Wellness Toys · Sexual health and wellness, plainly explained.
+          - paragraph [ref=e36]: 12 products · 6 departments · billed as Wellness Toys
+        - heading "Sexual wellbeing, taken seriously." [level=1] [ref=e37]
+        - generic [ref=e38]:
+          - link "Shop the catalogue" [ref=e39] [cursor=pointer]:
+            - /url: /shop
+          - link "Read the library" [ref=e40] [cursor=pointer]:
+            - /url: /learn
+          - link "Our standards" [ref=e41] [cursor=pointer]:
+            - /url: /standards
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - heading "Departments" [level=2] [ref=e44]
+            - link "Vibrators 3" [ref=e45] [cursor=pointer]:
+              - /url: /shop/vibrators
+              - generic [ref=e46]: Vibrators
+              - generic [ref=e47]: "3"
+            - link "Lubricants 3" [ref=e48] [cursor=pointer]:
+              - /url: /shop/lubricants
+              - generic [ref=e49]: Lubricants
+              - generic [ref=e50]: "3"
+            - link "Massage 2" [ref=e51] [cursor=pointer]:
+              - /url: /shop/massage
+              - generic [ref=e52]: Massage
+              - generic [ref=e53]: "2"
+            - link "Pelvic health 1" [ref=e54] [cursor=pointer]:
+              - /url: /shop/pelvic-health
+              - generic [ref=e55]: Pelvic health
+              - generic [ref=e56]: "1"
+            - link "Barrier methods 1" [ref=e57] [cursor=pointer]:
+              - /url: /shop/barrier-methods
+              - generic [ref=e58]: Barrier methods
+              - generic [ref=e59]: "1"
+            - link "Care and storage 2" [ref=e60] [cursor=pointer]:
+              - /url: /shop/care-and-storage
+              - generic [ref=e61]: Care and storage
+              - generic [ref=e62]: "2"
+          - generic [ref=e63]:
+            - heading "Newest" [level=2] [ref=e64]
+            - link "Northlight Storage Case $34.00" [ref=e65] [cursor=pointer]:
+              - /url: /shop/care-and-storage/northlight-storage-case
+              - generic [ref=e66]: Northlight Storage Case
+              - generic [ref=e67]: $34.00
+            - link "Corvid Toy Cleaner $14.00" [ref=e69] [cursor=pointer]:
+              - /url: /shop/care-and-storage/corvid-toy-cleaner
+              - generic [ref=e70]: Corvid Toy Cleaner
+              - generic [ref=e71]: $14.00
+            - link "Fenwick Condoms $12.00" [ref=e73] [cursor=pointer]:
+              - /url: /shop/barrier-methods/fenwick-condoms
+              - generic [ref=e74]: Fenwick Condoms
+              - generic [ref=e75]: $12.00
+            - link "Ashgrove Pelvic Trainer Set $42.00" [ref=e77] [cursor=pointer]:
+              - /url: /shop/pelvic-health/ashgrove-pelvic-trainer-set
+              - generic [ref=e78]: Ashgrove Pelvic Trainer Set
+              - generic [ref=e79]: $42.00
+            - link "Northlight Massage Stone $19.00" [ref=e81] [cursor=pointer]:
+              - /url: /shop/massage/northlight-massage-stone
+              - generic [ref=e82]: Northlight Massage Stone
+              - generic [ref=e83]: $19.00
+            - link "Corvid Massage Oil $24.00" [ref=e85] [cursor=pointer]:
+              - /url: /shop/massage/corvid-massage-oil
+              - generic [ref=e86]: Corvid Massage Oil
+              - generic [ref=e87]: $24.00
+            - link "Fenwick Hybrid $16.00" [ref=e89] [cursor=pointer]:
+              - /url: /shop/lubricants/fenwick-hybrid
+              - generic [ref=e90]: Fenwick Hybrid
+              - generic [ref=e91]: $16.00
+            - link "Ashgrove Silicone $22.00" [ref=e93] [cursor=pointer]:
+              - /url: /shop/lubricants/ashgrove-silicone
+              - generic [ref=e94]: Ashgrove Silicone
+              - generic [ref=e95]: $22.00
+          - generic [ref=e97]:
+            - heading "The library" [level=2] [ref=e98]
+            - link "Guides and explainers" [ref=e99] [cursor=pointer]:
+              - /url: /learn
+            - link "Glossary of terms" [ref=e101] [cursor=pointer]:
+              - /url: /learn/glossary
+            - link "Who writes it" [ref=e103] [cursor=pointer]:
+              - /url: /learn/experts
+            - link "The blog" [ref=e105] [cursor=pointer]:
+              - /url: /blog
+            - link "What we collect, and what we refuse to" [ref=e107] [cursor=pointer]:
+              - /url: /privacy
+      - generic [ref=e110]:
+        - heading "Most of this industry talks to you like a joke." [level=2] [ref=e111]
+        - generic [ref=e112]:
+          - paragraph [ref=e113]: Open a typical shop in this category and you get black backgrounds, neon glow, and product names that are embarrassed by their own subject. The information you actually need is buried under the winking.
+          - paragraph [ref=e114]: So we started from the other direction. Everything we sell has a materials list, care instructions and dimensions. Everything we publish has a source. Where a question is medical, we say so and point you at a clinician instead of quietly implying a product will fix it.
+          - paragraph [ref=e115]: That is the whole idea. Treat people as adults, and treat the subject the way any other part of health gets treated.
+      - generic [ref=e118]:
+        - generic [ref=e119]:
+          - term [ref=e120]: We will not invent facts.
+          - definition [ref=e121]: No made up statistics, no borrowed credentials, no studies that do not exist. If we cite something, you can follow the link and read it.
+        - generic [ref=e122]:
+          - term [ref=e123]: We will not make medical claims.
+          - definition [ref=e124]: A product can be described accurately without pretending to be a treatment. Anything clinical belongs with a clinician.
+        - generic [ref=e125]:
+          - term [ref=e126]: We will not sell your privacy.
+          - definition [ref=e127]: Purchase history and browsing in this category reveal health intent. No advertising trackers, no session recording, and nothing in a URL that identifies you.
+        - generic [ref=e128]:
+          - term [ref=e129]: We will not pretend to be discreet.
+          - definition [ref=e130]: Plain packaging and a neutral billing descriptor, stated once, on the shipping page. It is a standard we meet, not a slogan we shout.
+  - contentinfo [ref=e131]:
+    - generic [ref=e132]:
+      - generic [ref=e133]:
+        - generic [ref=e134]:
+          - paragraph [ref=e135]: Wellness Toys
+          - paragraph [ref=e136]: Sexual health and wellness, plainly explained.
+        - navigation "Company" [ref=e137]:
+          - heading "Company" [level=2] [ref=e138]
+          - list [ref=e139]:
+            - listitem [ref=e140]:
+              - link "About" [ref=e141] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e142]:
+              - link "Our standards" [ref=e143] [cursor=pointer]:
+                - /url: /standards
+            - listitem [ref=e144]:
+              - link "Contact" [ref=e145] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e146]:
+              - link "FAQ" [ref=e147] [cursor=pointer]:
+                - /url: /faq
+        - navigation "Trust and legal" [ref=e148]:
+          - heading "Trust" [level=2] [ref=e149]
+          - list [ref=e150]:
+            - listitem [ref=e151]:
+              - link "Shipping" [ref=e152] [cursor=pointer]:
+                - /url: /shipping
+            - listitem [ref=e153]:
+              - link "Discreet shipping" [ref=e154] [cursor=pointer]:
+                - /url: /discreet-shipping
+            - listitem [ref=e155]:
+              - link "Returns" [ref=e156] [cursor=pointer]:
+                - /url: /returns
+            - listitem [ref=e157]:
+              - link "Privacy" [ref=e158] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e159]:
+              - link "Terms" [ref=e160] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e161]:
+              - link "Accessibility" [ref=e162] [cursor=pointer]:
+                - /url: /accessibility
+      - generic [ref=e163]:
+        - paragraph [ref=e164]: Wellness Toys. You must be of legal age in your jurisdiction to purchase.
+        - paragraph [ref=e165]:
+          - link "support@example.com" [ref=e166] [cursor=pointer]:
+            - /url: mailto:support@example.com
+  - toolbar "variate" [ref=e167]:
+    - button "home-html" [ref=e168] [cursor=pointer]
+    - generic [ref=e169]:
+      - button "previous" [ref=e170] [cursor=pointer]: ‹
+      - button "1" [ref=e171] [cursor=pointer]
+      - button "2" [ref=e172] [cursor=pointer]
+      - button "3 ·the broadside" [ref=e173] [cursor=pointer]:
+        - text: "3"
+        - generic [ref=e174]: ·the broadside
+      - button "4" [ref=e175] [cursor=pointer]
+      - button "next" [ref=e176] [cursor=pointer]: ›
+    - generic [ref=e177]:
+      - button "pick a section" [ref=e178] [cursor=pointer]
+      - button "refine this one" [ref=e184] [cursor=pointer]
+      - button "keep this one" [ref=e188] [cursor=pointer]
+      - button "hide" [ref=e191] [cursor=pointer]: ▾

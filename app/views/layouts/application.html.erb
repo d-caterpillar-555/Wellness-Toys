@@ -24,6 +24,10 @@
     <meta name="theme-color" content="#F5F4F0" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#12151A" media="(prefers-color-scheme: dark)">
 
+    <%# Turbo drives same-origin view transitions where the browser has the API,
+        so a navigation turns over instead of flashing between documents. %>
+    <meta name="view-transition" content="same-origin">
+
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
@@ -48,8 +52,24 @@
           var stored = localStorage.getItem("wt-theme");
           var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
           document.documentElement.dataset.theme = stored || (prefersDark ? "dark" : "light");
+          // The visual world, resolved before first paint for the same reason
+          // the theme is: nobody should watch the site change clothes. A query
+          // parameter wins so a world can be linked to directly; otherwise the
+          // stored choice, otherwise the default.
+          var allowed = <%= raw STYLE_WORLDS.to_json %>;
+          var wanted = new URLSearchParams(location.search).get("style");
+          // A stored world is checked against the list as well. A value left
+          // behind by a world that has been deleted would otherwise render the
+          // page with no world at all, which is how a deleted style comes back
+          // as a ghost.
+          var stored = localStorage.getItem("wt-style");
+          document.documentElement.dataset.style =
+            (allowed.indexOf(wanted) >= 0 ? wanted : null) ||
+            (allowed.indexOf(stored) >= 0 ? stored : null) ||
+            allowed[0];
         } catch (e) {
           document.documentElement.dataset.theme = "light";
+          document.documentElement.dataset.style = "<%= STYLE_WORLDS.first %>";
         }
       })();
     </script>
@@ -75,9 +95,14 @@
 
     <main id="main" class="flex-1">
       <%= render "layouts/flash" %>
+
+    <%= render "layouts/style_switch" %>
       <%= yield %>
     </main>
 
     <%= render "layouts/footer" %>
+  <%# variate:begin %>
+  <% if Rails.env.development? %><script src="http://127.0.0.1:4875/v.js"></script><% end %>
+  <%# variate:end %>
   </body>
 </html>
