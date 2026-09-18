@@ -56,3 +56,7 @@
 /node_modules/
 /byebug.log
 /.rubocop_cache/
+
+# Machine-local tool state. The identifier in here is specific to this
+# checkout and means nothing in anyone else's.
+/.freebuff/
