@@ -12,8 +12,8 @@
   <%= json_ld(product_schema(@product, variants: @variants, category: @primary_category)) %>
 <% end %>
 
-<%# The contents rail is built from the sections this product actually has, so
-    a sparse record does not advertise sections it cannot fill. %>
+<%# The contents rail is built from the sections this record actually has, so a
+    sparse object does not advertise sections it cannot fill. %>
 <% contents = [] %>
 <% contents << [ "specifications", "Materials and safety" ] if @product.materials.present? || @product.safety_notes.present? || @product.weight_grams.present? %>
 <% contents << [ "how", "How it works" ] if @product.description.present? %>
@@ -22,188 +22,214 @@
 <% contents << [ "reviews", "Reviews" ] %>
 <% contents << [ "questions", "Questions" ] if @faqs.any? %>
 
-<article class="wt-container pt-8 pb-24 md:pt-12" data-controller="register">
-  <nav aria-label="Breadcrumb" class="text-caption">
-    <%= link_to "Shop", shop_path, class: "text-body no-underline hover:text-ink" %>
-    <% if @primary_category %>
-      <span aria-hidden="true" class="text-muted"> / </span>
-      <%= link_to @primary_category.name, category_path(@primary_category), class: "text-body no-underline hover:text-ink" %>
-    <% end %>
-    <span aria-hidden="true" class="text-muted"> / </span>
-    <span class="text-ink" aria-current="page"><%= @product.name %></span>
-  </nav>
+<div class="inst">
+  <header class="inst-run">
+    <p class="inst-run__mark"><%= link_to Store.name, root_path, class: "inst-link" %></p>
+    <p class="inst-run__section">
+      <%= link_to "Catalogue", shop_path, class: "inst-link" %>
+      <% if @primary_category %> &middot; <%= link_to @primary_category.name, category_path(@primary_category), class: "inst-link" %><% end %>
+    </p>
+    <p><%= @product.sku %></p>
+  </header>
 
-  <%# --- The plate ---------------------------------------------------------
-      Image on the left, the record on the right. The register line above the
-      title carries the real identifiers: brand and SKU. %>
-  <div class="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16">
-    <div data-controller="reveal" data-reveal>
-      <div class="wt-specimen aspect-square">
-        <%= product_cover_tag(@product) %>
-        <span class="wt-specimen__stamp wt-register"><%= @product.sku %></span>
-      </div>
-    </div>
-
-    <div data-controller="reveal" data-reveal>
-      <p class="wt-register">
-        <% if @product.brand %><%= @product.brand.name %> · <% end %><%= @product.sku %>
-      </p>
-      <h1 class="mt-3 text-heading-lg text-ink md:text-display-sm"><%= @product.name %></h1>
-
-      <% if @product.subtitle.present? %>
-        <p class="mt-4 max-w-[46ch] text-lede text-body"><%= @product.subtitle %></p>
-      <% end %>
-
-      <p class="wt-numeral mt-6 text-heading"><%= price(@product.lowest_price_cents) %></p>
-
-      <div class="mt-8">
-        <% if @variants.any? %>
-          <%= form_with url: cart_items_path, method: :post, class: "space-y-6" do |form| %>
-            <fieldset>
-              <legend class="wt-register mb-2"><%= t("products.configuration") %></legend>
-              <div>
-                <% @variants.each_with_index do |variant, index| %>
-                  <label class="wt-choice-row">
-                    <span class="flex items-center gap-3">
-                      <%= radio_button_tag "variant_id", variant.id, index.zero?, id: "variant_#{variant.id}", class: "wt-choice" %>
-                      <span class="text-ui text-ink"><%= variant.name %></span>
-                    </span>
-                    <span class="flex items-center gap-3">
-                      <%= stock_label(variant) %>
-                      <span class="wt-numeral text-ui"><%= price(variant.price_cents, currency: variant.currency) %></span>
-                    </span>
-                  </label>
-                <% end %>
-                <div class="border-t border-line"></div>
-              </div>
-            </fieldset>
-
-            <div class="max-w-[12rem]">
-              <label class="wt-label" for="quantity"><%= t("cart.quantity") %></label>
-              <%= form.select :quantity, quantity_options, {}, class: "wt-input", id: "quantity" %>
-            </div>
-
-            <%= form.submit t("products.add_to_cart"), class: "wt-btn wt-btn--primary w-full" %>
-          <% end %>
-        <% else %>
-          <p class="wt-plate wt-plate--sunk px-5 py-4 text-ui text-ink">No configuration of this product is available right now.</p>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-  <%# --- The monograph ----------------------------------------------------
-      Contents rail on the left, the record on the right. The rail is the same
-      instrument the education library uses for its evidence. %>
-  <div class="mt-20 grid gap-16 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-20">
-    <nav class="wt-rail" aria-label="Contents">
-      <p class="wt-register mb-2">Contents</p>
-      <ul>
-        <% contents.each do |id, label| %>
+  <div class="inst-body">
+    <nav class="inst-rail" aria-label="Contents" data-institute-rail>
+      <p class="inst-rail__title">Contents</p>
+      <ol class="inst-rail__list">
+        <% contents.each_with_index do |(id, label), index| %>
           <li>
-            <a href="#<%= id %>" class="wt-rail__link" data-register-target="link"><%= label %></a>
+            <a class="inst-rail__link" href="#<%= id %>">
+              <span class="inst-rail__number"><%= index + 1 %></span><%= label %>
+            </a>
           </li>
         <% end %>
-      </ul>
+      </ol>
     </nav>
 
-    <div class="space-y-16">
-      <section id="specifications" aria-labelledby="specifications-heading" data-register-target="section">
-        <h2 id="specifications-heading" class="text-heading text-ink">Materials and safety</h2>
+    <article class="inst-sheet inst-sheet--wide">
+      <section class="inst-clause" data-institute-clause>
+        <div class="inst-record">
+          <div>
+            <div class="inst-plate"><%= product_cover_tag(@product) %></div>
+          </div>
 
-        <% has_specs = @product.materials.present? || @product.safety_notes.present? %>
-        <% if has_specs %>
-          <dl class="mt-6">
-            <% if @product.materials.present? %>
-              <%= render "products/spec_row", label: "Materials", value: @product.materials %>
+          <div class="inst-record__head">
+            <p class="inst-clause__number">
+              <% if @product.brand %><%= @product.brand.name %> &middot; <% end %><%= @product.sku %>
+            </p>
+            <h1 class="inst-record__title"><%= @product.name %></h1>
+            <% if @product.subtitle.present? %>
+              <p class="inst-clause__standfirst inst-record__sub"><%= @product.subtitle %></p>
             <% end %>
-            <%= render "products/spec_row", label: "Body safe", value: @product.body_safe? ? "Yes" : "No" %>
+
+            <p class="inst-price inst-record__price"><%= price(@product.lowest_price_cents) %></p>
+
+            <div class="inst-record__form">
+              <% if @variants.any? %>
+                <%= form_with url: cart_items_path, method: :post do |form| %>
+                  <fieldset class="inst-fieldset">
+                    <legend class="inst-quantity__label inst-legend"><%= t("products.configuration") %></legend>
+                    <% @variants.each_with_index do |variant, index| %>
+                      <label class="inst-choice">
+                        <span class="inst-choice__pair">
+                          <%= radio_button_tag "variant_id", variant.id, index.zero?, id: "variant_#{variant.id}" %>
+                          <span class="inst-choice__name"><%= variant.name %></span>
+                        </span>
+                        <span class="inst-choice__aside">
+                          <%= stock_label(variant) %>
+                          <span class="inst-ledger__price"><%= price(variant.price_cents, currency: variant.currency) %></span>
+                        </span>
+                      </label>
+                    <% end %>
+                  </fieldset>
+
+                  <div class="inst-quantity">
+                    <label class="inst-quantity__label" for="quantity"><%= t("cart.quantity") %></label>
+                    <%= form.select :quantity, quantity_options, {}, id: "quantity" %>
+                  </div>
+
+                  <%= form.submit t("products.add_to_cart"), class: "inst-button" %>
+                <% end %>
+              <% else %>
+                <p class="inst-note">No configuration of this product is available right now.</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="inst-clause" id="specifications" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">1</p>
+          <h2 class="inst-clause__title">Materials and safety</h2>
+        </div>
+
+        <% if @product.materials.present? || @product.safety_notes.present? %>
+          <dl class="inst-spec">
+            <% if @product.materials.present? %>
+              <div class="inst-spec__row">
+                <dt class="inst-spec__label">Materials</dt>
+                <dd class="inst-spec__value"><%= @product.materials %></dd>
+              </div>
+            <% end %>
+            <div class="inst-spec__row">
+              <dt class="inst-spec__label">Body safe</dt>
+              <dd class="inst-spec__value"><%= @product.body_safe? ? "Yes" : "No" %></dd>
+            </div>
             <% if @product.safety_notes.present? %>
-              <%= render "products/spec_row", label: "Safety notes", value: @product.safety_notes %>
+              <div class="inst-spec__row">
+                <dt class="inst-spec__label">Safety notes</dt>
+                <dd class="inst-spec__value"><%= @product.safety_notes %></dd>
+              </div>
             <% end %>
           </dl>
         <% else %>
-          <p class="mt-6 max-w-[60ch] text-body">Specifications for this product have not been recorded yet. We would rather leave the field empty than fill it with something we cannot stand behind.</p>
+          <p class="inst-standing">
+            Specifications for this object have not been recorded yet. We would rather leave the
+            field empty than fill it with something we cannot stand behind.
+          </p>
         <% end %>
       </section>
 
       <% if @product.description.present? %>
-        <section id="how" aria-labelledby="how-heading" data-register-target="section" data-controller="reveal" data-reveal>
-          <h2 id="how-heading" class="text-heading text-ink">How it works</h2>
-          <div class="wt-prose mt-6"><p><%= @product.description %></p></div>
+        <section class="inst-clause" id="how" data-institute-clause>
+          <div class="inst-clause__head">
+            <p class="inst-clause__number">2</p>
+            <h2 class="inst-clause__title">How it works</h2>
+          </div>
+          <div class="inst-prose"><p><%= @product.description %></p></div>
         </section>
       <% end %>
 
       <% if @product.care_instructions.present? %>
-        <section id="care" aria-labelledby="care-heading" data-register-target="section">
-          <h2 id="care-heading" class="text-heading text-ink">Care</h2>
-          <div class="wt-prose mt-6"><p><%= @product.care_instructions %></p></div>
+        <section class="inst-clause" id="care" data-institute-clause>
+          <div class="inst-clause__head">
+            <p class="inst-clause__number">3</p>
+            <h2 class="inst-clause__title">Care</h2>
+          </div>
+          <div class="inst-prose"><p><%= @product.care_instructions %></p></div>
         </section>
       <% end %>
 
       <% if @product.dimensions.present? || @product.weight_grams.present? %>
-        <section id="dimensions" aria-labelledby="dimensions-heading" data-register-target="section">
-          <h2 id="dimensions-heading" class="text-heading text-ink">Dimensions</h2>
-          <dl class="mt-6">
+        <section class="inst-clause" id="dimensions" data-institute-clause>
+          <div class="inst-clause__head">
+            <p class="inst-clause__number">4</p>
+            <h2 class="inst-clause__title">Dimensions</h2>
+          </div>
+          <dl class="inst-spec">
             <% if @product.dimensions.present? %>
-              <%= render "products/spec_row", label: "Dimensions", value: @product.dimensions %>
+              <div class="inst-spec__row">
+                <dt class="inst-spec__label">Dimensions</dt>
+                <dd class="inst-spec__value"><%= @product.dimensions %></dd>
+              </div>
             <% end %>
             <% if @product.weight_grams.present? %>
-              <%= render "products/spec_row", label: "Weight", value: "#{@product.weight_grams} g" %>
+              <div class="inst-spec__row">
+                <dt class="inst-spec__label">Weight</dt>
+                <dd class="inst-spec__value"><%= @product.weight_grams %> g</dd>
+              </div>
             <% end %>
           </dl>
         </section>
       <% end %>
 
-      <section id="reviews" aria-labelledby="reviews-heading" data-register-target="section">
-        <h2 id="reviews-heading" class="text-heading text-ink">Reviews</h2>
+      <section class="inst-clause" id="reviews" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">5</p>
+          <h2 class="inst-clause__title">Reviews</h2>
+        </div>
 
         <% if @reviews.any? %>
-          <ul class="mt-6">
+          <ul class="inst-reading-list">
             <% @reviews.each do |review| %>
-              <li class="border-t border-line pt-6 pb-2">
-                <div class="flex flex-wrap items-center gap-3">
-                  <p class="text-ui text-ink"><span class="tnum"><%= review.rating %></span> out of 5</p>
-                  <%= tag.span("Verified purchase", class: "wt-mark wt-mark--accent") if review.verified_purchase? %>
-                </div>
+              <li class="inst-reading-list__item">
+                <p class="inst-reading-list__meta inst-review__meta">
+                  <%= review.rating %> out of 5<% if review.verified_purchase? %> &middot; Verified purchase<% end %>
+                </p>
                 <% if review.title.present? %>
-                  <h3 class="mt-3 text-title text-ink"><%= review.title %></h3>
+                  <p class="inst-review__title"><%= review.title %></p>
                 <% end %>
                 <% if review.body.present? %>
-                  <p class="mt-2 max-w-[68ch] text-body"><%= review.body %></p>
+                  <div class="inst-prose inst-prose--tight"><p><%= review.body %></p></div>
                 <% end %>
               </li>
             <% end %>
           </ul>
         <% else %>
-          <div class="mt-6 max-w-[52ch] border-t border-line pt-6">
-            <p class="text-lede text-ink">No reviews here yet.</p>
-            <p class="mt-3 text-body">Reviews open once ordering and accounts are live. Nothing is invented to fill this space in the meantime.</p>
-            <%= link_to "Ask us a question", page_path("contact"), class: "wt-btn wt-btn--quiet mt-4" %>
+          <p class="inst-standing">No reviews here yet. Reviews open once ordering and accounts are live, and nothing is invented to fill this space in the meantime.</p>
+          <div class="inst-actions">
+            <%= link_to "Ask us a question", page_path("contact"), class: "inst-button inst-button--quiet" %>
           </div>
         <% end %>
       </section>
 
       <% if @faqs.any? %>
-        <section id="questions" aria-labelledby="questions-heading" data-register-target="section">
-          <h2 id="questions-heading" class="text-heading text-ink">Questions</h2>
-          <div class="mt-6">
-            <% @faqs.each do |faq| %>
-              <details class="border-t border-line">
-                <summary class="flex min-h-[44px] cursor-pointer items-center text-ui text-ink"><%= faq.question %></summary>
-                <p class="mt-3 max-w-[68ch] pb-4 text-body"><%= faq.answer %></p>
-              </details>
-            <% end %>
-            <div class="border-t border-line"></div>
+        <section class="inst-clause" id="questions" data-institute-clause>
+          <div class="inst-clause__head">
+            <p class="inst-clause__number">6</p>
+            <h2 class="inst-clause__title">Questions</h2>
           </div>
+          <dl class="inst-spec">
+            <% @faqs.each do |faq| %>
+              <div class="inst-spec__row">
+                <dt class="inst-spec__label inst-question"><%= faq.question %></dt>
+                <dd class="inst-spec__value"><%= faq.answer %></dd>
+              </div>
+            <% end %>
+          </dl>
         </section>
       <% end %>
 
-      <aside class="wt-plate wt-plate--sunk p-6">
-        <h2 class="text-title text-ink">Education</h2>
-        <p class="mt-3 max-w-[52ch] text-ui text-body">Materials, safety and use, explained without a sales pitch. The library carries the sources.</p>
-        <%= link_to "Read the library", learn_path, class: "wt-btn wt-btn--secondary mt-5" %>
-      </aside>
-    </div>
+      <section class="inst-clause">
+        <p class="inst-clause__standfirst inst-lead-in">Education</p>
+        <p class="inst-standing">
+          Materials, safety and use, explained without a sales pitch. The library carries the sources.
+        </p>
+        <div class="inst-actions">
+          <%= link_to "Read the library", learn_path, class: "inst-button inst-button--quiet" %>
+        </div>
+      </section>
+    </article>
   </div>
-</article>
+</div>

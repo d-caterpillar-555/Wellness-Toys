@@ -5,6 +5,9 @@ class ProductsController < ApplicationController
     @brands = Brand.kept_active.alphabetical
     @category = Category.kept.find_by(slug: params[:category])
     @brand = Brand.kept.find_by(slug: params[:brand])
+    # The register of departments, so the catalogue page renders its own facets
+    # from one grouped query rather than a count per row.
+    @register = Category.kept.with_catalogue_count.ordered
     @pagy, @products = pagy(:offset, catalogue, limit: PER_PAGE)
   end
 

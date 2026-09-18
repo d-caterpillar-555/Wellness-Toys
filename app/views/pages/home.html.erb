@@ -1,256 +1,207 @@
 <% content_for :title, nil %>
 <% content_for :meta_description, "#{Store.name} sells sexual health and wellness products, and publishes the education that explains them. Evidence over euphemism, discretion as standard." %>
 
-<%# Position 2: the index.
-    The front page opens as the contents page of the archive: the register of
-    departments first, the specimens after it. The shop's own words arrive
-    once the reader has seen what is actually here. %>
-<div class="v2-world" data-style="darkroom" data-variate-section="home-html">
-  <style nonce="<%= content_security_policy_nonce %>">
-    .v2-world {
-      background-color: var(--color-paper);
-      color: var(--color-body);
-      min-block-size: 100dvh;
-    }
+<%# The front page of the report. Contents first, the publication's own words
+    second, then the register, the catalogue head and the library. Every section
+    is a clause with a number, and the rail on the left is the page's own
+    contents - the instrument the whole architecture is built around. %>
+<div class="inst">
+  <header class="inst-run">
+    <p class="inst-run__mark"><%= Store.name %></p>
+    <p class="inst-run__section">Front matter</p>
+    <p>Vol. 1 &middot; <%= @register.sum(&:catalogue_count) %> objects &middot; <%= pluralize(@register.size, "department") %></p>
+  </header>
 
-    /* A masthead band, not a kicker over the heading: the two ends of one
-       rule, with the statement starting clean underneath it. */
-    .v2-band {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: calc(var(--spacing) * 4);
-      padding-block: calc(var(--spacing) * 4);
-      border-block-end: 1px solid var(--color-line);
-    }
+  <div class="inst-body">
+    <nav class="inst-rail" aria-label="Contents" data-institute-rail>
+      <p class="inst-rail__title">Contents</p>
+      <ol class="inst-rail__list">
+        <li><a class="inst-rail__link" href="#statement"><span class="inst-rail__number">1</span>The statement</a></li>
+        <li><a class="inst-rail__link" href="#departments"><span class="inst-rail__number">2</span>Departments</a></li>
+        <li><a class="inst-rail__link" href="#catalogue"><span class="inst-rail__number">3</span>The catalogue</a></li>
+        <li><a class="inst-rail__link" href="#library"><span class="inst-rail__number">4</span>The library</a></li>
+        <li><a class="inst-rail__link" href="#standards"><span class="inst-rail__number">5</span>Standards</a></li>
+        <li><a class="inst-rail__link" href="#contact"><span class="inst-rail__number">6</span>Contact</a></li>
+      </ol>
+    </nav>
 
-    .v2-masthead {
-      display: grid;
-      gap: calc(var(--spacing) * 6);
-      padding-block: calc(var(--spacing) * 10) calc(var(--spacing) * 10);
-    }
-
-    .v2-statement {
-      font-size: clamp(2.25rem, 5vw, 3.5rem);
-      line-height: 1.05;
-      letter-spacing: var(--tracking-display);
-      max-width: 28ch;
-    }
-
-    .v2-indices {
-      display: grid;
-      gap: calc(var(--spacing) * 10);
-    }
-
-    @media (min-width: 900px) {
-      .v2-indices {
-        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-        gap: calc(var(--spacing) * 16);
-      }
-    }
-
-    .v2-heading {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: calc(var(--spacing) * 4);
-      padding-block-end: calc(var(--spacing) * 3);
-      border-block-end: 1px solid var(--color-line);
-    }
-
-    .v2-strip {
-      display: flex;
-      gap: calc(var(--spacing) * 6);
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      padding-block: calc(var(--spacing) * 8);
-    }
-
-    .v2-strip > li {
-      flex: 0 0 auto;
-      inline-size: 14rem;
-      scroll-snap-align: start;
-    }
-  </style>
-
-  <div class="v2-band">
-    <p class="wt-register"><%= Store.name %></p>
-    <p class="wt-register">
-      <%= pluralize(@register.sum(&:catalogue_count), "product") %>
-      across <%= pluralize(@register.size, "department") %>
-      · discreet shipping
-      · billed as <%= Store.legal_entity %>
-    </p>
-  </div>
-
-  <section class="wt-container v2-masthead">
-    <h1 class="v2-statement text-ink">
-      Everything we sell has a materials list, and everything we publish has a source.
-    </h1>
-    <p class="max-w-[58ch] text-lede">
-      Products we can explain, and an education library we cite. No euphemisms, no shame, and no guessing.
-    </p>
-  </section>
-
-  <section class="wt-container pb-16">
-    <div class="v2-indices">
-      <div>
-        <div class="v2-heading">
-          <h2 class="text-heading text-ink">Departments</h2>
-          <%= link_to "Shop the catalogue", shop_path, class: "wt-btn wt-btn--quiet" %>
+    <article class="inst-sheet">
+      <section class="inst-clause" id="statement" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">1</p>
+          <h1 class="inst-statement">Everything we sell has a materials list, and everything we publish has a source.</h1>
         </div>
-        <ul>
+        <p class="inst-standing">
+          We are a shop and a publisher. The shop carries a small catalogue of sexual health and
+          wellness products, chosen against written standards rather than a supplier's margin.
+          The publisher carries the education that explains them, with the sources attached.
+        </p>
+        <p class="inst-standing">
+          Nothing here is a medical claim, and nothing is invented to fill a page. Where a question
+          is clinical, the library says so and points you to a clinician.
+        </p>
+        <p class="inst-note">
+          This site is published in eight architectures. This is the first: an annual report, one
+          page per section, every heading numbered. The eight are listed in the dock, bottom left.
+        </p>
+      </section>
+
+      <section class="inst-clause" id="departments" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">2</p>
+          <h2 class="inst-clause__title">Departments</h2>
+        </div>
+        <p class="inst-clause__standfirst">
+          The register, in the order the shop keeps it. The count is what is actually available
+          today, not what a supplier says might be.
+        </p>
+
+        <ol class="inst-register">
           <% @register.each do |category| %>
             <li>
-              <%= link_to category_path(category), class: "wt-index-row" do %>
-                <span class="wt-index-row__label"><%= category.name %></span>
-                <span class="wt-leader" aria-hidden="true"></span>
-                <span class="wt-index-row__data wt-register"><%= pluralize(category.catalogue_count, "product") %></span>
+              <%= link_to category_path(category), class: "inst-register__row" do %>
+                <span class="inst-register__name"><%= category.name %></span>
+                <span class="inst-register__count"><%= pluralize(category.catalogue_count, "object") %></span>
               <% end %>
             </li>
           <% end %>
-        </ul>
-      </div>
+        </ol>
 
-      <div>
-        <div class="v2-heading">
-          <h2 class="text-heading text-ink">The library</h2>
-          <%= link_to "Read", learn_path, class: "wt-btn wt-btn--quiet" %>
+        <div class="inst-actions">
+          <%= link_to "Shop the catalogue", shop_path, class: "inst-button" %>
+          <%= link_to "Everything we publish", learn_path, class: "inst-link" %>
         </div>
-        <ul>
-          <li>
-            <%= link_to learn_path, class: "wt-index-row" do %>
-              <span class="wt-index-row__label">Guides and explainers</span>
-              <span class="wt-leader" aria-hidden="true"></span>
-              <span class="wt-index-row__data wt-register">Learn</span>
-            <% end %>
-          </li>
-          <li>
-            <%= link_to learn_glossary_path, class: "wt-index-row" do %>
-              <span class="wt-index-row__label">Glossary of terms</span>
-              <span class="wt-leader" aria-hidden="true"></span>
-              <span class="wt-index-row__data wt-register">Terms</span>
-            <% end %>
-          </li>
-          <li>
-            <%= link_to learn_experts_path, class: "wt-index-row" do %>
-              <span class="wt-index-row__label">Who writes it</span>
-              <span class="wt-leader" aria-hidden="true"></span>
-              <span class="wt-index-row__data wt-register">Writers</span>
-            <% end %>
-          </li>
-          <li>
-            <%= link_to blog_path, class: "wt-index-row" do %>
-              <span class="wt-index-row__label">The blog</span>
-              <span class="wt-leader" aria-hidden="true"></span>
-              <span class="wt-index-row__data wt-register">Posts</span>
-            <% end %>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <% if @featured.any? %>
-    <section class="border-block-start border-line">
-      <div class="wt-container pt-12">
-        <div class="v2-heading">
-          <h2 class="text-heading text-ink">Recent specimens</h2>
-          <%= link_to "All products", shop_path, class: "wt-btn wt-btn--quiet" %>
+      <section class="inst-clause" id="catalogue" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">3</p>
+          <h2 class="inst-clause__title">The catalogue</h2>
         </div>
+        <p class="inst-clause__standfirst">
+          The most recent entries. Each object has one page, and that page carries its
+          specifications before its description.
+        </p>
 
-        <ul class="v2-strip">
+        <ol class="inst-ledger">
           <% @featured.each do |product| %>
             <li>
-              <%= render "products/specimen", product: product, category: product.primary_category %>
+              <%= link_to product_path(product.primary_category, product), class: "inst-ledger__row" do %>
+                <span class="inst-ledger__plate"><%= product_cover_tag(product) %></span>
+                <span>
+                  <span class="inst-ledger__name"><%= product.name %></span>
+                  <span class="inst-ledger__meta">
+                    <%= product.primary_category&.name || "Catalogue" %>
+                    <% if product.brand %> &middot; <%= product.brand.name %><% end %>
+                  </span>
+                </span>
+                <span class="inst-ledger__price"><%= price(product.lowest_price_cents) %></span>
+              <% end %>
             </li>
           <% end %>
-        </ul>
-      </div>
-    </section>
-  <% end %>
+        </ol>
 
-  <section class="border-block-start border-line">
-    <div class="wt-container grid gap-10 py-20 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] md:gap-16">
-      <h2 class="text-heading text-ink max-w-[18ch]">Most of this industry talks to you like a joke.</h2>
-      <div class="wt-prose">
-        <p>
-          Open a typical shop in this category and you get black backgrounds, neon
-          glow, and product names that are embarrassed by their own subject. The
-          information you actually need is buried under the winking.
-        </p>
-        <p>
-          So we started from the other direction. Everything we sell has a
-          materials list, care instructions and dimensions. Everything we publish
-          has a source. Where a question is medical, we say so and point you at a
-          clinician instead of quietly implying a product will fix it.
-        </p>
-        <p>
-          That is the whole idea. Treat people as adults, and treat the subject
-          the way any other part of health gets treated.
-        </p>
-      </div>
-    </div>
-  </section>
+        <div class="inst-actions">
+          <%= link_to "All objects", shop_path, class: "inst-link" %>
+        </div>
+      </section>
 
-  <section class="border-block-start border-line bg-paper-sunk">
-    <div class="wt-container py-20">
-      <h2 class="text-heading text-ink mb-12 max-w-[24ch]">Three things we will not do</h2>
-      <dl class="grid max-w-[76rem] gap-x-16 gap-y-10 md:grid-cols-2">
-        <div class="border-block-start border-line pt-6">
-          <dt class="mb-3 text-title text-ink font-display">We will not invent facts.</dt>
-          <dd class="max-w-[46ch] text-body">
-            No made up statistics, no borrowed credentials, no studies that do not exist. If we cite something, you can follow the link and read it.
-          </dd>
+      <section class="inst-clause" id="library" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">4</p>
+          <h2 class="inst-clause__title">The library</h2>
         </div>
-        <div class="border-block-start border-line pt-6">
-          <dt class="mb-3 text-title text-ink font-display">We will not make medical claims.</dt>
-          <dd class="max-w-[46ch] text-body">
-            A product can be described accurately without pretending to be a treatment. Anything clinical belongs with a clinician.
-          </dd>
-        </div>
-        <div class="border-block-start border-line pt-6">
-          <dt class="mb-3 text-title text-ink font-display">We will not sell your privacy.</dt>
-          <dd class="max-w-[46ch] text-body">
-            Purchase history and browsing in this category reveal health intent. No advertising trackers, no session recording, and nothing in a URL that identifies you.
-          </dd>
-        </div>
-        <div class="border-block-start border-line pt-6">
-          <dt class="mb-3 text-title text-ink font-display">We will not pretend to be discreet.</dt>
-          <dd class="max-w-[46ch] text-body">
-            Plain packaging and a neutral billing descriptor, stated once, on the shipping page. It is a standard we meet, not a slogan we shout.
-          </dd>
-        </div>
-      </dl>
-    </div>
-  </section>
+        <p class="inst-clause__standfirst">
+          The education side of the shop. Each piece carries its sources, and each writer carries
+          their credentials.
+        </p>
 
-  <section class="border-block-start border-line">
-    <div class="wt-container py-20">
-      <ul>
-        <li>
-          <%= link_to page_path("standards"), class: "wt-index-row" do %>
-            <span class="wt-index-row__label">How we choose what we stock</span>
-            <span class="wt-leader" aria-hidden="true"></span>
-            <span class="wt-index-row__data wt-register">Standards</span>
-          <% end %>
-        </li>
-        <li>
-          <%= link_to page_path("discreet-shipping"), class: "wt-index-row" do %>
-            <span class="wt-index-row__label">What arrives, and what it says on it</span>
-            <span class="wt-leader" aria-hidden="true"></span>
-            <span class="wt-index-row__data wt-register">Shipping</span>
-          <% end %>
-        </li>
-        <li>
-          <%= link_to page_path("privacy"), class: "wt-index-row" do %>
-            <span class="wt-index-row__label">What we collect, and what we refuse to</span>
-            <span class="wt-leader" aria-hidden="true"></span>
-            <span class="wt-index-row__data wt-register">Privacy</span>
-          <% end %>
-        </li>
-      </ul>
-    </div>
-  </section>
+        <% if @library.any? %>
+          <ul class="inst-reading-list">
+            <% @library.each do |article| %>
+              <% topic = article.primary_topic || article.topics.first %>
+              <li class="inst-reading-list__item">
+                <%= link_to article.title,
+                      topic ? learn_article_path(topic.slug, article.slug) : learn_path,
+                      class: "inst-reading-list__title" %>
+                <p class="inst-reading-list__meta">
+                  <%= article.kind %>
+                  <% if article.author %> &middot; <%= article.author.name %><% end %>
+                  <% if article.published_at %> &middot; <%= article.published_at.strftime("%B %Y") %><% end %>
+                </p>
+              </li>
+            <% end %>
+          </ul>
+          <div class="inst-actions">
+            <%= link_to "The whole library", learn_path, class: "inst-link" %>
+          </div>
+        <% else %>
+          <p class="inst-standing">The library is being prepared. Nothing is invented to fill it while it is.</p>
+        <% end %>
+      </section>
+
+      <section class="inst-clause" id="standards" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">5</p>
+          <h2 class="inst-clause__title">Standards</h2>
+        </div>
+        <p class="inst-clause__standfirst">
+          Three undertakings, applied to every object in the catalogue and every piece in the library.
+        </p>
+
+        <ol class="inst-undertakings">
+          <li class="inst-undertaking">
+            <p class="inst-undertaking__number">5.1</p>
+            <h3 class="inst-undertaking__title">How we choose what we stock</h3>
+            <p class="inst-undertaking__body">
+              Materials are declared, body-safe claims are checked against them, and a supplier that
+              will not state either is not stocked.
+            </p>
+          </li>
+          <li class="inst-undertaking">
+            <p class="inst-undertaking__number">5.2</p>
+            <h3 class="inst-undertaking__title">What arrives, and what it says on it</h3>
+            <p class="inst-undertaking__body">
+              Plain packaging, no product name on the outside, and a billing line that names this
+              company and nothing else.
+            </p>
+          </li>
+          <li class="inst-undertaking">
+            <p class="inst-undertaking__number">5.3</p>
+            <h3 class="inst-undertaking__title">What we collect, and what we refuse to</h3>
+            <p class="inst-undertaking__body">
+              No analytics, no ad pixels, no session recording. Purchase history reveals health
+              intent, and it is treated as sensitive even though this is not a clinic.
+            </p>
+          </li>
+          <li class="inst-undertaking">
+            <p class="inst-undertaking__number">5.4</p>
+            <h3 class="inst-undertaking__title">What we will not write</h3>
+            <p class="inst-undertaking__body">
+              No medical claims, no invented statistics, no citation to a study that does not
+              exist. A missing fact stays missing until it can be sourced.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="inst-clause" id="contact" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">6</p>
+          <h2 class="inst-clause__title">Contact</h2>
+        </div>
+        <p class="inst-standing">
+          Questions about an object, an order, or something we published:
+          <%= mail_to Store.support_email, Store.support_email, class: "inst-link" %>.
+        </p>
+        <div class="inst-actions">
+          <%= link_to "About", page_path("about"), class: "inst-link" %>
+          <%= link_to "Standards", page_path("standards"), class: "inst-link" %>
+          <%= link_to "Shipping", page_path("shipping"), class: "inst-link" %>
+          <%= link_to "Privacy", page_path("privacy"), class: "inst-link" %>
+          <%= link_to "FAQ", page_path("faq"), class: "inst-link" %>
+        </div>
+      </section>
+    </article>
+  </div>
 </div>

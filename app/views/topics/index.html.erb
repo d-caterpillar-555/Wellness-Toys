@@ -1,77 +1,83 @@
-<% content_for :title, "The education library" %>
-<% content_for :meta_description, "Evergreen guides, a glossary and named experts, with the sources behind every claim. The #{Store.name} education library." %>
+<% content_for :title, "The library" %>
+<% content_for :meta_description, "The education side of #{Store.name}: guides and explainers with their sources attached, organised by topic." %>
 
-<section class="wt-container pt-20 pb-16 md:pt-28 md:pb-20" data-controller="reveal" data-reveal>
-  <div class="max-w-[58rem]">
-    <h1 class="text-display-lg text-ink md:text-display-xl">The education library.</h1>
-    <p class="mt-8 max-w-[54ch] text-lede text-body">
-      This is the part of the site that is not trying to sell you anything. Guides
-      on how bodies and products actually work, a glossary of the words the
-      subject is full of, and the sources behind every claim so you can check us.
-    </p>
-    <div class="mt-10 flex flex-wrap gap-3">
-      <%= link_to "Open the glossary", learn_glossary_path, class: "wt-btn wt-btn--secondary" %>
-      <%= link_to "Meet the writers", learn_experts_path, class: "wt-btn wt-btn--secondary" %>
-    </div>
-  </div>
-</section>
+<div class="inst">
+  <header class="inst-run">
+    <p class="inst-run__mark"><%= link_to Store.name, root_path, class: "inst-link" %></p>
+    <p class="inst-run__section">The library</p>
+    <p><%= pluralize(@topics.size, "topic") %></p>
+  </header>
 
-<%# Topics as a hairline list rather than a card grid, so this layout family
-    appears only here and the guide grid below reads as a different one. %>
-<section class="border-t border-line" data-controller="reveal" data-reveal>
-  <div class="wt-container py-16 md:py-24">
-    <h2 class="text-heading text-ink md:text-heading-lg max-w-[24ch]">Start with a subject</h2>
+  <div class="inst-body">
+    <nav class="inst-rail" aria-label="Contents" data-institute-rail>
+      <p class="inst-rail__title">Contents</p>
+      <ol class="inst-rail__list">
+        <li><a class="inst-rail__link" href="#topics"><span class="inst-rail__number">1</span>Topics</a></li>
+        <% if @latest_guides.any? %>
+          <li><a class="inst-rail__link" href="#guides"><span class="inst-rail__number">2</span>Latest guides</a></li>
+        <% end %>
+        <li><a class="inst-rail__link" href="#related"><span class="inst-rail__number">3</span>Also in the library</a></li>
+      </ol>
+    </nav>
 
-    <% if @topics.any? %>
-      <ul class="mt-10 divide-y divide-line border-y border-line">
-        <% @topics.each do |topic| %>
-          <li>
-            <%= link_to learn_topic_path(topic), class: "group flex items-baseline justify-between gap-6 py-6 no-underline" do %>
-              <span class="max-w-[54ch]">
-                <span class="block text-title text-ink group-hover:text-accent"><%= topic.name %></span>
-                <% if topic.description.present? %>
-                  <span class="mt-2 block text-body"><%= topic.description %></span>
-                <% end %>
-              </span>
-              <span class="shrink-0 text-caption text-muted tnum"><%= pluralize(topic.published_article_count, "article") %></span>
+    <article class="inst-sheet">
+      <section class="inst-clause" id="topics" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">1</p>
+          <h1 class="inst-clause__title">Topics</h1>
+        </div>
+        <p class="inst-clause__standfirst">
+          The library is organised as topics, and each topic holds the guides that answer it.
+          Every piece carries its sources on the page.
+        </p>
+
+        <ol class="inst-register">
+          <% @topics.each do |topic| %>
+            <li>
+              <%= link_to learn_topic_path(topic), class: "inst-register__row" do %>
+                <span class="inst-register__name"><%= topic.name %></span>
+                <span class="inst-register__count"><%= pluralize(topic.published_article_count, "article") %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ol>
+      </section>
+
+      <% if @latest_guides.any? %>
+        <section class="inst-clause" id="guides" data-institute-clause>
+          <div class="inst-clause__head">
+            <p class="inst-clause__number">2</p>
+            <h2 class="inst-clause__title">Latest guides</h2>
+          </div>
+
+          <ul class="inst-reading-list">
+            <% @latest_guides.each do |article| %>
+              <% topic = article.primary_topic || article.topics.first %>
+              <li class="inst-reading-list__item">
+                <%= link_to article.title,
+                      topic ? learn_article_path(topic.slug, article.slug) : learn_path,
+                      class: "inst-reading-list__title" %>
+                <p class="inst-reading-list__meta">
+                  <% if article.author %> <%= article.author.name %> &middot; <% end %>
+                  <% if article.reading_minutes %><%= article.reading_minutes %> min<% else %>Guide<% end %>
+                </p>
+              </li>
             <% end %>
-          </li>
-        <% end %>
-      </ul>
-    <% else %>
-      <p class="mt-8 max-w-[52ch] text-body">The subjects are being written up. Check back shortly.</p>
-    <% end %>
+          </ul>
+        </section>
+      <% end %>
+
+      <section class="inst-clause" id="related" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">3</p>
+          <h2 class="inst-clause__title">Also in the library</h2>
+        </div>
+        <div class="inst-actions">
+          <%= link_to "Glossary of terms", learn_glossary_path, class: "inst-link" %>
+          <%= link_to "Who writes it", learn_experts_path, class: "inst-link" %>
+          <%= link_to "The blog", blog_path, class: "inst-link" %>
+        </div>
+      </section>
+    </article>
   </div>
-</section>
-
-<% if @latest_guides.any? %>
-  <section class="border-t border-line bg-paper-sunk" data-controller="reveal" data-reveal>
-    <div class="wt-container py-16 md:py-24">
-      <h2 class="text-heading text-ink">Latest guides</h2>
-
-      <div class="mt-10 grid gap-x-8 gap-y-10 md:grid-cols-3">
-        <% @latest_guides.each do |article| %>
-          <%= render "articles/card", article: article %>
-        <% end %>
-      </div>
-
-      <%= link_to "Everything we have published", blog_path, class: "wt-btn wt-btn--quiet mt-10" %>
-    </div>
-  </section>
-<% end %>
-
-<section class="border-t border-line" data-controller="reveal" data-reveal>
-  <div class="wt-container grid gap-10 py-16 md:grid-cols-2 md:py-20">
-    <div class="border-t border-line pt-6">
-      <h2 class="text-title text-ink">The glossary</h2>
-      <p class="mt-3 max-w-[46ch] text-body">Short definitions of the words this subject is full of, written to be understood on the first read.</p>
-      <%= link_to "Open the glossary", learn_glossary_path, class: "wt-btn wt-btn--secondary mt-6" %>
-    </div>
-
-    <div class="border-t border-line pt-6">
-      <h2 class="text-title text-ink">The writers</h2>
-      <p class="mt-3 max-w-[46ch] text-body">Every article is credited to a named person, with their credentials stated in their own words or left blank.</p>
-      <%= link_to "Meet the writers", learn_experts_path, class: "wt-btn wt-btn--secondary mt-6" %>
-    </div>
-  </div>
-</section>
+</div>

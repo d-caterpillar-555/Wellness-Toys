@@ -1,17 +1,46 @@
-<% content_for :title, @page.meta_title.presence || @page.title %>
-<% content_for :meta_description, @page.meta_description.presence || @page.subtitle %>
+<% content_for :title, @page.title %>
+<% content_for :meta_description, "#{@page.title} at #{Store.name}." %>
 
-<article class="wt-container py-16 md:py-24">
-  <header class="max-w-[68ch] mb-12 md:mb-16">
-    <h1 class="text-display-sm md:text-display text-ink"><%= @page.title %></h1>
-    <% if @page.subtitle.present? %>
-      <p class="mt-6 text-lede text-body"><%= @page.subtitle %></p>
-    <% end %>
+<%# A static page, set as one clause of the report: a running head, the title,
+    and the body as prose. These are the pages the footer points at, so they
+    carry the same furniture as everything else. %>
+<div class="inst">
+  <header class="inst-run">
+    <p class="inst-run__mark"><%= link_to Store.name, root_path, class: "inst-link" %></p>
+    <p class="inst-run__section"><%= @page.title %></p>
+    <p>Reference</p>
   </header>
 
-  <div class="wt-prose">
-    <% @page.paragraphs.each do |paragraph| %>
-      <p><%= paragraph %></p>
-    <% end %>
+  <div class="inst-body">
+    <article class="inst-sheet">
+      <section class="inst-clause" id="page" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">1</p>
+          <h1 class="inst-clause__title"><%= @page.title %></h1>
+        </div>
+
+        <div class="inst-prose">
+          <% @page.paragraphs.each do |paragraph| %>
+            <p><%= paragraph %></p>
+          <% end %>
+        </div>
+
+        <% if @page.paragraphs.empty? %>
+          <p class="inst-standing">
+            This page has not been written yet. We would rather leave it empty than fill it with
+            something we cannot stand behind.
+          </p>
+        <% end %>
+      </section>
+
+      <section class="inst-clause">
+        <p class="inst-clause__standfirst inst-lead-in">Elsewhere in the report</p>
+        <div class="inst-actions">
+          <%= link_to "The catalogue", shop_path, class: "inst-link" %>
+          <%= link_to "The library", learn_path, class: "inst-link" %>
+          <%= link_to "Contact", page_path("contact"), class: "inst-link" %>
+        </div>
+      </section>
+    </article>
   </div>
-</article>
+</div>

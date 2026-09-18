@@ -4,6 +4,13 @@ Rails.application.routes.draw do
 
   root "pages#home"
 
+  # --- The eight architectures ----------------------------------------------
+  # The site's default architecture (institute) is the canonical routes below.
+  # The other seven are alternate architectures, each with its own prefix, its
+  # own page inventory and its own layout - see docs/eight-worlds.md. Their
+  # routes are drawn next to the world they belong to, further down this file.
+  get "/worlds", to: "worlds#index", as: :worlds
+
   # --- Shop -----------------------------------------------------------------
   get "/shop", to: "products#index", as: :shop
   get "/collections/:slug", to: "collections#show", as: :collection

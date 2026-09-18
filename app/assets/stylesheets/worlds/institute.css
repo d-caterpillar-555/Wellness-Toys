@@ -1,0 +1,768 @@
+/* ==========================================================================
+   Institute: the default architecture.
+
+   An annual report, not a shop window. The site is one publication with
+   numbered clauses, a running head on every page, a contents rail down the
+   left and a register where a grid of cards would be. The discipline is the
+   design: hairlines, tabular data, one accent, and type doing the work that
+   imagery would otherwise be asked to do.
+
+   Tokens are the design system's (docs/design/DESIGN.md). This file does not
+   redeclare a palette; institute is the world that keeps the system's clothes.
+   ========================================================================== */
+
+.inst {
+  --inst-gutter: 1.25rem;
+  --inst-measure: 68ch;
+  background-color: var(--color-paper);
+  color: var(--color-body);
+  font-family: var(--font-sans);
+}
+
+@media (min-width: 48rem) {
+  .inst {
+    --inst-gutter: 2.5rem;
+  }
+}
+
+/* --- The running head ----------------------------------------------------
+   Printed at the top of every page: who is publishing, what section you are
+   in, which volume. The double rule under it is the one thick line on the
+   site. */
+
+.inst-run {
+  align-items: baseline;
+  border-block-end: 2px solid var(--color-ink);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--text-fine);
+  font-weight: var(--font-weight-medium);
+  gap: 0.75rem 1.5rem;
+  justify-content: space-between;
+  letter-spacing: var(--tracking-register);
+  padding-block: 0.9rem 0.6rem;
+  text-transform: uppercase;
+}
+
+.inst-run__section {
+  color: var(--color-muted);
+}
+
+.inst-run__mark {
+  color: var(--color-accent-strong);
+}
+
+/* --- The sheet ----------------------------------------------------------- */
+
+.inst-body {
+  display: grid;
+  gap: 2rem;
+  margin-inline: auto;
+  max-inline-size: 86rem;
+  padding-block: 2rem 5rem;
+  padding-inline: var(--inst-gutter);
+}
+
+@media (min-width: 64rem) {
+  .inst-body {
+    gap: 4.5rem;
+    grid-template-columns: 13rem minmax(0, 1fr);
+    padding-block: 3rem 7rem;
+  }
+}
+
+.inst-sheet {
+  max-inline-size: var(--inst-measure);
+  min-inline-size: 0;
+}
+
+.inst-sheet--wide {
+  max-inline-size: none;
+}
+
+/* --- The contents rail --------------------------------------------------- */
+
+.inst-rail {
+  align-self: start;
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .inst-rail {
+    display: block;
+    position: sticky;
+    top: 2.5rem;
+  }
+}
+
+.inst-rail__title {
+  border-block-end: 1px solid var(--color-ink);
+  font-size: var(--text-fine);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-register);
+  margin-block-end: 0.75rem;
+  padding-block-end: 0.5rem;
+  text-transform: uppercase;
+}
+
+.inst-rail__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.inst-rail__link {
+  border-inline-start: 2px solid transparent;
+  color: var(--color-muted);
+  display: block;
+  font-size: var(--text-label);
+  line-height: 1.3;
+  padding-block: 0.4rem;
+  padding-inline: 0.75rem 0.5rem;
+  text-decoration: none;
+}
+
+.inst-rail__link:hover,
+.inst-rail__link:focus-visible {
+  color: var(--color-ink);
+}
+
+.inst-rail__link[aria-current="true"] {
+  border-inline-start-color: var(--color-accent);
+  color: var(--color-ink);
+}
+
+.inst-rail__number {
+  color: var(--color-accent-strong);
+  font-size: var(--text-fine);
+  letter-spacing: var(--tracking-register);
+  margin-inline-end: 0.5rem;
+}
+
+/* --- Clauses ------------------------------------------------------------- */
+
+.inst-clause {
+  border-block-start: 1px solid var(--color-line);
+  padding-block: 2.5rem 3rem;
+}
+
+.inst-clause:first-child {
+  border-block-start: 0;
+  padding-block-start: 0.5rem;
+}
+
+.inst-clause__head {
+  align-items: baseline;
+  display: flex;
+  gap: 1rem;
+  margin-block-end: 1.25rem;
+}
+
+.inst-clause__number {
+  color: var(--color-accent-strong);
+  flex: none;
+  font-size: var(--text-fine);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-register);
+  padding-block-start: 0.35rem;
+  text-transform: uppercase;
+}
+
+.inst-clause__title {
+  font-family: var(--font-display);
+  font-size: var(--text-heading);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-headline);
+  line-height: 1.2;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.inst-clause__standfirst {
+  color: var(--color-body);
+  font-size: var(--text-lede);
+  line-height: 1.6;
+  margin-block: 0 1.5rem;
+  max-inline-size: 54ch;
+}
+
+/* --- The statement ------------------------------------------------------- */
+
+.inst-statement {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.04;
+  margin: 0.5rem 0 1.5rem;
+  max-inline-size: 26ch;
+  text-wrap: balance;
+}
+
+.inst-standing {
+  color: var(--color-body);
+  font-size: var(--text-lede);
+  line-height: 1.65;
+  max-inline-size: 58ch;
+}
+
+.inst-standing + .inst-standing {
+  margin-block-start: 1rem;
+}
+
+.inst-note {
+  border-block-start: 1px solid var(--color-line);
+  color: var(--color-muted);
+  font-size: var(--text-caption);
+  line-height: 1.6;
+  margin-block-start: 1.75rem;
+  max-inline-size: 52ch;
+  padding-block-start: 0.75rem;
+}
+
+/* --- The register: departments as ruled entries -------------------------- */
+
+.inst-register {
+  border-block-start: 1px solid var(--color-ink);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.inst-register__row {
+  align-items: baseline;
+  border-block-end: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.25rem 1rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-block: 0.85rem;
+  text-decoration: none;
+}
+
+.inst-register__row:hover .inst-register__name,
+.inst-register__row:focus-visible .inst-register__name {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.inst-register__name {
+  color: var(--color-ink);
+  font-size: var(--text-body);
+}
+
+.inst-register__bearing {
+  color: var(--color-muted);
+  font-size: var(--text-caption);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.inst-register__count {
+  color: var(--color-body);
+  font-size: var(--text-caption);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* --- The ledger: the catalogue as entries, not cards -------------------- */
+
+.inst-ledger {
+  border-block-start: 1px solid var(--color-ink);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.inst-ledger__row {
+  align-items: center;
+  border-block-end: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.5rem 1.25rem;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  padding-block: 0.9rem;
+  text-decoration: none;
+}
+
+.inst-ledger__plate {
+  aspect-ratio: 1;
+  background-color: var(--color-paper-sunk);
+  border: 1px solid var(--color-line);
+  display: block;
+  overflow: hidden;
+  width: 3.5rem;
+}
+
+.inst-ledger__plate img {
+  block-size: 100%;
+  display: block;
+  inline-size: 100%;
+  object-fit: contain;
+  padding: 6%;
+}
+
+.inst-ledger__name {
+  color: var(--color-ink);
+  display: block;
+  font-size: var(--text-body);
+  line-height: 1.35;
+}
+
+.inst-ledger__row:hover .inst-ledger__name,
+.inst-ledger__row:focus-visible .inst-ledger__name {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.inst-ledger__meta {
+  color: var(--color-muted);
+  display: block;
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-label);
+  margin-block-start: 0.2rem;
+  text-transform: uppercase;
+}
+
+.inst-ledger__price {
+  color: var(--color-ink);
+  font-size: var(--text-ui);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* --- The library list ---------------------------------------------------- */
+
+.inst-reading-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.inst-reading-list__item {
+  border-block-end: 1px solid var(--color-line);
+  padding-block: 1rem;
+}
+
+.inst-reading-list__title {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  letter-spacing: var(--tracking-title);
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.inst-reading-list__title:hover,
+.inst-reading-list__title:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.inst-reading-list__meta {
+  color: var(--color-muted);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-label);
+  margin-block-start: 0.35rem;
+  text-transform: uppercase;
+}
+
+/* --- Standards: three numbered undertakings ----------------------------- */
+
+.inst-undertakings {
+  display: grid;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 48rem) {
+  .inst-undertakings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.inst-undertaking {
+  border-block-start: 2px solid var(--color-ink);
+  padding-block-start: 0.75rem;
+}
+
+.inst-undertaking__number {
+  color: var(--color-accent-strong);
+  font-size: var(--text-fine);
+  letter-spacing: var(--tracking-register);
+}
+
+.inst-undertaking__title {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-title);
+  margin: 0.35rem 0 0.5rem;
+}
+
+.inst-undertaking__body {
+  color: var(--color-body);
+  font-size: var(--text-ui);
+  line-height: 1.6;
+}
+
+/* --- Links, buttons, small print ---------------------------------------- */
+
+.inst-link {
+  color: var(--color-accent-strong);
+  text-decoration: underline;
+  text-decoration-color: var(--color-line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.inst-link:hover,
+.inst-link:focus-visible {
+  text-decoration-color: var(--color-accent);
+}
+
+.inst-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin-block-start: 1.5rem;
+}
+
+.inst-button {
+  align-items: center;
+  background-color: var(--color-accent-strong);
+  border: 1px solid var(--color-accent-strong);
+  border-radius: 2px;
+  color: #fcfdfc;
+  display: inline-flex;
+  font-size: var(--text-ui);
+  font-weight: var(--font-weight-medium);
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding: 0.6rem 1.1rem;
+  text-decoration: none;
+}
+
+.inst-button:hover,
+.inst-button:focus-visible {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.inst-button--quiet {
+  background-color: transparent;
+  border-color: var(--color-line);
+  color: var(--color-ink);
+}
+
+.inst-button--quiet:hover,
+.inst-button--quiet:focus-visible {
+  background-color: var(--color-paper-sunk);
+  border-color: var(--color-ink);
+}
+
+/* --- The catalogue page -------------------------------------------------- */
+
+.inst-facets {
+  border-block: 1px solid var(--color-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-block-end: 2rem;
+  padding-block: 0.75rem;
+}
+
+.inst-facet {
+  color: var(--color-body);
+  font-size: var(--text-label);
+  text-decoration: none;
+}
+
+.inst-facet[aria-current="page"] {
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 4px;
+}
+
+/* --- The record (product page) ------------------------------------------ */
+
+.inst-record {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 56rem) {
+  .inst-record {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    gap: 3rem;
+  }
+}
+
+.inst-plate {
+  aspect-ratio: 1;
+  background-color: var(--color-paper-sunk);
+  border: 1px solid var(--color-line);
+}
+
+.inst-plate img {
+  block-size: 100%;
+  display: block;
+  inline-size: 100%;
+  object-fit: contain;
+  padding: 5%;
+}
+
+.inst-spec {
+  border-block-start: 1px solid var(--color-ink);
+  margin: 0;
+}
+
+.inst-spec__row {
+  border-block-end: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.25rem 1.5rem;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  padding-block: 0.7rem;
+}
+
+.inst-spec__label {
+  color: var(--color-muted);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.inst-spec__value {
+  color: var(--color-ink);
+  font-size: var(--text-ui);
+}
+
+.inst-price {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-heading-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.inst-choice {
+  align-items: center;
+  border-block-end: 1px solid var(--color-line);
+  cursor: pointer;
+  display: flex;
+  gap: 0.75rem;
+  min-block-size: 2.75rem;
+  padding-block: 0.5rem;
+}
+
+.inst-quantity {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  margin-block: 1rem 1.25rem;
+}
+
+.inst-quantity__label {
+  color: var(--color-muted);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* --- Prose pages --------------------------------------------------------- */
+
+.inst-prose {
+  max-inline-size: var(--inst-measure);
+}
+
+.inst-prose p {
+  margin-block: 0 1rem;
+  text-wrap: pretty;
+}
+
+.inst-prose p:first-of-type {
+  font-size: var(--text-lede);
+  line-height: 1.65;
+}
+
+.inst-prose h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-heading);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-headline);
+  margin-block: 2.5rem 1rem;
+}
+
+.inst-prose h3 {
+  font-size: var(--text-title);
+  margin-block: 2rem 0.75rem;
+}
+
+.inst-prose ul,
+.inst-prose ol {
+  margin-block: 0 1.25rem;
+  padding-inline-start: 1.25rem;
+}
+
+.inst-prose li {
+  margin-block-end: 0.4rem;
+}
+
+.inst-prose blockquote {
+  border-inline-start: 2px solid var(--color-accent);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-lede);
+  margin-block: 1.5rem;
+  padding-inline-start: 1.25rem;
+}
+
+/* --- The gallery of worlds ---------------------------------------------- */
+
+.inst-worlds {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+}
+
+@media (min-width: 48rem) {
+  .inst-worlds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.inst-world {
+  background-color: var(--color-paper);
+  border-block-start: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.4rem;
+  padding-block: 1.25rem;
+  padding-inline-end: 2rem;
+}
+
+.inst-world__name {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  letter-spacing: var(--tracking-title);
+}
+
+.inst-world__tagline {
+  color: var(--color-accent-strong);
+  font-size: var(--text-fine);
+  letter-spacing: var(--tracking-register);
+  text-transform: uppercase;
+}
+
+.inst-world__premise {
+  color: var(--color-body);
+  font-size: var(--text-ui);
+  line-height: 1.6;
+}
+
+/* --- Print --------------------------------------------------------------- */
+
+@media print {
+  .inst-rail,
+  .world-dock {
+    display: none;
+  }
+
+  .inst-body {
+    display: block;
+  }
+}
+
+/* --- The record, part two ------------------------------------------------
+   Classes rather than style attributes: the production content security
+   policy allows no inline CSS, so anything that carries a value lives here. */
+
+.inst-record__head {
+  min-inline-size: 0;
+}
+
+.inst-record__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-headline);
+  line-height: 1.1;
+  margin: 0.35rem 0 0;
+  text-wrap: balance;
+}
+
+.inst-record__sub {
+  margin-block-start: 0.75rem;
+}
+
+.inst-record__price {
+  margin-block-start: 1rem;
+}
+
+.inst-record__form {
+  margin-block-start: 1.5rem;
+}
+
+.inst-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.inst-legend {
+  margin-block-end: 0.35rem;
+}
+
+.inst-choice__pair {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.inst-choice__name {
+  color: var(--color-ink);
+  font-size: var(--text-ui);
+}
+
+.inst-choice__aside {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  margin-inline-start: auto;
+}
+
+.inst-question {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.inst-lead-in {
+  margin-block-end: 0.5rem;
+}
+
+.inst-prose--tight {
+  margin-block-start: 0.5rem;
+}
+
+.inst-review__meta {
+  margin: 0;
+}
+
+.inst-review__title {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  letter-spacing: var(--tracking-title);
+  margin: 0.35rem 0 0;
+}
+
+.inst-ledger__row--plain {
+  cursor: default;
+}

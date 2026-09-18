@@ -1,61 +1,102 @@
-<% heading = @category&.name.presence || @brand&.name.presence || "The catalogue" %>
-<% filtered = @category || @brand %>
-<% content_for :title, heading %>
-<% content_for :meta_description, filtered ? "Everything #{Store.name} stocks, filtered to #{heading}." : "Everything #{Store.name} stocks." %>
+<% content_for :title, "The catalogue" %>
+<% content_for :meta_description, "Every object #{Store.name} stocks, kept as a register: departments, materials, and prices as data." %>
 
-<section class="wt-container pt-12 pb-8 md:pt-16" data-controller="reveal" data-reveal>
-  <nav aria-label="Breadcrumb" class="text-caption">
-    <% if @category %>
-      <%= link_to "Shop", shop_path, class: "text-body no-underline hover:text-ink" %>
-      <span aria-hidden="true" class="text-muted"> / </span>
-      <span class="text-ink" aria-current="page"><%= @category.name %></span>
-    <% else %>
-      <span class="text-ink">Shop</span>
-    <% end %>
-  </nav>
+<div class="inst">
+  <header class="inst-run">
+    <p class="inst-run__mark"><%= link_to Store.name, root_path, class: "inst-link" %></p>
+    <p class="inst-run__section">The catalogue</p>
+    <p><%= pluralize(@pagy.count, "object") %></p>
+  </header>
 
-  <h1 class="mt-4 text-display-sm text-ink md:text-display"><%= heading %></h1>
-  <p class="mt-3 text-ui text-muted tnum"><%= pluralize(@pagy.count, "product") %></p>
-</section>
+  <div class="inst-body">
+    <nav class="inst-rail" aria-label="Contents" data-institute-rail>
+      <p class="inst-rail__title">Contents</p>
+      <ol class="inst-rail__list">
+        <li><a class="inst-rail__link" href="#catalogue"><span class="inst-rail__number">1</span>The register</a></li>
+        <% if @brands.any? %>
+          <li><a class="inst-rail__link" href="#makers"><span class="inst-rail__number">2</span>The makers</a></li>
+        <% end %>
+      </ol>
+    </nav>
 
-<section class="wt-container pb-10">
-  <%= form_with url: shop_path, method: :get, class: "flex flex-wrap items-end gap-3" do |form| %>
-    <% if @category %><%= form.hidden_field :category, value: @category.slug %><% end %>
+    <article class="inst-sheet inst-sheet--wide">
+      <section class="inst-clause" id="catalogue" data-institute-clause>
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">1</p>
+          <h1 class="inst-clause__title">The register</h1>
+        </div>
+        <p class="inst-clause__standfirst">
+          Every object the shop keeps, in the order it was entered. A department filters the
+          register; nothing is hidden behind a promotion.
+        </p>
 
-    <div class="min-w-[16rem]">
-      <%= form.label :brand, "Brand", class: "wt-label" %>
-      <%= form.select :brand,
-            options_for_select(@brands.map { |brand| [ brand.name, brand.slug ] }, @brand&.slug),
-            { include_blank: "All brands" },
-            class: "wt-input" %>
-    </div>
+        <nav class="inst-facets" aria-label="Departments">
+          <%= link_to "All", shop_path, class: "inst-facet",
+                aria: { current: ("page" if @category.nil? && @brand.nil?) } %>
+          <% @register.each do |category| %>
+            <%= link_to category.name, category_path(category), class: "inst-facet",
+                  aria: { current: ("page" if @category == category) } %>
+          <% end %>
+        </nav>
 
-    <%= form.submit "Apply", class: "wt-btn wt-btn--secondary" %>
-    <%= link_to "Clear", shop_path, class: "wt-btn wt-btn--quiet" if @brand || @category %>
-  <% end %>
-</section>
+        <% if @products.any? %>
+          <ol class="inst-ledger">
+            <% @products.each do |product| %>
+              <% row = capture do %>
+                <span class="inst-ledger__plate"><%= product_cover_tag(product) %></span>
+                <span>
+                  <span class="inst-ledger__name"><%= product.name %></span>
+                  <span class="inst-ledger__meta">
+                    <%= product.primary_category&.name || "Catalogue" %>
+                    <% if product.brand %> &middot; <%= product.brand.name %><% end %>
+                    <% unless product.in_stock? %> &middot; Out of stock<% end %>
+                  </span>
+                </span>
+                <span class="inst-ledger__price"><%= price(product.lowest_price_cents) %></span>
+              <% end %>
 
-<section class="wt-container pb-20" data-controller="reveal" data-reveal>
-  <h2 class="sr-only">Products</h2>
+              <li>
+                <% if product.primary_category %>
+                  <%= link_to product_path(product.primary_category, product), class: "inst-ledger__row" do %>
+                    <%= row %>
+                  <% end %>
+                <% else %>
+                  <div class="inst-ledger__row inst-ledger__row--plain"><%= row %></div>
+                <% end %>
+              </li>
+            <% end %>
+          </ol>
 
-  <% if @products.any? %>
-    <div class="wt-catalogue__grid">
-      <% @products.each do |product| %>
-        <%= render "products/card", product: product %>
+          <%= render "shared/pagination", pagy: @pagy %>
+        <% else %>
+          <p class="inst-standing">
+            <%= (@category || @brand) ? "Nothing matches this filter yet." : "The catalogue is empty right now." %>
+            An empty shelf is a fact; we would rather show it than fill it.
+          </p>
+        <% end %>
+      </section>
+
+      <% if @brands.any? %>
+        <section class="inst-clause" id="makers" data-institute-clause>
+          <div class="inst-clause__head">
+            <p class="inst-clause__number">2</p>
+            <h2 class="inst-clause__title">The makers</h2>
+          </div>
+          <p class="inst-clause__standfirst">
+            Every maker we stock, and how many of their objects are in the register today.
+          </p>
+          <ol class="inst-register">
+            <% @brands.each do |brand| %>
+              <li>
+                <%= link_to shop_path(brand: brand.slug), class: "inst-register__row" do %>
+                  <span class="inst-register__name"><%= brand.name %></span>
+                  <span class="inst-register__count"><%= pluralize(brand.product_count, "object") %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ol>
+        </section>
       <% end %>
-    </div>
-    <%= render "shared/pagination", pagy: @pagy %>
-  <% elsif @brand || @category %>
-    <div class="max-w-[52ch] border-t border-line pt-8">
-      <p class="text-lede text-ink">Nothing matches this filter yet.</p>
-      <p class="mt-3 text-body">Either the range is narrower than the catalogue, or nothing we stock fits it. Both are worth knowing.</p>
-      <%= link_to "Show every product", shop_path, class: "wt-btn wt-btn--secondary mt-6" %>
-    </div>
-  <% else %>
-    <div class="max-w-[52ch] border-t border-line pt-8">
-      <p class="text-lede text-ink">The catalogue is empty right now.</p>
-      <p class="mt-3 text-body">We are between deliveries. The standards we hold a product to are published in the meantime.</p>
-      <%= link_to "Read our standards", page_path("standards"), class: "wt-btn wt-btn--secondary mt-6" %>
-    </div>
-  <% end %>
-</section>
+    </article>
+  </div>
+</div>

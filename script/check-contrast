@@ -1,37 +1,44 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Contrast check for the visual worlds.
+# Contrast check for the storefront's architectures.
 #
-# Every world defines the same token names, and this script proves the pairs
-# that carry text clear their floors: body, muted, accent and reversed accent at
-# 4.5:1, and accent on a plate at 3:1. Run it after touching any world's tokens.
+# The default architecture (institute) is built on the design system's tokens in
+# app/assets/tailwind/application.css, so those are checked where they are
+# declared. Every other world declares its own palette at the top of its own
+# stylesheet as --w-* custom properties in OKLCH; those are checked per world.
+#
+# Run it after touching any palette:
 #
 #   bin/rails runner script/check-contrast
 #
-# It reads the stylesheet as text rather than through a browser, so it runs in
+# It reads the stylesheets as text rather than through a browser, so it runs in
 # CI without a display and without a build step.
 
-STYLESHEET = Rails.root.join("app/assets/tailwind/application.css")
-WORLDS = STYLE_WORLDS
+BASE_STYLESHEET = Rails.root.join("app/assets/tailwind/application.css")
+WORLD_STYLESHEETS = Rails.root.glob("app/assets/stylesheets/worlds/*.css").sort
 
 CHECKS = [
-  ["body on paper", "body", "paper", 4.5],
-  ["ink on paper", "ink", "paper", 4.5],
-  ["muted on paper", "muted", "paper", 4.5],
-  ["accent on paper", "accent", "paper", 4.5],
-  ["on-accent on accent", "on-accent", "accent", 4.5],
-  ["on-accent on accent-strong", "on-accent", "accent-strong", 4.5],
-  ["plate-body on plate", "plate-body", "plate", 4.5],
-  ["plate-ink on plate", "plate-ink", "plate", 4.5],
-  ["plate-muted on plate", "plate-muted", "plate", 4.5],
-  ["accent-plate on plate", "accent-plate", "plate", 3.0]
+  [ "body on surface", "body", "surface", 4.5 ],
+  [ "ink on surface", "ink", "surface", 4.5 ],
+  [ "muted on surface", "muted", "surface", 4.5 ],
+  [ "accent on surface", "accent", "surface", 4.5 ],
+  [ "on-accent on accent", "on-accent", "accent", 4.5 ]
 ].freeze
 
-def tokens_in(css)
-  css.scan(/--color-([a-z0-9-]+):\s*oklch\(([^)]+)\)/).to_h do |name, raw|
+# The design system's token names, for the base sheet.
+BASE_CHECKS = [
+  [ "body on paper", "body", "paper", 4.5 ],
+  [ "ink on paper", "ink", "paper", 4.5 ],
+  [ "muted on paper", "muted", "paper", 4.5 ],
+  [ "accent on paper", "accent", "paper", 4.5 ],
+  [ "on-accent on accent-strong", "on-accent", "accent-strong", 4.5 ]
+].freeze
+
+def tokens_in(css, prefix)
+  css.scan(/--#{prefix}([a-z0-9-]+):\s*oklch\(([^)]+)\)/).to_h do |name, raw|
     lightness, chroma, hue = raw.delete("%").split.map(&:to_f)
-    [name, [lightness / 100.0, chroma, hue]]
+    [ name, [ lightness / 100.0, chroma, hue ] ]
   end
 end
 
@@ -53,7 +60,7 @@ def luminance(lightness, chroma, hue_degrees)
   green = (-1.2684380046 * l) + (2.6097574011 * m) - (0.3413193965 * s)
   blue = (-0.0041960863 * l) - (0.7034186147 * m) + (1.7076147010 * s)
 
-  [red, green, blue].map { |value| value.clamp(0.0, 1.0) }.then do |r, g, b|
+  [ red, green, blue ].map { |value| value.clamp(0.0, 1.0) }.then do |r, g, b|
     (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
   end
 end
@@ -61,30 +68,42 @@ end
 def ratio(tokens, foreground, background)
   a = luminance(*tokens.fetch(foreground))
   b = luminance(*tokens.fetch(background))
-  high, low = [a, b].max, [a, b].min
+  high, low = [ a, b ].max, [ a, b ].min
   (high + 0.05) / (low + 0.05)
 end
 
-css = STYLESHEET.read
-base = tokens_in(css[css.index("@theme")...css.index('[data-theme="dark"]')])
+def check(label, css, prefix, pairs, failures)
+  tokens = tokens_in(css, prefix)
+  return if tokens.empty?
+
+  puts "--- #{label} ---"
+
+  pairs.each do |description, foreground, background, floor|
+    next unless tokens.key?(foreground) && tokens.key?(background)
+
+    value = ratio(tokens, foreground, background)
+    verdict = value >= floor ? "ok" : "BELOW"
+    failures << "#{label}: #{description} #{format('%.2f', value)} < #{floor}" if value < floor
+    puts format("  %-28s %5.2f:1  floor %.1f  %s", description, value, floor, verdict)
+  end
+end
 
 failures = []
 
-WORLDS.each do |world|
-  start = css.index(%([data-style="#{world}"]))
-  raise "no block for world #{world}" unless start
+base_css = BASE_STYLESHEET.read
+# Only the light-mode declarations: the dark block later in the file redeclares the
+# same names, and a scan that took the last value would report the dark palette as
+# if it were the base one.
+theme_start = base_css.index("@theme")
+dark_start = base_css.index('[data-theme="dark"]', theme_start)
+base_css = base_css[theme_start...dark_start]
+check("institute (design system)", base_css, "color-", BASE_CHECKS.map { |d, f, b, fl| [ d, f, b, fl ] }, failures)
 
-  finish = css.index('[data-style="', start + 10) || css.length
-  tokens = base.merge(tokens_in(css[start...finish]))
+WORLD_STYLESHEETS.each do |path|
+  css = path.read
+  next unless css.match?(/--w-[a-z0-9-]+:\s*oklch/)
 
-  puts "--- #{world} ---"
-
-  CHECKS.each do |description, foreground, background, floor|
-    value = ratio(tokens, foreground, background)
-    verdict = value >= floor ? "ok" : "BELOW"
-    failures << "#{world}: #{description} #{format('%.2f', value)} < #{floor}" if value < floor
-    puts format("  %-28s %5.2f:1  floor %.1f  %s", description, value, floor, verdict)
-  end
+  check(path.basename(".css").to_s, css, "w-", CHECKS, failures)
 end
 
 if failures.any?
@@ -93,4 +112,4 @@ if failures.any?
   exit 1
 end
 
-puts "\nAll #{WORLDS.size} worlds clear every floor."
+puts "\nEvery declared palette clears its floors."

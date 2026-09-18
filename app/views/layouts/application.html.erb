@@ -39,9 +39,14 @@
     <link rel="preload" href="/fonts/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 
     <%# tailwindcss-rails builds app/assets/tailwind/application.css into
-        app/assets/builds/tailwind.css. Referencing it by its real name. %>
+        app/assets/builds/tailwind.css: the baseline components that the
+        transactional pages and the institute world share. %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%# The dock is shared chrome; institute is the default architecture's own
+        sheet. The other seven worlds load their own in their own layouts. %>
+    <%= stylesheet_link_tag "worlds/dock", "worlds/institute", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= javascript_import_module_tag "worlds/institute" %>
 
     <%# Resolve the theme before first paint so nobody sees a flash of the wrong
         one. Inline and nonce-signed on purpose: an external request here would
@@ -52,24 +57,8 @@
           var stored = localStorage.getItem("wt-theme");
           var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
           document.documentElement.dataset.theme = stored || (prefersDark ? "dark" : "light");
-          // The visual world, resolved before first paint for the same reason
-          // the theme is: nobody should watch the site change clothes. A query
-          // parameter wins so a world can be linked to directly; otherwise the
-          // stored choice, otherwise the default.
-          var allowed = <%= raw STYLE_WORLDS.to_json %>;
-          var wanted = new URLSearchParams(location.search).get("style");
-          // A stored world is checked against the list as well. A value left
-          // behind by a world that has been deleted would otherwise render the
-          // page with no world at all, which is how a deleted style comes back
-          // as a ghost.
-          var stored = localStorage.getItem("wt-style");
-          document.documentElement.dataset.style =
-            (allowed.indexOf(wanted) >= 0 ? wanted : null) ||
-            (allowed.indexOf(stored) >= 0 ? stored : null) ||
-            allowed[0];
         } catch (e) {
           document.documentElement.dataset.theme = "light";
-          document.documentElement.dataset.style = "<%= STYLE_WORLDS.first %>";
         }
       })();
     </script>
@@ -95,14 +84,10 @@
 
     <main id="main" class="flex-1">
       <%= render "layouts/flash" %>
-
-    <%= render "layouts/style_switch" %>
       <%= yield %>
     </main>
 
     <%= render "layouts/footer" %>
-  <%# variate:begin %>
-  <% if Rails.env.development? %><script src="http://127.0.0.1:4875/v.js"></script><% end %>
-  <%# variate:end %>
+    <%= render "shared/world_dock" %>
   </body>
 </html>

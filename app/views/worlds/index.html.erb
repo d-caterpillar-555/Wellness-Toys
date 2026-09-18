@@ -1,0 +1,62 @@
+<% content_for :title, "The eight architectures" %>
+<% content_for :meta_description, "Eight architectures of the same shop: an annual report, a single document, a scroll choreography, a floor plan, a command line, a newspaper, a conversation, and a control room." %>
+
+<%# The index of the eight. Not a world itself: the one page that explains the
+    whole set, written in the default architecture's clothes. %>
+<div class="inst">
+  <header class="inst-run">
+    <p class="inst-run__mark"><%= Store.name %></p>
+    <p class="inst-run__section">The eight architectures</p>
+    <p>Design note</p>
+  </header>
+
+  <div class="inst-body">
+    <article class="inst-sheet inst-sheet--wide">
+      <section class="inst-clause">
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">&#167;</p>
+          <h1 class="inst-clause__title">Eight kinds of website, one store.</h1>
+        </div>
+        <p class="inst-standing">
+          These are not colourways. Each world disagrees about what a page is: how many pages
+          there are, how you move between them, and what happens when you scroll. The records
+          behind all eight are the same catalogue and the same library.
+        </p>
+        <p class="inst-note">
+          The dock in the bottom-left corner of every page moves between them. This page is the
+          index: what each one is, in one line.
+        </p>
+      </section>
+
+      <section class="inst-clause">
+        <ul class="inst-worlds">
+          <% @worlds.each do |world| %>
+            <li class="inst-world">
+              <p class="inst-world__tagline"><%= world.tagline %></p>
+              <p class="inst-world__name">
+                <%= link_to world.name, world.home_path, class: "inst-reading-list__title" %>
+              </p>
+              <p class="inst-world__premise"><%= world.premise %></p>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+
+      <section class="inst-clause">
+        <div class="inst-clause__head">
+          <p class="inst-clause__number">&#167;</p>
+          <h2 class="inst-clause__title">What stays the same</h2>
+        </div>
+        <p class="inst-clause__standfirst">
+          The cart, the checkout, the order, the account and the admin keep one sober design in
+          every world. The checkout is its own system, and it should look like one.
+        </p>
+        <div class="inst-actions">
+          <%= link_to "The catalogue", shop_path, class: "inst-link" %>
+          <%= link_to "The library", learn_path, class: "inst-link" %>
+          <%= link_to "Standards", page_path("standards"), class: "inst-link" %>
+        </div>
+      </section>
+    </article>
+  </div>
+</div>
