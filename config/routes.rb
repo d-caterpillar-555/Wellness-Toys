@@ -116,6 +116,12 @@ Rails.application.routes.draw do
     get "/plan/register", to: "plan#register", as: :plan_register
     get "/plan/room/:slug", to: "plan#room", as: :plan_room
     get "/plan/object/:slug", to: "plan#object", as: :plan_object
+
+    # shell: one surface. Paths resolve against the catalogue, the library and
+    # the reference pages; /shell/object/:slug opens the machine with that
+    # object already printed.
+    get "/shell", to: "shell#index", as: :shell
+    get "/shell/object/:slug", to: "shell#object", as: :shell_object
   end
 
   # --- Admin ----------------------------------------------------------------

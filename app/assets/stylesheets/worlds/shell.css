@@ -1,0 +1,190 @@
+/* ==========================================================================
+   shell: the shop as a command line.
+
+   A dark terminal that is not a costume: one mono face for everything, a
+   phosphor ink on a deep green-black (never pure black), amber for anything
+   that went wrong, and one rule line. The palette is declared here as --w-*
+   tokens for script/check-contrast.
+   ========================================================================== */
+
+.shell {
+  --w-surface: oklch(19% 0.022 165);
+  --w-surface-sunk: oklch(15.5% 0.020 165);
+  --w-ink: oklch(90% 0.115 152);
+  --w-body: oklch(84% 0.095 152);
+  --w-muted: oklch(70% 0.055 152);
+  --w-accent: oklch(84% 0.130 85);
+  --w-on-accent: oklch(19% 0.022 165);
+  --w-line: oklch(38% 0.040 160);
+  --shell-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  background-color: var(--w-surface);
+  color: var(--w-body);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--shell-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  min-block-size: 100dvh;
+}
+
+.shell-skip {
+  background-color: var(--w-accent);
+  color: var(--w-on-accent);
+  inset-block-start: -100%;
+  inset-inline-start: 1rem;
+  padding: 0.75rem 1rem;
+  position: absolute;
+  text-decoration: none;
+  z-index: 80;
+}
+
+.shell-skip:focus {
+  inset-block-start: 1rem;
+}
+
+.shell-head {
+  align-items: baseline;
+  border-block-end: 1px solid var(--w-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+}
+
+.shell-head__name {
+  color: var(--w-ink);
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.shell-head__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.shell-head__link {
+  color: var(--w-muted);
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.shell-head__link:hover,
+.shell-head__link:focus-visible {
+  color: var(--w-accent);
+}
+
+/* --- The session --------------------------------------------------------- */
+
+.shell-body {
+  cursor: text;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-inline: auto;
+  max-inline-size: 74rem;
+  min-block-size: 0;
+  padding: 1.25rem;
+  inline-size: 100%;
+}
+
+.shell-screen {
+  flex: 1;
+  min-block-size: 40dvh;
+  overflow-y: auto;
+  scrollbar-color: var(--w-line) transparent;
+}
+
+.shell-line {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.shell-line--echo {
+  color: var(--w-ink);
+  margin-block-start: 0.4rem;
+}
+
+.shell-line--muted {
+  color: var(--w-muted);
+}
+
+.shell-line--accent {
+  color: var(--w-accent);
+}
+
+.shell-line--strong {
+  color: var(--w-ink);
+  font-weight: 600;
+}
+
+.shell-line--error {
+  color: var(--w-accent);
+}
+
+.shell-line--error::before {
+  content: "! ";
+}
+
+.shell-link {
+  color: var(--w-accent);
+  text-underline-offset: 3px;
+}
+
+.shell-prompt {
+  align-items: baseline;
+  border-block-start: 1px solid var(--w-line);
+  display: flex;
+  gap: 0.6rem;
+  margin-block-start: 0.75rem;
+  padding-block-start: 0.75rem;
+}
+
+.shell-prompt__label {
+  color: var(--w-accent);
+  font-weight: 600;
+}
+
+.shell-prompt__input {
+  background: transparent;
+  border: 0;
+  caret-color: var(--w-accent);
+  color: var(--w-ink);
+  flex: 1;
+  font-family: inherit;
+  font-size: inherit;
+  min-block-size: 2.75rem;
+  outline: none;
+}
+
+.shell-prompt__input::placeholder {
+  color: var(--w-muted);
+  opacity: 0.7;
+}
+
+.shell-fallback {
+  border-block-start: 1px solid var(--w-line);
+  color: var(--w-muted);
+  padding-block-start: 1rem;
+}
+
+.shell-fallback a {
+  color: var(--w-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-line {
+    animation: shell-in 120ms ease-out both;
+  }
+}
+
+@keyframes shell-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+}
