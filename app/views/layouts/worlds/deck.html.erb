@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <%= render "layouts/world_head", stylesheet: "worlds/deck", module_name: "worlds/deck" %>
+  </head>
+
+  <%# A console. The sidebar is chrome; everything else is a pane. %>
+  <body class="deck">
+    <a class="deck-skip" href="#main">Skip to content</a>
+
+    <%= render "shared/age_gate" unless age_confirmed? %>
+    <%= render "shared/consent_banner" if age_confirmed? && !consent_decided? %>
+
+    <aside class="deck-side">
+      <p class="deck-side__brand"><%= link_to "#{Store.name} deck", deck_path %></p>
+      <nav aria-label="Panes">
+        <ul class="deck-nav">
+          <li><%= link_to "Catalogue", deck_path, class: "deck-nav__link", aria: { current: ("page" if current_page?(deck_path) || action_name == "item") } %></li>
+          <li><%= link_to "Library", deck_library_path, class: "deck-nav__link", aria: { current: ("page" if current_page?(deck_library_path)) } %></li>
+          <li><%= link_to "Policies", deck_policies_path, class: "deck-nav__link", aria: { current: ("page" if current_page?(deck_policies_path)) } %></li>
+          <li><%= link_to "The shop", root_path, class: "deck-nav__link" %></li>
+        </ul>
+      </nav>
+
+      <div class="deck-side__keys" aria-hidden="true">
+        <div><span class="deck-side__key">/</span> filter</div>
+        <div><span class="deck-side__key">j</span> <span class="deck-side__key">k</span> move</div>
+        <div><span class="deck-side__key">enter</span> open record</div>
+        <div><span class="deck-side__key">esc</span> close</div>
+        <div><span class="deck-side__key">cmd k</span> filter</div>
+      </div>
+    </aside>
+
+    <%= yield %>
+
+    <%= render "shared/world_dock" %>
+  </body>
+</html>

@@ -90,7 +90,7 @@ module Worlds
           {
             name: topic.slug,
             type: "dir",
-            children: policy_scope(Article).published.kept.where(primary_topic_id: topic.id).recent_first.map do |article|
+            children: policy_scope(Article).published.kept.where(primary_topic_id: topic.id).includes(:author, :sources).recent_first.map do |article|
               {
                 name: article.slug,
                 type: "page",

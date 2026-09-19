@@ -1,0 +1,25 @@
+<% content_for :title, "Policies" %>
+<% content_for :meta_description, "The small print as a console pane: standards, shipping, returns, privacy, terms and accessibility." %>
+
+<header class="deck-top">
+  <h1 class="deck-top__title">Policies</h1>
+  <p class="deck-top__count"><%= pluralize(@pages.size, "policy") %></p>
+</header>
+
+<main class="deck-main" id="main">
+  <ul class="deck-list">
+    <% @pages.each do |page| %>
+      <li class="deck-list__row">
+        <div>
+          <%= link_to page.title, page_path(page.slug), class: "deck-list__link" %>
+          <% if page.paragraphs.any? %>
+            <p class="deck-note"><%= truncate(page.paragraphs.first, length: 200) %></p>
+          <% else %>
+            <p class="deck-note">Not yet written.</p>
+          <% end %>
+        </div>
+        <span class="deck-list__meta"><%= page.slug %></span>
+      </li>
+    <% end %>
+  </ul>
+</main>

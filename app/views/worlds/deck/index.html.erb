@@ -1,0 +1,71 @@
+<% content_for :title, "Catalogue" %>
+<% content_for :meta_description, "The catalogue as a console: filter, sort and open a record without leaving the page." %>
+
+<header class="deck-top">
+  <h1 class="deck-top__title">Catalogue</h1>
+  <p class="deck-top__count" data-deck-count><%= pluralize(@objects.size, "object") %></p>
+  <div class="deck-filter">
+    <label class="deck-filter__label" for="deck-filter">Filter</label>
+    <input class="deck-filter__input"
+           id="deck-filter"
+           data-deck-filter
+           type="search"
+           placeholder="name, department, maker or SKU"
+           autocomplete="off">
+  </div>
+</header>
+
+<main class="deck-main" id="main">
+  <div class="deck-panel">
+    <table class="deck-table" data-deck-table>
+      <thead>
+        <tr>
+          <th scope="col"><button class="deck-table__sort" type="button" data-deck-sort="name">Object</button></th>
+          <th scope="col"><button class="deck-table__sort" type="button" data-deck-sort="department">Department</button></th>
+          <th scope="col"><button class="deck-table__sort" type="button" data-deck-sort="maker">Maker</button></th>
+          <th scope="col">Materials</th>
+          <th scope="col"><button class="deck-table__sort" type="button" data-deck-sort="price">Price</button></th>
+          <th scope="col">Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @objects.each do |product| %>
+          <tr data-deck-row
+              data-slug="<%= product.slug %>"
+              data-name="<%= product.name.downcase %>"
+              data-department="<%= (product.primary_category&.name || "Catalogue").downcase %>"
+              data-maker="<%= (product.brand&.name || "").downcase %>"
+              data-price="<%= product.lowest_price_cents %>"
+              data-search="<%= [ product.name, product.sku, product.primary_category&.name, product.brand&.name ].compact.join(" ").downcase %>">
+            <td>
+              <span class="deck-table__name"><%= link_to product.name, deck_item_path(product.slug), class: "deck-table__link" %></span>
+              <div class="deck-table__flag"><%= product.sku %></div>
+            </td>
+            <td class="deck-table__flag"><%= product.primary_category&.name || "Catalogue" %></td>
+            <td class="deck-table__flag"><%= product.brand&.name || "-" %></td>
+            <td class="deck-table__flag"><%= truncate(product.materials.to_s, length: 44) %></td>
+            <td class="deck-table__number"><%= price(product.lowest_price_cents) %></td>
+            <td class="deck-table__flag <%= product.in_stock? ? "deck-table__flag--accent" : "deck-table__flag--ember" %>">
+              <%= product.in_stock? ? "in stock" : "out" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="deck-note">
+    <%= link_to "The library", deck_library_path %> has the publishing;
+    <%= link_to "the policies", deck_policies_path %> has the small print. Every record also has
+    <%= link_to "a page of its own", deck_item_path(@objects.first&.slug || "catalogue") %>.
+  </p>
+</main>
+
+<%# Where a record opens: a side sheet, filled from the same data the table is
+    rendered from. %>
+<aside class="deck-sheet" data-deck-sheet hidden aria-label="Record">
+  <button class="deck-sheet__close" type="button" data-deck-sheet-close>Close (esc)</button>
+  <div data-deck-sheet-body></div>
+</aside>
+
+<script type="application/json" data-deck-records nonce="<%= content_security_policy_nonce %>"><%= raw json_escape(@records.to_json) %></script>

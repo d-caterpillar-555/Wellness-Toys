@@ -1,0 +1,98 @@
+<% content_for :title, @product.name %>
+<% content_for :meta_description, @product.subtitle.presence || "#{@product.name}: the full record, with specifications and the basket." %>
+
+<header class="deck-top">
+  <p class="deck-top__count">
+    <%= link_to "Catalogue", deck_path, class: "deck-table__link" %>
+    &middot; <%= @product.sku %>
+  </p>
+  <h1 class="deck-top__title"><%= @product.name %></h1>
+  <p class="deck-top__count">
+    <%= @department&.name || "Catalogue" %>
+    <% if @product.brand %> &middot; <%= @product.brand.name %><% end %>
+  </p>
+</header>
+
+<main class="deck-main" id="main">
+  <div class="deck-record">
+    <div class="deck-record__plate"><%= product_cover_tag(@product) %></div>
+
+    <div>
+      <p class="deck-record__price"><%= price(@product.lowest_price_cents) %></p>
+
+      <dl class="deck-sheet__figures">
+        <% if @product.materials.present? %>
+          <div>
+            <dt>Materials</dt>
+            <dd><%= @product.materials %></dd>
+          </div>
+        <% end %>
+        <div>
+          <dt>Body safe</dt>
+          <dd><%= @product.body_safe? ? "Yes" : "No" %></dd>
+        </div>
+        <% if @product.safety_notes.present? %>
+          <div>
+            <dt>Safety notes</dt>
+            <dd><%= @product.safety_notes %></dd>
+          </div>
+        <% end %>
+        <% if @product.dimensions.present? %>
+          <div>
+            <dt>Dimensions</dt>
+            <dd><%= @product.dimensions %></dd>
+          </div>
+        <% end %>
+        <% if @product.weight_grams.present? %>
+          <div>
+            <dt>Weight</dt>
+            <dd><%= @product.weight_grams %> g</dd>
+          </div>
+        <% end %>
+        <div>
+          <dt>Stock</dt>
+          <dd><%= @product.in_stock? ? "In stock" : "Out of stock" %></dd>
+        </div>
+      </dl>
+
+      <% if @product.description.present? %>
+        <p class="deck-note"><%= @product.description %></p>
+      <% end %>
+      <% if @product.care_instructions.present? %>
+        <p class="deck-note"><%= @product.care_instructions %></p>
+      <% end %>
+
+      <% if @variants.any? %>
+        <%= form_with url: cart_items_path, method: :post, class: "deck-buy" do %>
+          <label class="deck-filter__label" for="variant_id">Edition</label>
+          <%= select_tag "variant_id",
+                options_for_select(@variants.map { |variant|
+                  label = strip_tags(price(variant.price_cents, currency: variant.currency))
+                  [ "#{variant.name} - #{label}", variant.id ]
+                }), id: "variant_id" %>
+
+          <%= select_tag "quantity", options_for_select(quantity_options), id: "quantity", aria: { label: "Quantity" } %>
+          <%= submit_tag t("products.add_to_cart"), class: "deck-buy__submit" %>
+        <% end %>
+      <% else %>
+        <p class="deck-note">No edition of this object is available right now.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @related.any? %>
+    <section aria-labelledby="related-heading">
+      <h2 class="deck-top__title" id="related-heading">Also in <%= @department&.name || "the catalogue" %></h2>
+      <ul class="deck-list">
+        <% @related.each do |product| %>
+          <li class="deck-list__row">
+            <%= link_to product.name, deck_item_path(product.slug), class: "deck-list__link" %>
+            <span class="deck-list__meta"><%= product.sku %> &middot; <%= price(product.lowest_price_cents) %></span>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+</main>
+
+<script type="application/json" data-deck-records nonce="<%= content_security_policy_nonce %>"><%= raw json_escape(@records.to_json) %></script>

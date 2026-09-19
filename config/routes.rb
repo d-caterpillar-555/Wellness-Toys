@@ -136,6 +136,13 @@ Rails.application.routes.draw do
     get "/desk", to: "desk#index", as: :desk
     get "/desk/shelf", to: "desk#shelf", as: :desk_shelf
     get "/desk/item/:slug", to: "desk#item", as: :desk_item
+
+    # deck: an operations console. The catalogue as a table, a record as a side
+    # sheet, the library and the policies as panes.
+    get "/deck", to: "deck#index", as: :deck
+    get "/deck/item/:slug", to: "deck#item", as: :deck_item
+    get "/deck/library", to: "deck#reading", as: :deck_library
+    get "/deck/policies", to: "deck#paperwork", as: :deck_policies
   end
 
   # --- Admin ----------------------------------------------------------------
