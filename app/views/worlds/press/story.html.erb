@@ -1,0 +1,65 @@
+<% content_for :title, @article.title %>
+<% content_for :meta_description, @article.excerpt.presence || "A piece from the #{Store.name} library, reprinted with its sources." %>
+
+<main class="press-page" id="main">
+  <article>
+    <header>
+      <p class="press-kicker"><%= @topic.name %> &middot; <%= @article.kind %></p>
+      <h1 class="press-headline"><%= @article.title %></h1>
+      <% if @article.excerpt.present? %>
+        <p class="press-deck"><%= @article.excerpt %></p>
+      <% end %>
+      <p class="press-byline">
+        <% if @article.author %>By <%= @article.author.name %><% else %>Unsigned<% end %>
+        <% if @article.author&.credentials.present? %> &middot; <%= @article.author.credentials %><% end %>
+        <% if @article.published_at %> &middot; <%= @article.published_at.strftime("%-d %B %Y") %><% end %>
+        &middot; <%= reading_time(@article) %>
+      </p>
+    </header>
+
+    <div class="press-columns press-body">
+      <%= simple_format(@article.body) %>
+    </div>
+
+    <section class="press-section" aria-labelledby="sources-heading">
+      <h2 class="press-section__title" id="sources-heading">Sources, printed</h2>
+      <% if @article.sources.any? %>
+        <ol class="press-sources">
+          <% @article.sources.each do |source| %>
+            <li class="press-sources__item">
+              <%= source.title %>.
+              <%= [ source.publisher, source.published_on&.year ].compact.join(", ") %>.
+              <%= link_to "Read it", source.url, rel: "noopener noreferrer", target: "_blank" %>
+            </li>
+          <% end %>
+        </ol>
+      <% else %>
+        <p class="press-deck">This piece does not cite external sources.</p>
+      <% end %>
+    </section>
+
+    <% if @related.any? %>
+      <section class="press-section" aria-labelledby="related-heading">
+        <h2 class="press-section__title" id="related-heading">Also in this issue</h2>
+        <% @related.each do |article| %>
+          <% topic = article.primary_topic || article.topics.first %>
+          <article class="press-story">
+            <h3 class="press-story__headline">
+              <%= link_to article.title,
+                    topic ? press_story_path(topic.slug, article.slug) : press_issue_path %>
+            </h3>
+            <p class="press-byline">
+              <% if article.author %>By <%= article.author.name %><% else %>Unsigned<% end %>
+            </p>
+          </article>
+        <% end %>
+      </section>
+    <% end %>
+  </article>
+
+  <footer class="press-folio">
+    <span><%= Store.name %> &middot; No. 1</span>
+    <span>Feature</span>
+    <span><%= link_to "This issue", press_issue_path %></span>
+  </footer>
+</main>

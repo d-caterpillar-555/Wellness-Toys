@@ -1,0 +1,105 @@
+<% content_for :title, "The front page" %>
+<% content_for :meta_description, "#{Store.name}, set as a newspaper: the shop's case, the objects reviewed in this issue, features from the library, and the notices." %>
+
+<main class="press-page" id="main">
+  <div class="press-front">
+    <div>
+      <article class="press-lead">
+        <p class="press-kicker">The shop states its case</p>
+        <h1 class="press-headline">Everything we sell has a materials list, and everything we publish has a source.</h1>
+        <p class="press-deck">
+          A small catalogue, chosen against written standards, and an education library with the
+          evidence attached. No medical claims, and nothing invented to fill a column.
+        </p>
+        <p class="press-byline">From the standards desk</p>
+        <div class="press-body">
+          <p>
+            We stock sexual health and wellness products and we publish the education that
+            explains them. The order is deliberate: the specification comes before the
+            description, and the source comes before the claim.
+          </p>
+          <p>
+            The category norm is a black page, a neon glow and a euphemism. This paper is the
+            opposite of that, and the plainness is the argument.
+          </p>
+        </div>
+      </article>
+
+      <section class="press-section" aria-labelledby="reviews-heading">
+        <h2 class="press-section__title" id="reviews-heading">Reviewed in this issue</h2>
+        <ol class="press-reviews">
+          <% @reviewed.each do |product| %>
+            <%= render "worlds/press/review", product: product %>
+          <% end %>
+        </ol>
+        <p><%= link_to "The whole review section", press_catalogue_path %></p>
+      </section>
+    </div>
+
+    <aside>
+      <section class="press-figures" aria-labelledby="figures-heading">
+        <h2 class="press-figures__title" id="figures-heading">The shop in figures</h2>
+        <div class="press-figures__row">
+          <span class="press-figures__label">Objects in the catalogue</span>
+          <span class="press-figures__value"><%= @counts[:objects] %></span>
+        </div>
+        <div class="press-figures__row">
+          <span class="press-figures__label">Departments</span>
+          <span class="press-figures__value"><%= @counts[:departments] %></span>
+        </div>
+        <div class="press-figures__row">
+          <span class="press-figures__label">Pieces published</span>
+          <span class="press-figures__value"><%= @counts[:pieces] %></span>
+        </div>
+        <div class="press-figures__row">
+          <span class="press-figures__label">Analytics vendors</span>
+          <span class="press-figures__value">none</span>
+        </div>
+        <div class="press-figures__row">
+          <span class="press-figures__label">Billing descriptor</span>
+          <span class="press-figures__value">plain</span>
+        </div>
+      </section>
+
+      <section class="press-section" aria-labelledby="features-heading">
+        <h2 class="press-section__title" id="features-heading">From the library</h2>
+        <% @features.each do |article| %>
+          <% topic = article.primary_topic || article.topics.first %>
+          <article class="press-story">
+            <h3 class="press-story__headline">
+              <%= link_to article.title,
+                    topic ? press_story_path(topic.slug, article.slug) : press_issue_path %>
+            </h3>
+            <% if article.excerpt.present? %>
+              <p class="press-story__deck"><%= article.excerpt %></p>
+            <% end %>
+            <p class="press-byline">
+              <% if article.author %>By <%= article.author.name %><% else %>Unsigned<% end %>
+              <% if article.published_at %> &middot; <%= article.published_at.strftime("%-d %B %Y") %><% end %>
+            </p>
+          </article>
+        <% end %>
+      </section>
+
+      <section class="press-section" aria-labelledby="notices-heading">
+        <h2 class="press-section__title" id="notices-heading">Notices</h2>
+        <div class="press-notice">
+          <h3 class="press-notice__title">Shipping</h3>
+          <p>Plain packaging, no product name on the outside, a billing line that names this company and nothing else.</p>
+          <p><%= link_to "Read the notice in full", page_path("shipping") %></p>
+        </div>
+        <div class="press-notice">
+          <h3 class="press-notice__title">Privacy</h3>
+          <p>No analytics, no ad pixels, no session recording. Purchase history reveals health intent and is treated accordingly.</p>
+          <p><%= link_to "Read the notice in full", page_path("privacy") %></p>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <footer class="press-folio">
+    <span><%= Store.name %> &middot; No. 1</span>
+    <span>Front page</span>
+    <span><%= link_to "The eight architectures", worlds_path %></span>
+  </footer>
+</main>

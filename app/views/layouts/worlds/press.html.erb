@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <%# press is print: no module of its own. %>
+    <%= render "layouts/world_head", stylesheet: "worlds/press", module_name: nil %>
+  </head>
+
+  <body class="press">
+    <a class="press-skip" href="#main">Skip to content</a>
+
+    <%= render "shared/age_gate" unless age_confirmed? %>
+    <%= render "shared/consent_banner" if age_confirmed? && !consent_decided? %>
+
+    <%# The paper's own furniture: masthead, edition line, section nav. It sits
+        in the layout because every page of the paper carries it. %>
+    <header class="press-masthead">
+      <div class="press-masthead__rule">
+        <span>No. 1</span>
+        <span>Published by <%= Store.legal_entity %></span>
+        <span><%= Date.current.strftime("%A %-d %B %Y") %></span>
+      </div>
+
+      <p class="press-title"><%= link_to Store.name, press_path, class: "press-title__link" %></p>
+      <p class="press-title__sub"><%= Store.tagline %></p>
+
+      <nav class="press-nav" aria-label="Sections of the paper">
+        <%= link_to "Front page", press_path, class: "press-nav__link", aria: { current: ("page" if current_page?(press_path)) } %>
+        <%= link_to "Reviews", press_catalogue_path, class: "press-nav__link", aria: { current: ("page" if current_page?(press_catalogue_path)) } %>
+        <%= link_to "This issue", press_issue_path, class: "press-nav__link", aria: { current: ("page" if current_page?(press_issue_path)) } %>
+        <%= link_to "Notices", press_notices_path, class: "press-nav__link", aria: { current: ("page" if current_page?(press_notices_path)) } %>
+        <%= link_to "The shop itself", root_path, class: "press-nav__link" %>
+      </nav>
+    </header>
+
+    <%= yield %>
+
+    <%= render "shared/world_dock" %>
+  </body>
+</html>

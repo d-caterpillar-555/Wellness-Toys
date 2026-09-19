@@ -18,7 +18,7 @@
       <h1 class="fig-pieces__title">The pieces</h1>
       <p class="fig-pieces__standfirst">
         <%= pluralize(@pieces.size, "object") %> in
-        <%= pluralize(@departments.size, "department") %>. Each one is documented before it is
+        <%= pluralize(@departments.length, "department") %>. Each one is documented before it is
         described.
       </p>
     </header>

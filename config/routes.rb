@@ -122,6 +122,14 @@ Rails.application.routes.draw do
     # object already printed.
     get "/shell", to: "shell#index", as: :shell
     get "/shell/object/:slug", to: "shell#object", as: :shell_object
+
+    # press: a newspaper. A front page, the review section, the issue's
+    # features, a story reprinted with its sources, and the notices.
+    get "/press", to: "press#index", as: :press
+    get "/press/catalogue", to: "press#reviews", as: :press_catalogue
+    get "/press/issue", to: "press#issue", as: :press_issue
+    get "/press/story/:topic_slug/:slug", to: "press#story", as: :press_story
+    get "/press/notices", to: "press#notices", as: :press_notices
   end
 
   # --- Admin ----------------------------------------------------------------

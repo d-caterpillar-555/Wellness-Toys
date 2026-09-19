@@ -35,7 +35,9 @@
 
 <%= stylesheet_link_tag "tailwind", stylesheet, "data-turbo-track": "reload" %>
 <%= javascript_importmap_tags %>
-<%= javascript_import_module_tag module_name %>
+<%# Most worlds ship one module; a print world ships none. %>
+<% if module_name.present? %><%# Most worlds ship one module; a print world ships none. %>
+<% if module_name.present? %><%= javascript_import_module_tag module_name %><% end %><% end %>
 
 <script nonce="<%= content_security_policy_nonce %>">
   (function () {
