@@ -130,6 +130,12 @@ Rails.application.routes.draw do
     get "/press/issue", to: "press#issue", as: :press_issue
     get "/press/story/:topic_slug/:slug", to: "press#story", as: :press_story
     get "/press/notices", to: "press#notices", as: :press_notices
+
+    # desk: a conversation. The transcript navigates; the shelf is the whole
+    # catalogue for anyone who would rather browse it quietly.
+    get "/desk", to: "desk#index", as: :desk
+    get "/desk/shelf", to: "desk#shelf", as: :desk_shelf
+    get "/desk/item/:slug", to: "desk#item", as: :desk_item
   end
 
   # --- Admin ----------------------------------------------------------------

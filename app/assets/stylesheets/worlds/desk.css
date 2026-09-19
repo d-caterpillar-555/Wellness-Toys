@@ -1,0 +1,527 @@
+/* ==========================================================================
+   desk: the shop as a conversation.
+
+   A warm lobby: deep green, brass and cream, soft shadows, and type that
+   separates the two voices - a serif for the desk, a sans for the visitor.
+   Tokens are declared as --w-* for script/check-contrast.
+   ========================================================================== */
+
+.desk {
+  --w-surface: oklch(94.5% 0.012 85);
+  --w-surface-sunk: oklch(90.5% 0.014 85);
+  --w-ink: oklch(25.5% 0.035 158);
+  --w-body: oklch(35% 0.030 158);
+  --w-muted: oklch(49% 0.025 158);
+  --w-accent: oklch(50% 0.085 78);
+  --w-on-accent: oklch(96.5% 0.010 85);
+  --w-line: oklch(80% 0.016 85);
+  --desk-shadow: 0 18px 40px -24px oklch(25.5% 0.035 158 / 0.35);
+
+  background-color: var(--w-surface);
+  color: var(--w-body);
+  font-family: var(--font-sans);
+  min-block-size: 100dvh;
+}
+
+.desk-skip {
+  background-color: var(--w-ink);
+  color: var(--w-surface);
+  inset-block-start: -100%;
+  inset-inline-start: 1rem;
+  padding: 0.75rem 1rem;
+  position: absolute;
+  text-decoration: none;
+  z-index: 80;
+}
+
+.desk-skip:focus {
+  inset-block-start: 1rem;
+}
+
+.desk-masthead {
+  align-items: baseline;
+  border-block-end: 1px solid var(--w-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+}
+
+.desk-wordmark {
+  color: var(--w-ink);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.desk-wordmark a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.desk-masthead__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.desk-masthead__link {
+  color: var(--w-muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.desk-masthead__link:hover,
+.desk-masthead__link:focus-visible,
+.desk-masthead__link[aria-current="page"] {
+  color: var(--w-accent);
+}
+
+/* --- The room ------------------------------------------------------------ */
+
+.desk-room {
+  display: grid;
+  gap: 2rem;
+  margin-inline: auto;
+  max-inline-size: 78rem;
+  padding: 2rem 1.5rem 4rem;
+}
+
+@media (min-width: 62rem) {
+  .desk-room {
+    gap: 3.5rem;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  }
+}
+
+.desk-intro {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0 0 1rem;
+}
+
+.desk-note {
+  color: var(--w-muted);
+  font-size: 0.875rem;
+  margin: 0 0 1.5rem;
+  max-inline-size: 52ch;
+}
+
+/* --- The transcript ------------------------------------------------------ */
+
+.desk-transcript {
+  background-color: var(--w-surface);
+  border: 1px solid var(--w-line);
+  box-shadow: var(--desk-shadow);
+  display: grid;
+  gap: 1rem;
+  max-block-size: 60dvh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  scrollbar-color: var(--w-line) transparent;
+}
+
+.desk-turn {
+  margin: 0;
+  max-inline-size: 62ch;
+}
+
+.desk-turn__body {
+  margin: 0;
+}
+
+.desk-turn--desk .desk-turn__body {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.desk-turn--you {
+  color: var(--w-ink);
+  font-weight: 500;
+  justify-self: end;
+  text-align: right;
+}
+
+.desk-turn--you .desk-turn__body::before {
+  color: var(--w-muted);
+  content: "you: ";
+  font-weight: 400;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .desk-turn,
+  .desk-offer {
+    animation: desk-rise 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes desk-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.desk-offer {
+  background-color: var(--w-surface-sunk);
+  border-inline-start: 3px solid var(--w-accent);
+  padding: 0.9rem 1rem;
+}
+
+.desk-offer__name {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  margin: 0 0 0.2rem;
+}
+
+.desk-offer__name a {
+  color: var(--w-ink);
+  text-decoration: none;
+}
+
+.desk-offer__name a:hover,
+.desk-offer__name a:focus-visible {
+  color: var(--w-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.desk-offer__meta {
+  color: var(--w-muted);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  margin: 0 0 0.4rem;
+  text-transform: uppercase;
+}
+
+.desk-offer__line {
+  margin: 0 0 0.6rem;
+}
+
+.desk-offer__actions {
+  margin: 0;
+}
+
+.desk-offer__button {
+  background-color: var(--w-ink);
+  border: 0;
+  color: var(--w-surface);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  min-block-size: 2.5rem;
+  padding-inline: 0.9rem;
+}
+
+.desk-offer__button:hover,
+.desk-offer__button:focus-visible {
+  background-color: var(--w-accent);
+}
+
+.desk-offer__button[disabled] {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.desk-link {
+  color: var(--w-accent);
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+}
+
+/* --- Replies and the visitor's own words --------------------------------- */
+
+.desk-replies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-start: 1rem;
+}
+
+.desk-reply {
+  background-color: var(--w-surface);
+  border: 1px solid var(--w-line);
+  border-radius: 999px;
+  color: var(--w-ink);
+  cursor: pointer;
+  font-size: 0.875rem;
+  min-block-size: 2.75rem;
+  padding-inline: 1rem;
+}
+
+.desk-reply:hover,
+.desk-reply:focus-visible {
+  border-color: var(--w-accent);
+  color: var(--w-accent);
+}
+
+.desk-form {
+  align-items: center;
+  border-block-start: 1px solid var(--w-line);
+  display: flex;
+  gap: 0.75rem;
+  margin-block-start: 1.25rem;
+  padding-block-start: 1rem;
+}
+
+.desk-form__input {
+  background-color: var(--w-surface);
+  border: 1px solid var(--w-line);
+  color: var(--w-ink);
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  min-block-size: 2.75rem;
+  padding-inline: 0.75rem;
+}
+
+.desk-form__input:focus-visible {
+  border-color: var(--w-accent);
+  outline: 2px solid var(--w-accent);
+  outline-offset: 1px;
+}
+
+.desk-form__submit {
+  background-color: transparent;
+  border: 1px solid var(--w-ink);
+  color: var(--w-ink);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  min-block-size: 2.75rem;
+  padding-inline: 1rem;
+  text-transform: uppercase;
+}
+
+.desk-form__submit:hover,
+.desk-form__submit:focus-visible {
+  background-color: var(--w-ink);
+  color: var(--w-surface);
+}
+
+/* --- The shelf beside the desk ------------------------------------------- */
+
+.desk-side {
+  align-self: start;
+}
+
+.desk-side__title {
+  border-block-end: 1px solid var(--w-ink);
+  color: var(--w-ink);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  margin: 1.75rem 0 0.75rem;
+  padding-block-end: 0.4rem;
+}
+
+.desk-side__title:first-child {
+  margin-block-start: 0;
+}
+
+.desk-shelf {
+  display: grid;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.desk-shelf__item {
+  border-block-end: 1px solid var(--w-line);
+  padding-block-end: 0.75rem;
+}
+
+.desk-shelf__link {
+  color: var(--w-ink);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.desk-shelf__link:hover,
+.desk-shelf__link:focus-visible {
+  color: var(--w-accent);
+}
+
+.desk-shelf__meta {
+  color: var(--w-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  margin: 0.2rem 0 0;
+  text-transform: uppercase;
+}
+
+/* --- The quiet shelf page ------------------------------------------------ */
+
+.desk-page {
+  margin-inline: auto;
+  max-inline-size: 78rem;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.desk-grid {
+  display: grid;
+  gap: 2rem 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+
+@media (min-width: 40rem) {
+  .desk-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 68rem) {
+  .desk-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.desk-card__plate {
+  background-color: var(--w-surface-sunk);
+  border: 1px solid var(--w-line);
+}
+
+.desk-card__plate img {
+  aspect-ratio: 4 / 5;
+  block-size: auto;
+  display: block;
+  inline-size: 100%;
+  object-fit: contain;
+  padding: 8%;
+}
+
+.desk-card__name {
+  color: var(--w-ink);
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  margin-block-start: 0.6rem;
+  text-decoration: none;
+}
+
+.desk-card__name:hover,
+.desk-card__name:focus-visible {
+  color: var(--w-accent);
+}
+
+.desk-card__meta {
+  color: var(--w-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  margin: 0.2rem 0 0;
+  text-transform: uppercase;
+}
+
+/* --- One object, brought to the desk ------------------------------------- */
+
+.desk-item {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 56rem) {
+  .desk-item {
+    gap: 3rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.desk-item__plate {
+  background-color: var(--w-surface-sunk);
+  border: 1px solid var(--w-line);
+}
+
+.desk-item__plate img {
+  aspect-ratio: 1;
+  block-size: auto;
+  display: block;
+  inline-size: 100%;
+  object-fit: contain;
+  padding: 6%;
+}
+
+.desk-item__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.4vw, 2.25rem);
+  font-weight: 400;
+  margin: 0.35rem 0 0.5rem;
+}
+
+.desk-item__price {
+  color: var(--w-accent);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin: 0 0 1.25rem;
+}
+
+.desk-figures {
+  border-block-start: 1px solid var(--w-ink);
+  margin: 0 0 1.25rem;
+}
+
+.desk-figure {
+  border-block-end: 1px solid var(--w-line);
+  display: grid;
+  gap: 0.2rem 1rem;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  padding-block: 0.55rem;
+}
+
+.desk-figure dt {
+  color: var(--w-muted);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.desk-figure dd {
+  color: var(--w-ink);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.desk-buy {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+.desk-buy select {
+  background-color: var(--w-surface);
+  border: 1px solid var(--w-line);
+  color: var(--w-ink);
+  font-size: 0.9375rem;
+  min-block-size: 2.75rem;
+  padding-inline: 0.6rem;
+}
+
+.desk-buy__submit {
+  background-color: var(--w-ink);
+  border: 0;
+  color: var(--w-surface);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  min-block-size: 2.75rem;
+  padding-inline: 1.25rem;
+}
+
+.desk-buy__submit:hover,
+.desk-buy__submit:focus-visible {
+  background-color: var(--w-accent);
+}
