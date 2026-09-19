@@ -37,12 +37,13 @@
         </div>
 
         <p class="inst-reading-list__meta">
-          <%= [
-                (@article.author ? link_to(@article.author.name, learn_expert_path(@article.author), class: "inst-link") : nil),
-                @article.author&.credentials.presence,
-                @article.published_at&.strftime("%d %B %Y"),
-                reading_time(@article)
-              ].compact.join(" &middot; ").html_safe %>
+          <% if @article.author %>
+            <%= link_to @article.author.name, learn_expert_path(@article.author), class: "inst-link" %>
+            <% if @article.author.credentials.present? %> &middot; <%= @article.author.credentials %><% end %>
+            &middot;
+          <% end %>
+          <% if @article.published_at %><%= @article.published_at.strftime("%d %B %Y") %> &middot; <% end %>
+          <%= reading_time(@article) %>
         </p>
 
         <% if @article.excerpt.present? %>
