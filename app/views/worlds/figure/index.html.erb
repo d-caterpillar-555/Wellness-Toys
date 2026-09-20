@@ -1,9 +1,9 @@
 <% content_for :title, "Figure" %>
-<% content_for :meta_description, "The shop as a figure study: a drawn figure moves through five poses as you scroll, and each pose carries a chapter - the catalogue, the library, the standards." %>
+<% content_for :meta_description, "The shop as a figure study: a filmed pair, scrubbed by your reading. The first chapter holds the first frame; the last holds the kiss." %>
 
-<%# The choreography. One figure, five poses, five chapters. The figure is
-    drawn from a skeleton in the browser, so the pose changes with the reader
-    rather than between screens: see app/javascript/worlds/figure.js. %>
+<%# The choreography. One film, five chapters. The film is scrubbed by the
+    reader's progress through the chapters rather than played on its own, so
+    the picture answers the words: see app/javascript/worlds/figure.js. %>
 <div class="figure">
   <header class="fig-masthead">
     <p class="fig-wordmark"><%= Store.name %></p>
@@ -16,7 +16,7 @@
     </nav>
   </header>
 
-  <ol class="fig-rail" aria-label="Poses">
+  <ol class="fig-rail" aria-label="Chapters">
     <% [ [ "stand", "Stand" ], [ "reach", "Reach" ], [ "fold", "Fold" ], [ "rest", "Rest" ], [ "open", "Open" ] ].each do |pose, label| %>
       <li>
         <a class="fig-rail__link" href="#pose-<%= pose %>" data-figure-link data-pose="<%= pose %>">
@@ -26,14 +26,29 @@
     <% end %>
   </ol>
 
-  <div class="fig-stage" data-figure-stage>
-    <div class="fig-figure" aria-hidden="true">
-      <svg class="fig-figure__svg" data-figure-svg viewBox="0 0 200 400" role="presentation"></svg>
+  <div class="fig-stage" data-sequence-stage>
+    <div class="fig-figure"
+         data-sequence-layer
+         data-sequence-base="<%= sequence_base_path(:kiss) %>"
+         data-sequence-count="<%= sequence(:kiss)[:count] %>"
+         aria-hidden="true">
+      <%# The plates are a rendered study of one embrace: two models, whole, on a
+          transparent ground, so they stand on the world's dusk rather than in a
+          rectangle. Two thousand frames, and the reader's progress is the
+          playhead. The module builds the second plate it decodes into: see
+          app/javascript/lib/frame_sequence.js. %>
+      <%= image_tag sequence_path(:kiss, 1),
+            class: "fig-figure__frame is-current",
+            data: { sequence_frame: "current" },
+            alt: "",
+            width: sequence(:kiss)[:width],
+            height: sequence(:kiss)[:height],
+            decoding: "async" %>
     </div>
 
     <main class="fig-chapters" id="main">
       <section class="fig-chapter" id="pose-stand" data-pose="stand">
-        <p class="fig-chapter__pose">Pose one &middot; Stand</p>
+        <p class="fig-chapter__pose">Chapter one &middot; Stand</p>
         <h1 class="fig-chapter__standfirst">
           Everything we sell has a materials list, and everything we publish has a source.
         </h1>
@@ -42,13 +57,14 @@
           standards, and the education that explains them, with the sources attached.
         </p>
         <p class="fig-chapter__body">
-          Keep scrolling and she will move: reach for the catalogue, fold over the library, rest
-          on the standards, and open at the end.
+          Keep scrolling and the film runs with you: it opens on the first frame here, and rests
+          on the last at the end. She is a model in a rendered study, not a person we are
+          showing you.
         </p>
       </section>
 
       <section class="fig-chapter" id="pose-reach" data-pose="reach">
-        <p class="fig-chapter__pose">Pose two &middot; Reach</p>
+        <p class="fig-chapter__pose">Chapter two &middot; Reach</p>
         <h2 class="fig-chapter__title">The catalogue</h2>
         <p class="fig-chapter__body">
           Each object is documented before it is described: materials, body safety, dimensions,
@@ -70,7 +86,7 @@
       </section>
 
       <section class="fig-chapter" id="pose-fold" data-pose="fold">
-        <p class="fig-chapter__pose">Pose three &middot; Fold</p>
+        <p class="fig-chapter__pose">Chapter three &middot; Fold</p>
         <h2 class="fig-chapter__title">The library</h2>
         <p class="fig-chapter__body">
           The publishing side of the shop: guides and explainers, written by named people with
@@ -95,7 +111,7 @@
       </section>
 
       <section class="fig-chapter" id="pose-rest" data-pose="rest">
-        <p class="fig-chapter__pose">Pose four &middot; Rest</p>
+        <p class="fig-chapter__pose">Chapter four &middot; Rest</p>
         <h2 class="fig-chapter__title">What we will not do</h2>
         <p class="fig-chapter__body">
           No medical claims, no invented statistics, no analytics, no ad pixels, no session
@@ -109,7 +125,7 @@
       </section>
 
       <section class="fig-chapter" id="pose-open" data-pose="open">
-        <p class="fig-chapter__pose">Pose five &middot; Open</p>
+        <p class="fig-chapter__pose">Chapter five &middot; Open</p>
         <h2 class="fig-chapter__title">Open</h2>
         <p class="fig-chapter__body">
           That is the shop: a catalogue with its specifications, a library with its sources, and

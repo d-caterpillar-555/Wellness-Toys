@@ -11,6 +11,9 @@ class Article < ApplicationRecord
   belongs_to :primary_topic, class_name: "Topic", optional: true
   has_many :article_topics, dependent: :destroy
   has_many :topics, through: :article_topics
+  # sources_count is a counter cache, maintained from Source's belongs_to: the
+  # shell and the console both print how many sources a piece carries, and a
+  # list that says "3 src" should not load three records to say it.
   has_many :sources, -> { order(:position) }, dependent: :destroy, inverse_of: :article
 
   has_one_attached :hero_image
@@ -41,11 +44,13 @@ class Article < ApplicationRecord
   scope :search_by_title, ->(query) {
     where("title ILIKE :q", q: "%#{Article.sanitize_sql_like(query.to_s)}%")
   }
-  # The byline and the topic, for a card or a list. Sources are included
-  # separately: only the page that renders the evidence rail needs them, and
-  # loading them into every list view is a query nothing there uses.
+  # The byline and the topic, for a card or a list.
+  #
+  # Sources are deliberately not eager loaded anywhere. The evidence rail is
+  # printed on a single piece's own page, where one query is cheap, and the
+  # count on a list comes from articles.sources_count. Preloading them for a
+  # piece that cites nothing is a query nobody reads.
   scope :with_reading_list, -> { includes(:author, :primary_topic) }
-  scope :with_evidence, -> { includes(:sources) }
 
   def guide?
     kind == "guide"

@@ -77,9 +77,13 @@ persistent progress line; `#anchor` deep links work.
 
 **Look.** A book: warm paper, generous margins, a serif for prose, a vermilion accent used
 for the index and one ornament. Drop caps on section openings, marginal notes, footnotes at
-the foot of the document.
+the foot of the document. Behind it, held at the right edge of the window, a rendered study
+of two models is printed into the paper - a multiply blend, so it reads as an impression in
+the page rather than a picture laid on top of it.
 
-**Motion.** Almost none: the index marker slides, disclosures open.
+**Motion.** Almost none: the index marker slides and disclosures open. The figure's frames
+advance with the whole scroll rather than with a passage, so the pair move as the reader
+reads, and no line of copy is ever asked to sit on a photograph.
 
 **Signature.** The living index: it knows where you are and marks it, and every entry is a
 real anchor.
@@ -89,29 +93,33 @@ composition.
 
 ## 3. figure - the scroll choreography (`/figure`)
 
-**Premise.** The shop as a figure study. A drawn figure moves through a sequence of poses as
-you scroll; the copy and the catalogue arrive with each pose.
+**Premise.** The shop as a figure study. A filmed pair moves through one embrace as you
+scroll; the copy and the catalogue arrive with the film.
 
-**Architecture.** Three pages: `/figure` (the choreography), `/figure/pieces` (the catalogue,
-poses on hover), `/figure/pieces/:slug` (a piece, with a still pose).
+**Architecture.** Three pages: `/figure` (the choreography), `/figure/pieces` (the catalogue),
+`/figure/pieces/:slug` (a piece).
 
-**Navigation.** Scroll is the navigation on the home page; poses are chapters and are also
-listed as links.
+**Navigation.** Scroll is the navigation on the home page; chapters are listed in a rail and
+are also real links.
 
-**Look.** Dusk: a deep gradient ground, the figure drawn in chalk line and ink fill with a
-warm rim light, type in a high-contrast display serif and a grotesk. The figure is stylised,
-abstract, fully drawn - a figure study, never photographic, never sexualised.
+**Look.** Dusk: a deep gradient ground, a warm rim light, type in a high-contrast display
+serif and a grotesk. The figure is a rendered study of two models - one embrace, whole, on a
+transparent ground - so the pair stand on the dusk rather than inside a rectangle.
 
-**Motion.** The figure's pose interpolates with scroll progress between key poses (stand,
-reach, fold, rest, open), drawn as SVG with joint interpolation. Reduced motion shows one
-composed pose and no interpolation.
+**Motion.** The figure is a sequence of two thousand frames, and the reader's progress through
+the chapters is the playhead: the first chapter holds the first frame, the last holds the
+kiss. The playhead eases toward the scroll position rather than snapping to it, a frame is
+swapped in once the next one has decoded, and the frames arrive in passes - every sixteenth,
+then every eighth, and so on - so any position has a frame near it long before the whole
+sequence has downloaded.
 
-**Signature.** The figure. It is the only world with a scroll-driven drawing, and the pose
-sequence is the page's structure.
+**Signature.** The reader's position in the page is the playhead. It is the only world whose
+figure is a render rather than a drawing.
 
 **Must not.** Use scroll listeners that jank (drive it from `IntersectionObserver` +
-`requestAnimationFrame`, or scroll-driven CSS animation where supported); must not imply a
-real person.
+`requestAnimationFrame`); must not imply a real person - the pair are models in a rendered
+study and the page says so; must not show anything explicit: the frame stops at the
+collarbones.
 
 ## 4. plan - the shop as a building (`/plan`)
 

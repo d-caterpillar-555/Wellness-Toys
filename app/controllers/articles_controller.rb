@@ -3,7 +3,7 @@ class ArticlesController < ApplicationController
 
   def show
     @topic = policy_scope(Topic).find_by!(slug: params[:topic_slug])
-    @article = article_scope.with_evidence.find_by!(slug: params[:slug])
+    @article = article_scope.find_by!(slug: params[:slug])
     authorize @article
     @related = related_articles
   end
@@ -14,12 +14,15 @@ class ArticlesController < ApplicationController
     end
 
     # Same primary topic, never itself. An article with no primary topic has
-    # nothing to be related to, which is an empty list and not an error.
+    # nothing to be related to, which is an empty list and not an error. The
+    # list prints a title and a topic link and nothing else, so it loads the
+    # topic rather than the byline.
     def related_articles
       return Article.none if @article.primary_topic.nil?
 
       @article.primary_topic.published_articles.kept
         .where.not(id: @article.id)
-        .with_reading_list.recent_first.limit(RELATED_LIMIT)
+        .includes(:primary_topic)
+        .recent_first.limit(RELATED_LIMIT)
     end
 end

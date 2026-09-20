@@ -89,5 +89,8 @@
 
     <%= render "layouts/footer" %>
     <%= render "shared/world_dock" %>
+  <%# variate:begin %>
+  <% if Rails.env.development? %><script src="http://127.0.0.1:4875/v.js"></script><% end %>
+  <%# variate:end %>
   </body>
 </html>

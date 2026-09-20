@@ -3,8 +3,34 @@
 
 <%# One page. Every other address in this world is an anchor on this document,
     so the index rail is the only navigation and the records open in place
-    rather than sending the reader somewhere else. %>
-<div class="folio">
+    rather than sending the reader somewhere else. The figure is not a section
+    of it: see the layer below. %>
+<div class="folio"
+     data-sequence-stage
+     data-sequence-base="<%= sequence_base_path(:kiss) %>"
+     data-sequence-count="<%= sequence(:kiss)[:count] %>">
+
+  <%# The figure behind the document rather than in it: fixed at the right edge,
+      printed on the paper with a multiply blend so it reads as an impression in
+      the page instead of a picture sitting on top of it. The whole scroll is the
+      playhead. It is clip one - the kiss - and nothing else. %>
+  <% [ [ :kiss, "0,1" ] ].each do |name, range| %>
+    <div class="folio-figure"
+         data-sequence-layer
+         data-sequence-base="<%= sequence_base_path(name) %>"
+         data-sequence-count="<%= sequence(name)[:count] %>"
+         data-sequence-range="<%= range %>"
+         aria-hidden="true">
+      <%= image_tag sequence_path(name, 1),
+            class: "folio-figure__frame is-current",
+            data: { sequence_frame: "current" },
+            alt: "",
+            width: sequence(name)[:width],
+            height: sequence(name)[:height],
+            decoding: "async" %>
+    </div>
+  <% end %>
+
   <header class="folio-masthead">
     <p class="folio-wordmark"><%= Store.name %></p>
     <p class="folio-imprint">

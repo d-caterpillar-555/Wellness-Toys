@@ -9,18 +9,29 @@ module Worlds
     world "folio"
 
     def index
-      @departments = departments
-      @products = catalogue
-      @by_department = @products.group_by { |product| product.primary_category&.id }
-      @unfiled = @by_department[nil] || []
-      @reading = library(limit: 12)
-      @standards = page_for("standards")
-      @shipping = page_for("shipping")
+      load_document(plates: true)
     end
 
     def print
-      index
+      load_document(plates: false)
       render :print
+    end
+
+    private
+
+    # The whole document, loaded for the template that will print it: the index
+    # shows the plates and the makers, the print view is text only, so it asks
+    # for neither. An association a page never touches is a query nobody uses.
+    def load_document(plates:)
+      @departments = departments
+      @products = catalogue.includes(:categories, :variants)
+      @products = @products.includes(:brand, :cover_image_attachment) if plates
+      @by_department = @products.group_by { |product| product.primary_category&.id }
+      @unfiled = @by_department[nil] || []
+      @reading = library(limit: 12).includes(:author)
+      @reading = @reading.includes(:primary_topic) if plates
+      @standards = page_for("standards")
+      @shipping = page_for("shipping")
     end
   end
 end

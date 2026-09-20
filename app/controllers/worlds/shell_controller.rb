@@ -87,10 +87,12 @@ module Worlds
         name: "library",
         type: "dir",
         children: policy_scope(Topic).ordered.map do |topic|
+          articles = policy_scope(Article).published.kept.where(primary_topic_id: topic.id)
+
           {
             name: topic.slug,
             type: "dir",
-            children: policy_scope(Article).published.kept.where(primary_topic_id: topic.id).includes(:author, :sources).recent_first.map do |article|
+            children: articles.includes(:author).recent_first.map do |article|
               {
                 name: article.slug,
                 type: "page",
@@ -99,7 +101,7 @@ module Worlds
                   "kind: #{article.kind}",
                   ("writer: #{article.author.name}" if article.author),
                   ("published: #{article.published_at.strftime('%Y-%m-%d')}" if article.published_at),
-                  "sources: #{article.sources.size}"
+                  "sources: #{article.sources_count}"
                 ].compact,
                 description: article.excerpt.to_s,
                 url: helpers.learn_article_path(topic.slug, article.slug)

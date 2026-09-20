@@ -10,30 +10,29 @@ module Worlds
     world "press"
 
     def index
-      @objects = catalogue
+      @objects = reviewed_objects
       @departments = departments
-      @lead = library(limit: 1).first
-      @features = library(limit: 6)
+      @features = library(limit: 6).includes(:author, :primary_topic)
       @reviewed = @objects.limit(4)
       @counts = { objects: @objects.size, departments: @departments.length, pieces: library(limit: 100).size }
     end
 
     def reviews
-      @objects = catalogue
+      @objects = reviewed_objects
       @departments = departments
       @counts = { objects: @objects.size, departments: @departments.length, pieces: library(limit: 100).size }
     end
 
     def issue
-      @features = library(limit: 12)
+      @features = library(limit: 12).includes(:author, :primary_topic)
       @departments = departments
       @counts = { objects: catalogue.size, departments: @departments.length, pieces: @features.size }
     end
 
     def story
       @topic = policy_scope(Topic).find_by!(slug: params[:topic_slug])
-      @article = policy_scope(Article).published.kept.with_evidence.find_by!(slug: params[:slug])
-      @related = library(limit: 4)
+      @article = policy_scope(Article).published.kept.find_by!(slug: params[:slug])
+      @related = library(limit: 4).includes(:author, :primary_topic)
       @counts = { objects: catalogue.size, departments: departments.length, pieces: @related.size }
     end
 
@@ -41,6 +40,15 @@ module Worlds
       @pages = Page::ROUTED_SLUGS.filter_map { |slug| page_for(slug) }
       @objects = catalogue.limit(6)
       @counts = { objects: catalogue.size, departments: departments.length, pieces: @pages.size }
+    end
+
+    private
+
+    # The review section: the objects with their maker and their department,
+    # which is everything a notice prints. There is no photography in this
+    # world, so none is loaded.
+    def reviewed_objects
+      @reviewed_objects ||= catalogue.includes(:brand, :categories, :variants)
     end
   end
 end

@@ -29,22 +29,28 @@ module Worlds
 
     def register
       @departments = departments
-      @objects = catalogue
+      @objects = catalogue.includes(:categories, :variants)
     end
 
     def room
       building
       @category = policy_scope(Category).kept.find_by!(slug: params[:slug])
-      @objects = catalogue.for_category(@category.slug)
+      @objects = catalogue.includes(:variants).for_category(@category.slug)
       @room = ROOMS[@departments.index(@category) || 0] || ROOMS.first
     end
 
     def object
       @departments = departments
-      @product = catalogue.find_by!(slug: params[:slug])
+      @product = catalogue
+        .includes(:brand, :categories, :variants, :cover_image_attachment)
+        .find_by!(slug: params[:slug])
       @variants = @product.variants.select(&:active?)
       @category = @product.primary_category
-      @related = catalogue.for_category(@category&.slug).where.not(id: @product.id).limit(3)
+      @related = catalogue
+        .includes(:variants)
+        .for_category(@category&.slug)
+        .where.not(id: @product.id)
+        .limit(3)
     end
 
     private

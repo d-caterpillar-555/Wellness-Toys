@@ -8,7 +8,7 @@ class PostsController < ApplicationController
 
   def show
     # The page itself renders the body and the evidence rail, not the byline.
-    @post = posts_scope.with_evidence.find_by!(slug: params[:slug])
+    @post = posts_scope.find_by!(slug: params[:slug])
     authorize @post
   end
 

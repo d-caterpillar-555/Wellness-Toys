@@ -531,6 +531,72 @@
   }
 }
 
+/* --- The figure -----------------------------------------------------------
+   Behind the document, not in it. It is fixed at the right edge and its frames
+   run with the whole scroll, so it is present the whole way down rather than
+   belonging to a passage. A multiply blend prints it into the paper: what the
+   reader sees is an impression in the page, not a picture laid on top of it,
+   and because the text is drawn above it no line of copy is ever asked to sit
+   on a photograph. The mask takes it out before it reaches the column. */
+.folio-figure {
+  block-size: 100dvh;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: min(44rem, 50vw);
+  mix-blend-mode: multiply;
+  /* The layer fades, the frames inside it do not: a fade on the frames leaves
+     both of them half transparent during a fast scrub, which reads as the page
+     flashing through the figure. Between acts, a fade is what makes one hold
+     become the next. */
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transition: opacity 260ms linear;
+  z-index: 0;
+}
+
+.folio-figure.is-live {
+  opacity: 0.62;
+}
+
+.folio-figure__frame {
+  block-size: 100%;
+  inline-size: 100%;
+  inset: 0;
+  object-fit: contain;
+  object-position: right center;
+  opacity: 0;
+  position: absolute;
+  -webkit-mask-image: linear-gradient(to left, #000 52%, transparent 100%);
+  mask-image: linear-gradient(to left, #000 52%, transparent 100%);
+}
+
+.folio-figure__frame.is-current {
+  opacity: 1;
+}
+
+/* The masthead, the index and the document all sit above it. */
+.folio-masthead,
+.folio-body {
+  position: relative;
+  z-index: 1;
+}
+
+/* On a narrow screen there is no margin to put a figure in, so it steps back
+   rather than sitting under a column of text. */
+@media (max-width: 63.99rem) {
+  .folio-figure {
+    inline-size: 70vw;
+    opacity: 0.28;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-figure__frame {
+    transition: none;
+  }
+}
+
 @media print {
   .folio-index,
   .world-dock,
@@ -544,5 +610,10 @@
 
   .folio-record__body {
     display: block;
+  }
+
+  /* A figure that runs with the scroll is not a figure on paper. */
+  .folio-figure {
+    display: none;
   }
 }

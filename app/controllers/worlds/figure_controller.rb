@@ -12,20 +12,25 @@ module Worlds
     POSES = %w[stand reach fold rest open].freeze
 
     def index
-      @pieces = catalogue.limit(6)
-      @reading = library(limit: 4)
+      @pieces = catalogue.includes(:variants).limit(6)
+      @reading = library(limit: 4).includes(:primary_topic)
       @poses = POSES
     end
 
     def pieces
-      @pieces = catalogue
+      @pieces = catalogue.includes(:categories, :variants, :cover_image_attachment)
       @departments = departments
     end
 
     def piece
-      @product = catalogue.find_by!(slug: params[:slug])
+      @product = catalogue
+        .includes(:brand, :categories, :variants, :cover_image_attachment)
+        .find_by!(slug: params[:slug])
       @variants = @product.variants.select(&:active?)
-      @related = catalogue.where.not(id: @product.id).limit(3)
+      @related = catalogue
+        .includes(:variants, :cover_image_attachment)
+        .where.not(id: @product.id)
+        .limit(3)
     end
   end
 end

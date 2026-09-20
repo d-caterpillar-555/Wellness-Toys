@@ -1,9 +1,14 @@
+import FrameSequence from "lib/frame_sequence";
+
 // folio: the index knows where the reader is, and says so.
 //
 // The document is one page, so the index is the only navigation there is. Two
 // jobs: mark the section the reader is in, and draw how far through the
 // document they have come. Both come from one IntersectionObserver over the
 // sections - there is no scroll listener anywhere in this file.
+//
+// The plate is a third job, borrowed from the figure world: the frames of a
+// rendered study advance with the reader's progress past it (lib/frame_sequence).
 export default class Folio {
   constructor(root = document) {
     this.sections = Array.from(root.querySelectorAll("[data-folio-section]"))
@@ -65,3 +70,4 @@ export default class Folio {
 }
 
 new Folio()
+FrameSequence.attachAll()

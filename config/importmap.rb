@@ -11,3 +11,6 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin "application"
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/javascript/worlds", under: "worlds"
+# What more than one world borrows: a scrubbed frame sequence is the same
+# instrument in figure and in folio, so it lives in one file.
+pin_all_from "app/javascript/lib", under: "lib"

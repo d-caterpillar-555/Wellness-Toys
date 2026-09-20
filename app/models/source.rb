@@ -1,5 +1,8 @@
 class Source < ApplicationRecord
-  belongs_to :article, inverse_of: :sources
+  # The counter cache for articles.sources_count. Rails reads it from this side
+  # of the association: the column is named after the model, so `true` resolves
+  # to sources_count without repeating the name.
+  belongs_to :article, inverse_of: :sources, counter_cache: true
 
   validates :title, :url, :publisher, presence: true
   validates :url,

@@ -4,7 +4,7 @@ class GlossaryController < ApplicationController
   end
 
   def show
-    @term = policy_scope(Article).glossary_terms.with_evidence.find_by!(slug: params[:term])
+    @term = policy_scope(Article).glossary_terms.find_by!(slug: params[:term])
     authorize @term
   end
 end

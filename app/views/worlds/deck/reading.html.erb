@@ -18,7 +18,7 @@
           <%= article.kind %>
           <% if article.author %> &middot; <%= article.author.name %><% end %>
           <% if article.published_at %> &middot; <%= article.published_at.strftime("%Y-%m-%d") %><% end %>
-          &middot; <%= article.sources.size %> src
+          &middot; <%= article.sources_count %> src
         </span>
       </li>
     <% end %>

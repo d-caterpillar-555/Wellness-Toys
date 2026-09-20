@@ -15,20 +15,26 @@ module Worlds
     def index
       @departments = departments
       @shelf = shelf_index
-      @reading = library(limit: 6)
+      @reading = library(limit: 6).includes(:author, :primary_topic)
     end
 
     def shelf
       @departments = departments
       @shelf = shelf_index
-      @objects = catalogue
+      @objects = catalogue.includes(:categories, :variants, :cover_image_attachment)
     end
 
     def item
-      @product = catalogue.find_by!(slug: params[:slug])
+      @product = catalogue
+        .includes(:categories, :variants, :cover_image_attachment)
+        .find_by!(slug: params[:slug])
       @variants = @product.variants.select(&:active?)
       @department = @product.primary_category
-      @related = catalogue.for_category(@department&.slug).where.not(id: @product.id).limit(3)
+      @related = catalogue
+        .includes(:variants, :cover_image_attachment)
+        .for_category(@department&.slug)
+        .where.not(id: @product.id)
+        .limit(3)
       @departments = departments
       @shelf = shelf_index
     end
@@ -38,7 +44,7 @@ module Worlds
     # What the concierge can offer: one line per object, its department, and the
     # price. Deliberately short - the transcript is not a data dump.
     def shelf_index
-      @shelf_index ||= catalogue.map do |product|
+      @shelf_index ||= catalogue.includes(:categories, :variants).map do |product|
         variants = product.variants.select(&:active?)
 
         {
