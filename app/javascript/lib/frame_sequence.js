@@ -32,9 +32,13 @@ const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 // How fast the playhead closes on the scroll position, and how far it may move
 // in one frame. Without the cap a fast wheel moves the playhead dozens of
 // frames per tick and the picture strobes; with it a hard scroll reads as
-// motion that catches up.
-const EASE = 0.18;
-const MAX_STEP = 8;
+// motion that catches up. Both are deliberately slack now that the film is one
+// long take: the kiss used to run past in a second on a flick of the wheel, so
+// the playhead takes a smaller share of the gap each tick and is capped at
+// three frames, which lets a hard scroll read as the film hurrying rather than
+// as the film skipping.
+const EASE = 0.08;
+const MAX_STEP = 3;
 const PASSES = [ 16, 8, 4, 2, 1 ];
 const PASS_PAUSE = 260;
 

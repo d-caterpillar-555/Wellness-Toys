@@ -54,24 +54,40 @@ RSpec.describe "Worlds", type: :request do
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include("fig-figure__frame")
-    expect(response.body).to include("/worlds/figure/sequences/kiss/frame_0001.webp")
+    expect(response.body).to include("/worlds/figure/sequences/clip-1/frame_0001.webp")
     expect(response.body).to include(%(data-sequence-count="2000"))
     expect(response.body).to include(%(data-sequence-frame="current"))
   end
 
-  it "prints clip one behind the folio" do
+  # The plate is one sequence now: clip_1, link_1 and clip_2 joined, so there is
+  # one layer, one count and no range to fade between. The loader screen rides
+  # on the same stage, which is why it is asserted here too.
+  it "prints the film behind the folio, with the screen that holds it" do
     get folio_path
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include("folio-figure__frame")
-    expect(response.body).to include("/worlds/figure/sequences/kiss/frame_0001.webp")
+    expect(response.body).to include("/worlds/figure/sequences/film-1/frame_0001.webp")
+    expect(response.body).to include(%(data-sequence-count="3809"))
+    expect(response.body).to include("data-sequence-loader")
     expect(response.body).to include(%(data-sequence-range="0,1"))
   end
 
-  # The sequence is served from public/, so a missing render is a missing file
-  # rather than a broken manifest: worth asserting at both ends of it.
-  it "ships both ends of the figure's frame sequence" do
-    expect(Rails.root.join("public/worlds/figure/sequences/kiss/frame_0001.webp")).to exist
-    expect(Rails.root.join("public/worlds/figure/sequences/kiss/frame_2000.webp")).to exist
+  # The sequences are served from public/, so a missing render is a missing file
+  # rather than a broken manifest: worth asserting at both ends of each one.
+  it "ships both ends of each frame sequence" do
+    { "clip-1" => 2000, "film-1" => 3809 }.each do |shot, count|
+      expect(Rails.root.join("public/worlds/figure/sequences", shot, "frame_0001.webp")).to exist
+      expect(Rails.root.join("public/worlds/figure/sequences", shot, format("frame_%04d.webp", count))).to exist
+    end
+  end
+
+  # The film is the three renders joined, so its seams must be the same picture
+  # on both sides: a cut that jumps is the one thing a joined sequence cannot do.
+  it "joins the film at its seams" do
+    expect(Rails.root.join("public/worlds/figure/sequences/film-1/frame_2000.webp")).to exist
+    expect(Rails.root.join("public/worlds/figure/sequences/film-1/frame_2001.webp")).to exist
+    expect(Rails.root.join("public/worlds/figure/sequences/film-1/frame_2600.webp")).to exist
+    expect(Rails.root.join("public/worlds/figure/sequences/film-1/frame_2601.webp")).to exist
   end
 end

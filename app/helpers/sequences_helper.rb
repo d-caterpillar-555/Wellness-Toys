@@ -9,10 +9,17 @@ module SequencesHelper
   # key: a sequence is rendered into a new folder rather than over an old one,
   # so a reader who has seen the previous frames is never served them again.
   SEQUENCES = {
-    # Clip one: the kiss, whole and as the models came. It is the one that is
-    # kept - the takes that followed it (the hold from behind, the lifted hold)
-    # were removed, so this is the figure in both worlds.
-    kiss: { shot: "kiss", count: 2000, width: 500, height: 625 }
+    # clip_1: the kiss, whole and as the models came, build and all - the pair
+    # stand apart, meet, and stand apart again. The figure world scrubs this one
+    # and keeps it.
+    clip_1: { shot: "clip-1", count: 2000, width: 500, height: 625 },
+    # film_1: one shot, joined. clip_1 is the kiss as it came, link_1 is his
+    # arms coming up to take her waist - the animation's own move, walked
+    # backwards, so it bends the way arms bend - and clip_2 is the kiss with his
+    # hands brought down onto her seat, the solve fading in so they travel there
+    # rather than starting there. The folio prints the whole thing as one
+    # sequence: one layer, one count, and no fade between acts.
+    film_1: { shot: "film-1", count: 3809, width: 500, height: 625 }
   }.freeze
 
   def sequence(name)

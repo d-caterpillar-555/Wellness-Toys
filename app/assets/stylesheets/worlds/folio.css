@@ -617,3 +617,45 @@
     display: none;
   }
 }
+
+/* --- The screen that holds the document until the film is in hand ---------- */
+
+/* Shown by script only (app/javascript/lib/sequence_loader.js) so that a
+   reader without it is never held behind a screen that cannot lift. It covers
+   the page rather than the plate: the point is that nobody reads half a
+   loaded film. */
+.folio-loader {
+  align-items: center;
+  background-color: var(--w-surface);
+  color: var(--w-body);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 70;
+}
+
+.folio-loader[hidden] {
+  display: none;
+}
+
+.folio-loader__mark {
+  color: var(--w-ink);
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+.folio-loader__count {
+  color: var(--w-accent);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9375rem;
+}
+
+.folio-loader__note {
+  color: var(--w-muted);
+  font-size: 0.8125rem;
+  max-inline-size: 22rem;
+  text-align: center;
+}

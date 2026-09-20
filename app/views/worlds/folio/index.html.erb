@@ -7,14 +7,27 @@
     of it: see the layer below. %>
 <div class="folio"
      data-sequence-stage
-     data-sequence-base="<%= sequence_base_path(:kiss) %>"
-     data-sequence-count="<%= sequence(:kiss)[:count] %>">
+     data-sequence-base="<%= sequence_base_path(:film_1) %>"
+     data-sequence-count="<%= sequence(:film_1)[:count] %>">
+
+  <%# The film is thousands of frames, and opening the document cold shows a
+      slideshow of whatever arrived first. So it is fetched up front, behind
+      this screen, and the document appears when it is in hand: see
+      app/javascript/lib/sequence_loader.js. The screen is hidden by markup and
+      shown by script, so a reader without it is never held behind it. %>
+  <div class="folio-loader" data-sequence-loader hidden>
+    <p class="folio-loader__mark"><%= Store.name %></p>
+    <p class="folio-loader__count" data-sequence-loader-value>0%</p>
+    <p class="folio-loader__note">The film is being loaded.</p>
+  </div>
 
   <%# The figure behind the document rather than in it: fixed at the right edge,
       printed on the paper with a multiply blend so it reads as an impression in
       the page instead of a picture sitting on top of it. The whole scroll is the
-      playhead. It is clip one - the kiss - and nothing else. %>
-  <% [ [ :kiss, "0,1" ] ].each do |name, range| %>
+      playhead, and the film is one sequence: clip_1, link_1 and clip_2 joined
+      frame for frame, so there is nothing to fade between and the scrub runs at
+      one speed from the first frame to the last. %>
+  <% [ [ :film_1, "0,1" ] ].each do |name, range| %>
     <div class="folio-figure"
          data-sequence-layer
          data-sequence-base="<%= sequence_base_path(name) %>"

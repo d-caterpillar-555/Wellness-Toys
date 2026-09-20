@@ -1,4 +1,5 @@
 import FrameSequence from "lib/frame_sequence";
+import SequenceLoader from "lib/sequence_loader";
 
 // folio: the index knows where the reader is, and says so.
 //
@@ -8,7 +9,10 @@ import FrameSequence from "lib/frame_sequence";
 // sections - there is no scroll listener anywhere in this file.
 //
 // The plate is a third job, borrowed from the figure world: the frames of a
-// rendered study advance with the reader's progress past it (lib/frame_sequence).
+// rendered study advance with the reader's progress past it
+// (lib/frame_sequence). The film is thousands of frames, so it is fetched
+// before the document is shown, behind a screen that counts it off
+// (lib/sequence_loader) - the page must never open onto a half-loaded plate.
 export default class Folio {
   constructor(root = document) {
     this.sections = Array.from(root.querySelectorAll("[data-folio-section]"))
@@ -70,4 +74,5 @@ export default class Folio {
 }
 
 new Folio()
+SequenceLoader.attachAll()
 FrameSequence.attachAll()

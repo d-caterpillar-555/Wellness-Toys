@@ -29,20 +29,20 @@
   <div class="fig-stage" data-sequence-stage>
     <div class="fig-figure"
          data-sequence-layer
-         data-sequence-base="<%= sequence_base_path(:kiss) %>"
-         data-sequence-count="<%= sequence(:kiss)[:count] %>"
+         data-sequence-base="<%= sequence_base_path(:clip_1) %>"
+         data-sequence-count="<%= sequence(:clip_1)[:count] %>"
          aria-hidden="true">
       <%# The plates are a rendered study of one embrace: two models, whole, on a
           transparent ground, so they stand on the world's dusk rather than in a
           rectangle. Two thousand frames, and the reader's progress is the
           playhead. The module builds the second plate it decodes into: see
           app/javascript/lib/frame_sequence.js. %>
-      <%= image_tag sequence_path(:kiss, 1),
+      <%= image_tag sequence_path(:clip_1, 1),
             class: "fig-figure__frame is-current",
             data: { sequence_frame: "current" },
             alt: "",
-            width: sequence(:kiss)[:width],
-            height: sequence(:kiss)[:height],
+            width: sequence(:clip_1)[:width],
+            height: sequence(:clip_1)[:height],
             decoding: "async" %>
     </div>
 
