@@ -620,57 +620,10 @@
   padding-inline-start: 1.25rem;
 }
 
-/* --- The gallery of worlds ---------------------------------------------- */
-
-.inst-worlds {
-  display: grid;
-  gap: 1px;
-  grid-template-columns: minmax(0, 1fr);
-  list-style: none;
-  margin: 2rem 0 0;
-  padding: 0;
-}
-
-@media (min-width: 48rem) {
-  .inst-worlds {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.inst-world {
-  background-color: var(--color-paper);
-  border-block-start: 1px solid var(--color-line);
-  display: grid;
-  gap: 0.4rem;
-  padding-block: 1.25rem;
-  padding-inline-end: 2rem;
-}
-
-.inst-world__name {
-  color: var(--color-ink);
-  font-family: var(--font-display);
-  font-size: var(--text-title);
-  letter-spacing: var(--tracking-title);
-}
-
-.inst-world__tagline {
-  color: var(--color-accent-strong);
-  font-size: var(--text-fine);
-  letter-spacing: var(--tracking-register);
-  text-transform: uppercase;
-}
-
-.inst-world__premise {
-  color: var(--color-body);
-  font-size: var(--text-ui);
-  line-height: 1.6;
-}
-
 /* --- Print --------------------------------------------------------------- */
 
 @media print {
-  .inst-rail,
-  .world-dock {
+  .inst-rail {
     display: none;
   }
 

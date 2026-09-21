@@ -599,7 +599,6 @@
 
 @media print {
   .folio-index,
-  .world-dock,
   .folio-buy {
     display: none;
   }

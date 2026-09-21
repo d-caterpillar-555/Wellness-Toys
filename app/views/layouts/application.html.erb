@@ -42,9 +42,9 @@
         app/assets/builds/tailwind.css: the baseline components that the
         transactional pages and the institute world share. %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%# The dock is shared chrome; institute is the default architecture's own
-        sheet. The other seven worlds load their own in their own layouts. %>
-    <%= stylesheet_link_tag "worlds/dock", "worlds/institute", "data-turbo-track": "reload" %>
+    <%# institute is the store's own sheet. The folio loads its own in its own
+        layout. %>
+    <%= stylesheet_link_tag "worlds/institute", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <%= javascript_import_module_tag "worlds/institute" %>
 
@@ -88,9 +88,5 @@
     </main>
 
     <%= render "layouts/footer" %>
-    <%= render "shared/world_dock" %>
-  <%# variate:begin %>
-  <% if Rails.env.development? %><script src="http://127.0.0.1:4875/v.js"></script><% end %>
-  <%# variate:end %>
   </body>
 </html>

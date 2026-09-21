@@ -4,12 +4,11 @@ Rails.application.routes.draw do
 
   root "pages#home"
 
-  # --- The eight architectures ----------------------------------------------
-  # The site's default architecture (institute) is the canonical routes below.
-  # The other seven are alternate architectures, each with its own prefix, its
-  # own page inventory and its own layout - see docs/eight-worlds.md. Their
-  # routes are drawn next to the world they belong to, further down this file.
-  get "/worlds", to: "worlds#index", as: :worlds
+  # --- The folio world ------------------------------------------------------
+  # The store's own routes are the canonical ones below. The folio is the one
+  # alternate architecture still published: the whole shop as a single
+  # document, with its own prefix, its own page inventory and its own layout -
+  # see docs/folio-world.md. Its routes are drawn further down this file.
 
   # --- Shop -----------------------------------------------------------------
   get "/shop", to: "products#index", as: :shop
@@ -92,57 +91,15 @@ Rails.application.routes.draw do
     get "/#{slug}", to: "pages#show", defaults: { slug: slug }, as: :"page_#{slug.tr('-', '_')}"
   end
 
-  # --- The worlds -----------------------------------------------------------
-  # One prefix per architecture, each with its own page inventory. Institute,
-  # the default, is the canonical routes above; these are the other seven.
-  # See docs/eight-worlds.md.
+  # --- The folio world ------------------------------------------------------
+  # One prefix, its own page inventory. The canonical routes above keep the
+  # store's own chrome; the folio is the whole shop as one continuous
+  # document. Its addresses are anchors on /folio, and the print view is the
+  # same document without the furniture. See docs/folio-world.md.
 
   scope module: "worlds" do
-    # folio: the whole shop as one continuous document. Its addresses are
-    # anchors on /folio; the print view is the same document without furniture.
     get "/folio", to: "folio#index", as: :folio
     get "/folio/print", to: "folio#print", as: :folio_print
-
-    # figure: the scroll choreography. One story, a catalogue with poses on
-    # hover, and one piece at a time.
-    get "/figure", to: "figure#index", as: :figure
-    get "/figure/pieces", to: "figure#pieces", as: :figure_pieces
-    get "/figure/pieces/:slug", to: "figure#piece", as: :figure_piece
-
-    # plan: a floor plan. Departments are rooms; a product is an object on the
-    # plan, drawn with its callout. The register is the same data without the
-    # walking.
-    get "/plan", to: "plan#index", as: :plan
-    get "/plan/register", to: "plan#register", as: :plan_register
-    get "/plan/room/:slug", to: "plan#room", as: :plan_room
-    get "/plan/object/:slug", to: "plan#object", as: :plan_object
-
-    # shell: one surface. Paths resolve against the catalogue, the library and
-    # the reference pages; /shell/object/:slug opens the machine with that
-    # object already printed.
-    get "/shell", to: "shell#index", as: :shell
-    get "/shell/object/:slug", to: "shell#object", as: :shell_object
-
-    # press: a newspaper. A front page, the review section, the issue's
-    # features, a story reprinted with its sources, and the notices.
-    get "/press", to: "press#index", as: :press
-    get "/press/catalogue", to: "press#reviews", as: :press_catalogue
-    get "/press/issue", to: "press#issue", as: :press_issue
-    get "/press/story/:topic_slug/:slug", to: "press#story", as: :press_story
-    get "/press/notices", to: "press#notices", as: :press_notices
-
-    # desk: a conversation. The transcript navigates; the shelf is the whole
-    # catalogue for anyone who would rather browse it quietly.
-    get "/desk", to: "desk#index", as: :desk
-    get "/desk/shelf", to: "desk#shelf", as: :desk_shelf
-    get "/desk/item/:slug", to: "desk#item", as: :desk_item
-
-    # deck: an operations console. The catalogue as a table, a record as a side
-    # sheet, the library and the policies as panes.
-    get "/deck", to: "deck#index", as: :deck
-    get "/deck/item/:slug", to: "deck#item", as: :deck_item
-    get "/deck/library", to: "deck#reading", as: :deck_library
-    get "/deck/policies", to: "deck#paperwork", as: :deck_policies
   end
 
   # --- Admin ----------------------------------------------------------------
