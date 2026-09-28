@@ -90,7 +90,7 @@ GEM
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     ast (2.4.3)
-    avo (4.2.5)
+    avo (4.2.6)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -609,7 +609,7 @@ CHECKSUMS
   addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
   annotate (2.6.5) sha256=14dc2adae397080ee14bf6e3fd6f1d8de81aa1d28c4ca670e734d11bf6b97d26
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
-  avo (4.2.5) sha256=cc99697e81e7b0474226af2404f303f470420795981fbfd49c6d8b536e0a307d
+  avo (4.2.6) sha256=08cbf1aec1a3a18af545fa73efaadeda760bbf7a09ac855d84d444ca1cc17a05
   avo-icons (0.2.1) sha256=1ceb00725ca6149f754ac9d8651398be03d67ceb6bd22eab98a5394d10210e10
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt (3.1.22) sha256=1f0072e88c2d705d94aff7f2c5cb02eb3f1ec4b8368671e19112527489f29032
